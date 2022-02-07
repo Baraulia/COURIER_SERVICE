@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"strconv"
 )
 
 type Courier struct {
@@ -39,5 +40,23 @@ func GetCouriersFromDB(Couriers *[]SmallInfo) {
 		var courier SmallInfo
 		err = get.Scan(&courier.IdCourier, &courier.CourierName, &courier.PhoneNumber, &courier.Photo)
 		*Couriers = append(*Couriers, courier)
+	}
+}
+
+func GetOneCourierFromDB(Couriers *SmallInfo, id string) {
+	db := ConnectDB()
+	defer db.Close()
+	l, _ := strconv.Atoi(id)
+
+	get, err := db.Query(fmt.Sprintf("Select id_courier,name,phone_number,photo from couriers where id_courier = %d", l))
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	for get.Next() {
+		var courier SmallInfo
+		err = get.Scan(&courier.IdCourier, &courier.CourierName, &courier.PhoneNumber, &courier.Photo)
+		*Couriers = courier
 	}
 }

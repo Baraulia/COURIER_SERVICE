@@ -14,7 +14,7 @@ func main() {
 	db.ConnectDB()
 	r.HandleFunc("/", Controllers.GreetingPage).Methods("GET")
 	r.HandleFunc("/couriers", Controllers.GetCouriers).Methods("GET")
-	r.HandleFunc("/courier/{id_courier}", Controllers.GetOneCourier).Methods("GET")
+	r.HandleFunc("/courier", Controllers.GetOneCourier).Methods("GET")
 	err := http.ListenAndServe(":80", r)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)

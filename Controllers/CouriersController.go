@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"github.com/Baraulia/COURIER_SERVICE/Models"
 	"github.com/Baraulia/COURIER_SERVICE/db"
-	"github.com/gorilla/mux"
 	"net/http"
-	"strconv"
 )
 
 var Couriers []db.SmallInfo
@@ -24,12 +22,8 @@ func GetCouriers(w http.ResponseWriter, r *http.Request) {
 
 func GetOneCourier(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(r)
-	Couriers = Models.GetCouriers(Couriers)
-	for _, courier := range Couriers {
-		if strconv.Itoa(int(courier.IdCourier)) == params["id_courier"] {
-			json.NewEncoder(w).Encode(courier)
-			return
-		}
-	}
+	var Courier db.SmallInfo
+	id := r.URL.Query().Get("id")
+	Courier = Models.GetOneCourier(Courier, id)
+	json.NewEncoder(w).Encode(Courier)
 }
