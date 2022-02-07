@@ -10,6 +10,7 @@ import (
 
 func main() {
 	db.ConnectDB()
+	http.HandleFunc("/", Controllers.GreetingPage)
 	http.HandleFunc("/couriers", Controllers.GetCouriers)
 	err := http.ListenAndServe(":80", nil)
 	if err != nil {
