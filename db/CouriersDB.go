@@ -16,11 +16,17 @@ type Courier struct {
 	Deleted          bool   `json:"deleted"`
 }
 
-func GetCouriersFromDB(Couriers *[]Courier) {
+type SmallInfo struct {
+	CourierName string `json:"courier_name"`
+	PhoneNumber string `json:"phone_number"`
+	Photo       string `json:"photo"`
+}
+
+func GetCouriersFromDB(Couriers *[]SmallInfo) {
 	db := ConnectDB()
 	defer db.Close()
 
-	selectValue := `Select * from "couriers"`
+	selectValue := `Select "name", "phone_number","photo" from "couriers"`
 
 	get, err := db.Query(selectValue)
 
@@ -29,8 +35,8 @@ func GetCouriersFromDB(Couriers *[]Courier) {
 	}
 
 	for get.Next() {
-		var courier Courier
-		err = get.Scan(&courier.IdCourier, &courier.CourierName, &courier.ReadyToGo, &courier.PhoneNumber, &courier.Email, &courier.Rating, &courier.Photo, &courier.NumberOfFailures, &courier.Deleted)
+		var courier SmallInfo
+		err = get.Scan(&courier.CourierName, &courier.PhoneNumber, &courier.Photo)
 		*Couriers = append(*Couriers, courier)
 	}
 }
