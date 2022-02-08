@@ -6,8 +6,8 @@ import (
 	"fmt"
 )
 
-func GetCourierCompletedOrders(Order []dao.Order, limit,page,idCourier int) ([]dao.Order,error){
-	Order = []dao.Order{}
+func GetCourierCompletedOrders( limit,page,idCourier int) ([]dao.Order,error){
+	var Order = []dao.Order{}
 	totalCount:=dao.GetCourierCompletedOrdersWithPage_fromDB(&Order,limit,page,idCourier)
 	LimitOfPages:=(totalCount/limit)+1
 	if LimitOfPages<page{
@@ -21,8 +21,8 @@ func GetCourierCompletedOrders(Order []dao.Order, limit,page,idCourier int) ([]d
 }
 
 
-func GetAllOrdersOfCourierService(Order []dao.Order,limit,page,idService int) ([]dao.Order,error){
-	Order = []dao.Order{}
+func GetAllOrdersOfCourierService(limit,page,idService int) ([]dao.Order,error){
+	var Order = []dao.Order{}
 	totalCount:=dao.GetAllOrdersOfCourierServiceWithPage_fromDB(&Order,limit,page,idService)
 	LimitOfPages:=(totalCount/limit)+1
 	if LimitOfPages<page{
@@ -37,8 +37,8 @@ func GetAllOrdersOfCourierService(Order []dao.Order,limit,page,idService int) ([
 	return Order,nil
 }
 
-func GetCourierCompletedOrdersByMonth(Order []dao.Order,limit,page,idService,Month int) ([]dao.Order,error){
-	Order = []dao.Order{}
+func GetCourierCompletedOrdersByMonth(limit,page,idService,Month int) ([]dao.Order,error){
+	var Order = []dao.Order{}
 	totalCount:=dao.GetCourierCompletedOrdersByMouthWithPage_fromDB(&Order,limit,page,idService,Month)
 	LimitOfPages:=(totalCount/limit)+1
 	if LimitOfPages<page{

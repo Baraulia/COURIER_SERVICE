@@ -28,7 +28,7 @@ func GetCourierCompletedOrders(w http.ResponseWriter, r *http.Request) {
 		w.Write(b)
 	}
 	if er==nil && page!=0 && limit!=0{
-		Orders,err := model.GetCourierCompletedOrders(Orders,limit,page,idCourier)
+		Orders,err := model.GetCourierCompletedOrders(limit,page,idCourier)
 		if err!=nil{
 			b, _ := json.Marshal(fmt.Sprintf("Error: %s",err))
 			w.Write(b)
@@ -57,8 +57,8 @@ func GetAllOrdersOfCourierService(w http.ResponseWriter, r *http.Request) {
 		b, _ := json.Marshal(fmt.Sprintf("Error: %s",er))
 		w.Write(b)
 	}
-	if er==nil && page!=0 && limit!=0{
-		Orders, err := model.GetAllOrdersOfCourierService(Orders, limit, page, idService)
+	if er==nil && page!=0 && limit!=0 {
+		Orders, err := model.GetAllOrdersOfCourierService( limit, page, idService)
 		if err != nil {
 			b, _ := json.Marshal(fmt.Sprintf("Error: %s", err))
 			w.Write(b)
@@ -95,7 +95,7 @@ func GetCourierCompletedOrdersByMonth(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(limit,page,idCourier,Month)
 	if er==nil && Month!=0 && page!=0 && limit!=0{
-		Orders,err := model.GetCourierCompletedOrdersByMonth(Orders,limit,page,idCourier,Month)
+		Orders,err := model.GetCourierCompletedOrdersByMonth(	limit,page,idCourier,Month)
 		if err!=nil{
 			b, _ := json.Marshal(fmt.Sprintf("Error: %s",err))
 			w.Write(b)

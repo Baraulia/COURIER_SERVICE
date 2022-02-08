@@ -59,6 +59,7 @@ func GetAllOrdersOfCourierServiceWithPage_fromDB(Orders *[]Order,limit,page,idSe
 func GetCourierCompletedOrdersByMouthWithPage_fromDB(Orders *[]Order,limit,page,idCourier,Month int) int{
 	db:=OpenDB()
 	log.Println("connected to db")
+
 	defer db.Close()
 	res,err:=db.Query(fmt.Sprintf("SELECT id_courier ,id_order ,id_delivery_service ,delivery_time ,order_date ,status ,customer_address FROM delivery where id_courier=%d and Extract(MONTH from order_date )=%d LIMIT %d OFFSET %d ",idCourier,Month,limit,limit*(page-1)))
 	if err!=nil{
