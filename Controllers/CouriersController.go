@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Baraulia/COURIER_SERVICE/Models"
 	"github.com/Baraulia/COURIER_SERVICE/db"
+	"github.com/Baraulia/COURIER_SERVICE/other"
 	"net/http"
 	"strconv"
 )
@@ -25,7 +26,12 @@ func GetOneCourier(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var Courier db.SmallInfo
 	id := r.URL.Query().Get("id")
-	l, _ := strconv.Atoi(id)
+	l, err := strconv.Atoi(id)
+	if err != nil {
+		other.RespondWithError(w, 400, "bad request")
+		return
+	}
+
 	Courier = Models.GetOneCourier(l)
 	json.NewEncoder(w).Encode(Courier)
 }
