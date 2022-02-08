@@ -37,7 +37,7 @@ func GetActiveOrderFromDB(Orders *Order, id string) {
 	defer db.Close()
 	l, _ := strconv.Atoi(id)
 
-	get, err := db.Query(fmt.Sprintf("Select * from delivery where id_order = %d AND status = 'active'", l))
+	get, err := db.Query(fmt.Sprintf("Select * from delivery where id_order = %d AND status = 'ready to delivery'", l))
 
 	if err != nil {
 		fmt.Println(err)
