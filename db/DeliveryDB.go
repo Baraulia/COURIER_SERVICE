@@ -10,7 +10,7 @@ type Order struct {
 	IdOrder           uint16 `json:"id_order"`
 	IdCourier         uint16 `json:"id_courier"`
 	DeliveryTime      string `json:"delivery_time"`
-	CustomerAdress    string `json:"customer_adress"`
+	CustomerAddress   string `json:"customer_address"`
 	Status            string `json:"status"`
 	OrderDate         string `json:"order_date"`
 }
@@ -19,7 +19,7 @@ func GetActiveOrdersFromDB(Orders *[]Order) {
 	db := ConnectDB()
 	defer db.Close()
 
-	get, err := db.Query(fmt.Sprintf("Select * from delivery where status = 'active'"))
+	get, err := db.Query(fmt.Sprintf("Select * from delivery where status = 'ready to delivery'"))
 
 	if err != nil {
 		fmt.Println(err)
@@ -27,7 +27,7 @@ func GetActiveOrdersFromDB(Orders *[]Order) {
 
 	for get.Next() {
 		var order Order
-		err = get.Scan(&order.IdDeliveryService, &order.IdOrder, &order.IdCourier, &order.DeliveryTime, &order.CustomerAdress, &order.Status, &order.OrderDate)
+		err = get.Scan(&order.IdDeliveryService, &order.IdOrder, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate)
 		*Orders = append(*Orders, order)
 	}
 }
@@ -45,7 +45,7 @@ func GetActiveOrderFromDB(Orders *Order, id string) {
 
 	for get.Next() {
 		var order Order
-		err = get.Scan(&order.IdDeliveryService, &order.IdOrder, &order.IdCourier, &order.DeliveryTime, &order.CustomerAdress, &order.Status, &order.OrderDate)
+		err = get.Scan(&order.IdDeliveryService, &order.IdOrder, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate)
 		*Orders = order
 	}
 }
