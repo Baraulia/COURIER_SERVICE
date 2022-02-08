@@ -8,8 +8,8 @@ func GetCouriers(Couriers []db.SmallInfo) []db.SmallInfo {
 	return Couriers
 }
 
-func GetOneCourier(Courier db.SmallInfo, id string) db.SmallInfo {
-	Courier = db.SmallInfo{}
+func GetOneCourier(id int) db.SmallInfo {
+	Courier := db.SmallInfo{}
 	db.GetOneCourierFromDB(&Courier, id)
 	return Courier
 }

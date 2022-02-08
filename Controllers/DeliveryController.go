@@ -5,6 +5,7 @@ import (
 	"github.com/Baraulia/COURIER_SERVICE/Models"
 	"github.com/Baraulia/COURIER_SERVICE/db"
 	"net/http"
+	"strconv"
 )
 
 var Orders []db.Order
@@ -19,6 +20,7 @@ func GetOneOrder(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var Order db.Order
 	id := r.URL.Query().Get("id")
-	Order = Models.GetOneOrder(Order, id)
+	l, _ := strconv.Atoi(id)
+	Order = Models.GetOneOrder(l)
 	json.NewEncoder(w).Encode(Order)
 }

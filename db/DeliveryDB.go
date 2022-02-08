@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"strconv"
 )
 
 type Order struct {
@@ -19,8 +18,8 @@ func GetActiveOrdersFromDB(Orders *[]Order) {
 	db := ConnectDB()
 	defer db.Close()
 
-	get, err := db.Query(fmt.Sprintf("Select * from delivery where status = 'ready to delivery'"))
-
+	insertValue := `Select * from delivery where status = 'ready to delivery'`
+	get, err := db.Query(insertValue)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -32,13 +31,12 @@ func GetActiveOrdersFromDB(Orders *[]Order) {
 	}
 }
 
-func GetActiveOrderFromDB(Orders *Order, id string) {
+func GetActiveOrderFromDB(Orders *Order, id int) {
 	db := ConnectDB()
 	defer db.Close()
-	l, _ := strconv.Atoi(id)
 
-	get, err := db.Query(fmt.Sprintf("Select * from delivery where id_order = %d AND status = 'ready to delivery'", l))
-
+	insertValue := `Select * from delivery where id_order = $1 AND status = 'ready to delivery'`
+	get, err := db.Query(insertValue, id)
 	if err != nil {
 		fmt.Println(err)
 	}
