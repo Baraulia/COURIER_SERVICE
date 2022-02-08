@@ -13,6 +13,7 @@ type Courier struct {
 	Email            string `json:"email"`
 	Rating           uint16 `json:"rating"`
 	Photo            string `json:"photo"`
+	Surname          string `json:"surname"`
 	NumberOfFailures uint16 `json:"number_of_failures"`
 	Deleted          bool   `json:"deleted"`
 }
@@ -22,13 +23,14 @@ type SmallInfo struct {
 	CourierName string `json:"courier_name"`
 	PhoneNumber string `json:"phone_number"`
 	Photo       string `json:"photo"`
+	Surname     string `json:"surname"`
 }
 
 func GetCouriersFromDB(Couriers *[]SmallInfo) {
 	db := ConnectDB()
 	defer db.Close()
 
-	selectValue := `Select "id_courier","name", "phone_number","photo" from "couriers"`
+	selectValue := `Select "id_courier","name", "phone_number","photo", "surname" from "couriers"`
 
 	get, err := db.Query(selectValue)
 
@@ -38,7 +40,7 @@ func GetCouriersFromDB(Couriers *[]SmallInfo) {
 
 	for get.Next() {
 		var courier SmallInfo
-		err = get.Scan(&courier.IdCourier, &courier.CourierName, &courier.PhoneNumber, &courier.Photo)
+		err = get.Scan(&courier.IdCourier, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
 		*Couriers = append(*Couriers, courier)
 	}
 }
@@ -48,7 +50,7 @@ func GetOneCourierFromDB(Couriers *SmallInfo, id string) {
 	defer db.Close()
 	l, _ := strconv.Atoi(id)
 
-	get, err := db.Query(fmt.Sprintf("Select id_courier,name,phone_number,photo from couriers where id_courier = %d", l))
+	get, err := db.Query(fmt.Sprintf("Select id_courier,name,phone_number,photo, surname from couriers where id_courier = %d", l))
 
 	if err != nil {
 		fmt.Println(err)
@@ -56,7 +58,7 @@ func GetOneCourierFromDB(Couriers *SmallInfo, id string) {
 
 	for get.Next() {
 		var courier SmallInfo
-		err = get.Scan(&courier.IdCourier, &courier.CourierName, &courier.PhoneNumber, &courier.Photo)
+		err = get.Scan(&courier.IdCourier, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
 		*Couriers = courier
 	}
 }
