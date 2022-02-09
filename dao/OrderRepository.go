@@ -1,10 +1,19 @@
 package dao
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"time"
 )
+
+type OrderPostgres struct {
+	db *sql.DB
+}
+
+func NewOrderPostgres(db *sql.DB) *OrderPostgres {
+	return &OrderPostgres{db: db}
+}
 
 type Order struct {
 	IdDeliveryService int `json:"id_delivery_service,omitempty"`
@@ -16,7 +25,7 @@ type Order struct {
 	OrderDate time.Time `json:"order_date"`
 }
 
-func GetCourierCompletedOrdersWithPage_fromDB(Orders *[]Order,limit,page,idCourier int) int{
+func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(Orders *[]Order,limit,page,idCourier int) int{
 	db:=OpenDB()
 	defer db.Close()  //"Select id_courier,id_order, id_delivery_service,delivery_time,status, customer_address from delivery where status =`new` and status =`in progress` and status =`reade to delivery`")
 
@@ -36,7 +45,7 @@ func GetCourierCompletedOrdersWithPage_fromDB(Orders *[]Order,limit,page,idCouri
 	return len(*Orders)
 }
 
-func GetAllOrdersOfCourierServiceWithPage_fromDB(Orders *[]Order,limit,page,idService int) int{
+func (r *OrderPostgres)  GetAllOrdersOfCourierServiceWithPage_fromDB(Orders *[]Order,limit,page,idService int) int{
 	db:=OpenDB()
 	defer db.Close()
 	res,err:=db.Query(fmt.Sprintf("SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE delivery_service_id=%d LIMIT %d OFFSET %d",idService,limit,limit*(page-1)))
@@ -56,7 +65,7 @@ func GetAllOrdersOfCourierServiceWithPage_fromDB(Orders *[]Order,limit,page,idSe
 }
 
 
-func GetCourierCompletedOrdersByMouthWithPage_fromDB(Orders *[]Order,limit,page,idCourier,Month int) int{
+func (r *OrderPostgres)  GetCourierCompletedOrdersByMouthWithPage_fromDB(Orders *[]Order,limit,page,idCourier,Month int) int{
 	db:=OpenDB()
 	log.Println("connected to db")
 
