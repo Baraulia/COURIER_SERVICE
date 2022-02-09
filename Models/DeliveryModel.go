@@ -4,8 +4,8 @@ import (
 	"github.com/Baraulia/COURIER_SERVICE/db"
 )
 
-func GetOrders(Orders []db.Order) []db.Order {
-	Orders = []db.Order{}
+func GetOrders() []db.Order {
+	var Orders []db.Order
 	db.GetActiveOrdersFromDB(&Orders)
 	return Orders
 }

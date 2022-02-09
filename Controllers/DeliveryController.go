@@ -13,7 +13,7 @@ var Orders []db.Order
 
 func GetOrders(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	Orders = Models.GetOrders(Orders)
+	Orders = Models.GetOrders()
 	json.NewEncoder(w).Encode(Orders)
 }
 
