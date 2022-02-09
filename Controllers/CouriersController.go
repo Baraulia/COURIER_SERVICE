@@ -18,7 +18,7 @@ func GreetingPage(w http.ResponseWriter, r *http.Request) {
 
 func GetCouriers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	Couriers = Models.GetCouriers(Couriers)
+	Couriers = Models.GetCouriers()
 	json.NewEncoder(w).Encode(Couriers)
 }
 
