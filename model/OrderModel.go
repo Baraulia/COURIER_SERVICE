@@ -1,9 +1,10 @@
 package model
 
 import (
-	"CourierService/dao"
 	"errors"
 	"fmt"
+	"github.com/Baraulia/COURIER_SERVICE/dao"
+	_ "github.com/Baraulia/COURIER_SERVICE/dao"
 )
 
 func GetCourierCompletedOrders( limit,page,idCourier int) ([]dao.Order,error){

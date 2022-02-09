@@ -2,9 +2,8 @@ package main
 
 import (
 	"github.com/Baraulia/COURIER_SERVICE/Controller"
-	_"github.com/Baraulia/COURIER_SERVICE/dao"
+	_ "github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/gorilla/mux"
-	_ "github.com/lib/pq"
 	_ "github.com/lib/pq"
 	"net/http"
 )

@@ -1,10 +1,11 @@
 package controller
 
 import (
-	"CourierService/dao"
-	"CourierService/model"
 	"encoding/json"
 	"fmt"
+	"github.com/Baraulia/COURIER_SERVICE/dao"
+	_ "github.com/Baraulia/COURIER_SERVICE/dao"
+	"github.com/Baraulia/COURIER_SERVICE/model"
 	"net/http"
 	"strconv"
 )
