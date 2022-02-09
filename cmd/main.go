@@ -1,9 +1,10 @@
 package main
 
 import (
-	"CourierService/controller"
+	"github.com/Baraulia/COURIER_SERVICE/Controller"
+	_"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/gorilla/mux"
-	_ "github.com/gorilla/mux"
+	_ "github.com/lib/pq"
 	_ "github.com/lib/pq"
 	"net/http"
 )
