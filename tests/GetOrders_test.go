@@ -3,6 +3,7 @@ package tests
 import (
 	"github.com/Baraulia/COURIER_SERVICE/Controllers"
 	"github.com/Baraulia/COURIER_SERVICE/db"
+	_ "github.com/lib/pq"
 	"net/http"
 	"net/http/httptest"
 	"testing"
