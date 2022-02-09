@@ -42,7 +42,7 @@ func GetCourierCompletedOrdersByMonth(limit,page,idService,Month int) ([]dao.Ord
 	totalCount:=dao.GetCourierCompletedOrdersByMouthWithPage_fromDB(&Order,limit,page,idService,Month)
 	LimitOfPages:=(totalCount/limit)+1
 	if LimitOfPages<page{
-		return nil,errors.New("No more pages")
+		return nil,fmt.Errorf("Error in OrderService")
 	}
 	if limit==0 || page==0 {
 		return nil,errors.New("no page or limit")

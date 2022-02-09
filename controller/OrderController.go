@@ -9,33 +9,40 @@ import (
 	"strconv"
 )
 
+func JSONError(w http.ResponseWriter, err interface{}, code int) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	w.WriteHeader(code)
+	json.NewEncoder(w).Encode(err)
+}
+
      var Orders []dao.Order
 func GetCourierCompletedOrders(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	page,er:= strconv.Atoi(r.URL.Query().Get("page"))
 	if er!=nil{
 		b, _ := json.Marshal(fmt.Sprintf("Error: %s",er))
-		w.Write(b)
+		JSONError(w,b,http.StatusNoContent)
 	}
 	limit,er:= strconv.Atoi(r.URL.Query().Get("limit"))
 	if er!=nil{
 		b, _ := json.Marshal(fmt.Sprintf("Error: %s",er))
-		w.Write(b)
+		JSONError(w,b,http.StatusNoContent)
 	}
 	idCourier,er:= strconv.Atoi(r.URL.Query().Get("idcourier"))
 	if er!=nil{
 		b, _ := json.Marshal(fmt.Sprintf("Error: %s",er))
-		w.Write(b)
+		JSONError(w,b,http.StatusNoContent)
 	}
 	if er==nil && page!=0 && limit!=0{
 		Orders,err := model.GetCourierCompletedOrders(limit,page,idCourier)
 		if err!=nil{
 			b, _ := json.Marshal(fmt.Sprintf("Error: %s",err))
-			w.Write(b)
+			JSONError(w,b,http.StatusExpectationFailed)
 		}
 	json.NewEncoder(w).Encode(Orders) }else {
 		b, _ := json.Marshal(fmt.Sprintf("Error: %s",er))
-		w.Write(b)
+		JSONError(w,b,http.StatusExpectationFailed)
 	}
 }
 
