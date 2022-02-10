@@ -1,15 +1,36 @@
 package Models
 
-import "github.com/Baraulia/COURIER_SERVICE/db"
+import (
+	"errors"
+	"fmt"
+	"github.com/Baraulia/COURIER_SERVICE/db"
+	"log"
+)
 
-func GetCouriers() []db.SmallInfo {
-	var Couriers []db.SmallInfo
-	db.GetCouriersFromDB(&Couriers)
-	return Couriers
+type CourierService struct {
+	repo db.Repository
 }
 
-func GetOneCourier(id int) db.SmallInfo {
-	Courier := db.SmallInfo{}
-	db.GetOneCourierFromDB(&Courier, id)
-	return Courier
+func NewCourierService(repo db.Repository) *CourierService {
+	return &CourierService{repo: repo}
+}
+
+func (s *CourierService) GetCouriers() ([]db.SmallInfo, error) {
+	var Couriers []db.SmallInfo
+	err := s.repo.GetCouriersFromDB(&Couriers)
+	if err != nil {
+		return nil, fmt.Errorf("%w", err)
+	}
+	return Couriers, nil
+}
+
+func (s *CourierService) GetOneCourier(id int) ([]db.SmallInfo, error) {
+	var Courier []db.SmallInfo
+	s.repo.GetOneCourierFromDB(&Courier, id)
+	if id == 0 {
+		err := errors.New("no id")
+		log.Println("id cannot be zero")
+		return nil, fmt.Errorf("Error in CourierService: %s", err)
+	}
+	return Courier, nil
 }
