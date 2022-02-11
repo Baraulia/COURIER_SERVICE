@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"time"
 )
 
 type OrderPostgres struct {
@@ -16,13 +15,13 @@ func NewOrderPostgres(db *sql.DB) *OrderPostgres {
 }
 
 type Order struct {
-	IdDeliveryService int `json:"id_delivery_service,omitempty"`
-	IdCourier int `json:"id_courier,omitempty"`
-	IdOrder int `json:"id_order"`
+	IdDeliveryService int `json:"delivery_service_id,omitempty"`
+	IdOrder int `json:"id"`
+	IdCourier int `json:"courier_id,omitempty"`
 	DeliveryTime string `json:"delivery_time,omitempty"`
 	CustomerAddress string `json:"customer_address,omitempty"`
 	Status string `json:"status"`
-	OrderDate time.Time `json:"order_date"`
+	OrderDate string `json:"order_date"`
 }
 
 func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(Orders *[]Order,limit,page,idCourier int) (int){
