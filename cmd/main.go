@@ -1,21 +1,22 @@
 package main
 
 import (
+	"database/sql"
 	"github.com/Baraulia/COURIER_SERVICE/Controllers"
 	"github.com/Baraulia/COURIER_SERVICE/db"
-	"github.com/gorilla/mux"
+	"github.com/Baraulia/COURIER_SERVICE/service"
 	_ "github.com/lib/pq"
-	"log"
 	"net/http"
 )
 
 func main() {
-	r := mux.NewRouter()
-	db.ConnectDB()
-	r.HandleFunc("/orders", Controllers.GetOrders).Methods("GET")
-	r.HandleFunc("/order", Controllers.GetOneOrder).Methods("GET")
-	err := http.ListenAndServe(":80", r)
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
+	var database *sql.DB
+	repos := db.NewRepository(database)
+	services := service.NewService(repos)
+	handlers := Controllers.NewHandler(services)
+	s := &http.Server{
+		Addr:    ":80",
+		Handler: handlers.InitRoutes(),
 	}
+	s.ListenAndServe()
 }
