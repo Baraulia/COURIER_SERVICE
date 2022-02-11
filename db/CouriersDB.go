@@ -1,8 +1,17 @@
 package db
 
 import (
-	"fmt"
+	"database/sql"
+	"log"
 )
+
+type CourierPostgres struct {
+	db *sql.DB
+}
+
+func NewCourierPostgres(db *sql.DB) *CourierPostgres {
+	return &CourierPostgres{db: db}
+}
 
 type Courier struct {
 	IdCourier        uint16 `json:"id_courier"`
@@ -25,7 +34,7 @@ type SmallInfo struct {
 	Surname     string `json:"surname"`
 }
 
-func GetCouriersFromDB(Couriers *[]SmallInfo) {
+func (r *CourierPostgres) GetCouriersFromDB(Couriers *[]SmallInfo) error {
 	db := ConnectDB()
 	defer db.Close()
 
@@ -34,7 +43,9 @@ func GetCouriersFromDB(Couriers *[]SmallInfo) {
 	get, err := db.Query(selectValue)
 
 	if err != nil {
-		fmt.Println(err)
+
+		log.Println("Error of getting list of couriers :" + err.Error())
+		return err
 	}
 
 	for get.Next() {
@@ -42,9 +53,10 @@ func GetCouriersFromDB(Couriers *[]SmallInfo) {
 		err = get.Scan(&courier.IdCourier, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
 		*Couriers = append(*Couriers, courier)
 	}
+	return nil
 }
 
-func GetOneCourierFromDB(Couriers *SmallInfo, id int) {
+func (r *CourierPostgres) GetOneCourierFromDB(Couriers *[]SmallInfo, id int) error {
 	db := ConnectDB()
 	defer db.Close()
 
@@ -52,12 +64,14 @@ func GetOneCourierFromDB(Couriers *SmallInfo, id int) {
 	get, err := db.Query(selectValue, id)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println("Error of getting courier :" + err.Error())
+		return err
 	}
 
 	for get.Next() {
 		var courier SmallInfo
 		err = get.Scan(&courier.IdCourier, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
-		*Couriers = courier
+		*Couriers = append(*Couriers, courier)
 	}
+	return nil
 }
