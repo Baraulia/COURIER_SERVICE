@@ -5,6 +5,8 @@ import (
 	"github.com/Baraulia/COURIER_SERVICE/db"
 )
 
+//go:generate mockgen -source=Service.go -destination=mocks/mock.go
+
 type CourierApp interface {
 	GetCouriers() ([]db.SmallInfo, error)
 	GetOneCourier(id int) ([]db.SmallInfo, error)
