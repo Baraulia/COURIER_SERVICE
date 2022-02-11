@@ -18,6 +18,7 @@ func NewOrderService(repo dao.Repository) *OrderService {
 
 func (s *OrderService) GetCourierCompletedOrders( limit,page,idCourier int) ([]dao.Order,error){
 	var Order = []dao.Order{}
+
 	if limit<=0 || page<=0 {
 		err:=errors.New("no page or limit")
 		log.Println("no more pages or limit")
