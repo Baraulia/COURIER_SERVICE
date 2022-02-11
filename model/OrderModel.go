@@ -18,16 +18,16 @@ func NewOrderService(repo dao.Repository) *OrderService {
 
 func (s *OrderService) GetCourierCompletedOrders( limit,page,idCourier int) ([]dao.Order,error){
 	var Order = []dao.Order{}
-	totalCount:=s.repo.GetCourierCompletedOrdersWithPage_fromDB(&Order,limit,page,idCourier)
-	LimitOfPages:=(totalCount/limit)+1
-	if LimitOfPages<page{
-		err:=errors.New("no page")
-		log.Println("no more pages")
-		return nil,fmt.Errorf("Error in OrderService: %s",err)
-	}
-	if limit==0 || page==0 {
+	if limit<=0 || page<=0 {
 		err:=errors.New("no page or limit")
 		log.Println("no more pages or limit")
+		return nil,fmt.Errorf("Error in OrderService: %s",err)
+	}
+	Order,totalCount:=s.repo.GetCourierCompletedOrdersWithPage_fromDB(limit,page,idCourier)
+	LimitOfPages:=(totalCount/limit)+1
+	if LimitOfPages<page {
+		err:=errors.New("no page")
+		log.Println("no more pages")
 		return nil,fmt.Errorf("Error in OrderService: %s",err)
 	}
 	fmt.Println(Order)
@@ -37,16 +37,16 @@ func (s *OrderService) GetCourierCompletedOrders( limit,page,idCourier int) ([]d
 
 func (s *OrderService) GetAllOrdersOfCourierService(limit,page,idService int) ([]dao.Order,error){
 	var Order = []dao.Order{}
+	if limit<=0 || page<=0 {
+		err:=errors.New("no page or limit")
+		log.Println("no more pages or limit")
+		return nil,fmt.Errorf("Error in OrderService: %s",err)
+	}
 	totalCount:=s.repo.GetAllOrdersOfCourierServiceWithPage_fromDB(&Order,limit,page,idService)
 	LimitOfPages:=(totalCount/limit)+1
 	if LimitOfPages<page{
 		err:=errors.New("no page")
 		log.Println("no more pages")
-		return nil,fmt.Errorf("Error in OrderService: %s",err)
-	}
-	if limit==0 || page==0 {
-		err:=errors.New("no page or limit")
-		log.Println("no more pages or limit")
 		return nil,fmt.Errorf("Error in OrderService: %s",err)
 	}
 	fmt.Println(Order)
@@ -55,16 +55,16 @@ func (s *OrderService) GetAllOrdersOfCourierService(limit,page,idService int) ([
 
 func (s *OrderService) GetCourierCompletedOrdersByMonth(limit,page,idService,Month int) ([]dao.Order,error){
 	var Order = []dao.Order{}
+	if limit<=0 || page<=0 {
+		err:=errors.New("no page or limit")
+		log.Println("no more pages or limit")
+		return nil,fmt.Errorf("Error in OrderService: %s",err)
+	}
 	totalCount:=s.repo.GetCourierCompletedOrdersByMouthWithPage_fromDB(&Order,limit,page,idService,Month)
 	LimitOfPages:=(totalCount/limit)+1
 	if LimitOfPages<page{
 		err:=errors.New("no page")
 		log.Println("no more pages")
-		return nil,fmt.Errorf("Error in OrderService: %s",err)
-	}
-	if limit==0 || page==0 {
-		err:=errors.New("no page or limit")
-		log.Println("no more pages or limit")
 		return nil,fmt.Errorf("Error in OrderService: %s",err)
 	}
 	if Month>=13 || Month<1{
