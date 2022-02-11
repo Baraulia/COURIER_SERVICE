@@ -42,7 +42,21 @@ func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(Orders *[]Order
 
 		*Orders = append (*Orders, order)
 	}
-	return len(*Orders)
+	var Ordersss []Order
+	resl,err:=db.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE status='completed' and courier_id=%d ",idCourier))
+	if err!=nil{
+		panic(err)
+	}
+	for resl.Next(){
+		var order Order
+		err = resl.Scan(&order.IdCourier)
+		if err!=nil{
+			panic(err)
+		}
+
+		*Orders = append (*Orders, order)
+	}
+	return len(Ordersss)
 }
 
 func (r *OrderPostgres)  GetAllOrdersOfCourierServiceWithPage_fromDB(Orders *[]Order,limit,page,idService int) int{
@@ -54,14 +68,29 @@ func (r *OrderPostgres)  GetAllOrdersOfCourierServiceWithPage_fromDB(Orders *[]O
 	}
 	for res.Next(){
 		var order Order
-		err = res.Scan(&order.IdCourier, &order.IdOrder, &order.DeliveryTime, &order.Status, &order.CustomerAddress)
+		err = res.Scan(&order.IdCourier,&order.IdOrder,&order.DeliveryTime,&order.Status,&order.CustomerAddress)
 		if err!=nil{
 			panic(err)
 		}
 
 		*Orders = append (*Orders, order)
 	}
-	return len(*Orders)
+
+	var Ordersss []Order
+	resl,err:=db.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE delivery_service_id=%d ",idService))
+	if err!=nil{
+		panic(err)
+	}
+	for resl.Next(){
+		var order Order
+		err = resl.Scan(&order.IdCourier)
+		if err!=nil{
+			panic(err)
+		}
+
+		*Orders = append (*Orders, order)
+	}
+	return len(Ordersss)
 }
 
 
@@ -83,5 +112,20 @@ func (r *OrderPostgres)  GetCourierCompletedOrdersByMouthWithPage_fromDB(Orders 
 
 		*Orders = append (*Orders, order)
 	}
-	return len(*Orders)
+	var Ordersss []Order
+	resl,err:=db.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE courier_id=%d and Extract(MONTH from order_date )=%d",idCourier,Month))
+	if err!=nil{
+		panic(err)
+	}
+	for resl.Next(){
+		var order Order
+		err = resl.Scan(&order.IdCourier)
+		if err!=nil{
+			panic(err)
+		}
+
+		*Orders = append (*Orders, order)
+	}
+
+	return len(Ordersss)
 }

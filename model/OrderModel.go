@@ -23,7 +23,7 @@ func (s *OrderService) GetCourierCompletedOrders( limit,page,idCourier int) ([]d
 		log.Println("no more pages or limit")
 		return nil,fmt.Errorf("Error in OrderService: %s",err)
 	}
-	Order,totalCount:=s.repo.GetCourierCompletedOrdersWithPage_fromDB(limit,page,idCourier)
+	totalCount:=s.repo.GetCourierCompletedOrdersWithPage_fromDB(&Order,limit,page,idCourier)
 	LimitOfPages:=(totalCount/limit)+1
 	if LimitOfPages<page {
 		err:=errors.New("no page")
