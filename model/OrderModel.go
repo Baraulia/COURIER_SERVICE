@@ -24,7 +24,7 @@ func (s *OrderService) GetCourierCompletedOrders( limit,page,idCourier int) ([]d
 		log.Println("no more pages or limit")
 		return nil,fmt.Errorf("Error in OrderService: %s",err)
 	}
-	totalCount:=s.repo.GetCourierCompletedOrdersWithPage_fromDB(&Order,limit,page,idCourier)
+	Order,totalCount:=s.repo.GetCourierCompletedOrdersWithPage_fromDB(limit,page,idCourier)
 	LimitOfPages:=(totalCount/limit)+1
 	if LimitOfPages<page {
 		err:=errors.New("no page")
@@ -43,7 +43,7 @@ func (s *OrderService) GetAllOrdersOfCourierService(limit,page,idService int) ([
 		log.Println("no more pages or limit")
 		return nil,fmt.Errorf("Error in OrderService: %s",err)
 	}
-	totalCount:=s.repo.GetAllOrdersOfCourierServiceWithPage_fromDB(&Order,limit,page,idService)
+	Order,totalCount:=s.repo.GetAllOrdersOfCourierServiceWithPage_fromDB(limit,page,idService)
 	LimitOfPages:=(totalCount/limit)+1
 	if LimitOfPages<page{
 		err:=errors.New("no page")
@@ -61,7 +61,7 @@ func (s *OrderService) GetCourierCompletedOrdersByMonth(limit,page,idService,Mon
 		log.Println("no more pages or limit")
 		return nil,fmt.Errorf("Error in OrderService: %s",err)
 	}
-	totalCount:=s.repo.GetCourierCompletedOrdersByMouthWithPage_fromDB(&Order,limit,page,idService,Month)
+	Order,totalCount:=s.repo.GetCourierCompletedOrdersByMouthWithPage_fromDB(limit,page,idService,Month)
 	LimitOfPages:=(totalCount/limit)+1
 	if LimitOfPages<page{
 		err:=errors.New("no page")

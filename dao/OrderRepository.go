@@ -24,7 +24,8 @@ type Order struct {
 	OrderDate string `json:"order_date"`
 }
 
-func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(Orders *[]Order,limit,page,idCourier int) (int){
+func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(limit,page,idCourier int) ([]Order,int){
+	var Orders []Order
 	db:=OpenDB()
 	defer db.Close()  //"Select id_courier,id_order, id_delivery_service,delivery_time,status, customer_address from delivery where status =`new` and status =`in progress` and status =`reade to delivery`")
 
@@ -39,7 +40,7 @@ func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(Orders *[]Order
 			panic(err)
 		}
 
-		*Orders = append (*Orders, order)
+		Orders = append (Orders, order)
 	}
 	var Ordersss []Order
 	resl,err:=db.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE status='completed' and courier_id=%d ",idCourier))
@@ -53,12 +54,13 @@ func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(Orders *[]Order
 			panic(err)
 		}
 
-		*Orders = append (*Orders, order)
+		Ordersss = append (Ordersss, order)
 	}
-	return len(Ordersss)
+	return Orders,len(Ordersss)
 }
 
-func (r *OrderPostgres)  GetAllOrdersOfCourierServiceWithPage_fromDB(Orders *[]Order,limit,page,idService int) int{
+func (r *OrderPostgres)  GetAllOrdersOfCourierServiceWithPage_fromDB(limit,page,idService int) ([]Order,int){
+	var Orders []Order
 	db:=OpenDB()
 	defer db.Close()
 	res,err:=db.Query(fmt.Sprintf("SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE delivery_service_id=%d LIMIT %d OFFSET %d",idService,limit,limit*(page-1)))
@@ -72,7 +74,7 @@ func (r *OrderPostgres)  GetAllOrdersOfCourierServiceWithPage_fromDB(Orders *[]O
 			panic(err)
 		}
 
-		*Orders = append (*Orders, order)
+		Orders = append (Orders, order)
 	}
 
 	var Ordersss []Order
@@ -87,13 +89,14 @@ func (r *OrderPostgres)  GetAllOrdersOfCourierServiceWithPage_fromDB(Orders *[]O
 			panic(err)
 		}
 
-		*Orders = append (*Orders, order)
+		Ordersss = append (Ordersss, order)
 	}
-	return len(Ordersss)
+	return Orders,len(Ordersss)
 }
 
 
-func (r *OrderPostgres)  GetCourierCompletedOrdersByMouthWithPage_fromDB(Orders *[]Order,limit,page,idCourier,Month int) int{
+func (r *OrderPostgres)  GetCourierCompletedOrdersByMouthWithPage_fromDB(limit,page,idCourier,Month int) ([]Order,int){
+	var Orders []Order
 	db:=OpenDB()
 	log.Println("connected to db")
 
@@ -109,7 +112,7 @@ func (r *OrderPostgres)  GetCourierCompletedOrdersByMouthWithPage_fromDB(Orders 
 			panic(err)
 		}
 
-		*Orders = append (*Orders, order)
+		Orders = append (Orders, order)
 	}
 	var Ordersss []Order
 	resl,err:=db.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE courier_id=%d and Extract(MONTH from order_date )=%d",idCourier,Month))
@@ -123,8 +126,8 @@ func (r *OrderPostgres)  GetCourierCompletedOrdersByMouthWithPage_fromDB(Orders 
 			panic(err)
 		}
 
-		*Orders = append (*Orders, order)
+		Ordersss = append (Ordersss, order)
 	}
 
-	return len(Ordersss)
+	return Orders,len(Ordersss)
 }

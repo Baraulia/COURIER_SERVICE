@@ -13,7 +13,7 @@ func NewRepository(db *sql.DB) *Repository {
 }
 
 type OrderRep interface {
-	GetCourierCompletedOrdersWithPage_fromDB(Orders *[]Order,limit,page,idCourier int) int
-	GetAllOrdersOfCourierServiceWithPage_fromDB(Orders *[]Order,limit,page,idService int) int
-	GetCourierCompletedOrdersByMouthWithPage_fromDB(Orders *[]Order,limit,page,idCourier,Month int) int
+	GetCourierCompletedOrdersWithPage_fromDB(limit,page,idCourier int) ([]Order,int)
+	GetAllOrdersOfCourierServiceWithPage_fromDB(limit,page,idService int) ([]Order,int)
+	GetCourierCompletedOrdersByMouthWithPage_fromDB(limit,page,idCourier,Month int) ([]Order,int)
 }

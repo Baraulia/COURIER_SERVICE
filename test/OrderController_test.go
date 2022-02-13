@@ -37,16 +37,17 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 	}{
 		{
 			name:      "OK",
-			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}`,
+			//inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}`,
+			inputBody: `{"name":"Test","courier_id":1}`,
 			inputOrder: []dao.Order{
 				{
-				IdDeliveryService: 1,
-				IdOrder:           1,
+				//IdDeliveryService: 1,
+				//IdOrder:           1,
 				IdCourier:         1,
-				DeliveryTime:      "15:00",
-				CustomerAddress:   "Some address",
-				Status:            "ready to delivery",
-				OrderDate:         "11.11.2022",
+				//DeliveryTime:      "15:00",
+				//CustomerAddress:   "Some address",
+				//Status:            "ready to delivery",
+				//OrderDate:         "11.11.2022",
 				},
 			},
 			mockBehavior: func(s *mocks.MockOrderApp, order []dao.Order) {
