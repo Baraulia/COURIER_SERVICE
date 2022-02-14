@@ -16,7 +16,7 @@ func main(){
 	db, err := dao.NewPostgresDB(dao.PostgresDB{
 	"159.223.1.135", "5434","courierteam1","qwerty", "courier_db","disable"	})
 	if err != nil {
-		log.Println("failed to initialize db:%s", err.Error())
+		log.Println("failed to initialize db:", err.Error())
 	}
 	repos := dao.NewRepository(db)
 	services := model.NewService(repos)
