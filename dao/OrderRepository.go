@@ -143,3 +143,21 @@ func (r *OrderPostgres)  GetCourierCompletedOrdersByMouthWithPage_fromDB(limit,p
 
 	return Orders,len(Ordersss)
 }
+func (r *OrderPostgres) AssigningOrderToCourier_InDB(order Order) error{
+	transaction, err := r.db.Begin()
+	if err!=nil{
+		log.Fatal(err)
+	}
+	log.Println("connected to db")
+
+	defer transaction.Commit()
+	s := fmt.Sprintf("UPDATE delivery SET courier_id = %d WHERE id = %d",order.IdCourier,order.IdOrder)
+	log.Println(s)
+	insert, err1 := transaction.Query(s)
+	if err1 != nil {
+		log.Println(err1)
+	}
+	defer insert.Close()
+
+	return nil
+}

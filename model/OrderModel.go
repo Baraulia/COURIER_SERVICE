@@ -75,3 +75,12 @@ func (s *OrderService) GetCourierCompletedOrdersByMonth(limit,page,idService,Mon
 	}
 	return Order,nil
 }
+
+
+func (s *OrderService) AssigningOrderToCourier(order dao.Order) error{
+	if err := s.repo.AssigningOrderToCourier_InDB(order); err!=nil{
+		log.Println(err)
+		return fmt.Errorf("Error in OrderService: %s",err)
+	}
+	return nil
+}

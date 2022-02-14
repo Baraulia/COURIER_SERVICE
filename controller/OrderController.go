@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	_ "github.com/Baraulia/COURIER_SERVICE/dao"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -106,4 +107,18 @@ func (h *Handler) GetCourierCompletedOrdersByMonth(w http.ResponseWriter, r *htt
 		RespondWithError(w,http.StatusBadRequest,fmt.Sprintf("Error: %s",er))
 		return
 	}
+}
+func (h *Handler)AssignOrderToCourier(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json")
+	decoder := json.NewDecoder(r.Body)
+	var order dao.Order
+	err := decoder.Decode(&order)
+	if err != nil {
+		log.Println(err)
+	}
+	if err= h.services.AssigningOrderToCourier(order); err!=nil{
+		RespondWithError(w,http.StatusBadRequest,fmt.Sprintf("Error: %s",err))
+		return
+	}
+
 }

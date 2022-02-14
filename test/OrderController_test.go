@@ -13,6 +13,7 @@ import (
 	"testing"
 )
 
+
 func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 	type mockBehavior func(s *mocks.MockOrderApp, order []dao.Order)
 	var orders []dao.Order

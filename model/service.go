@@ -8,6 +8,7 @@ type OrderApp interface {
 	GetCourierCompletedOrders( limit,page,idCourier int) ([]dao.Order,error)
 	GetAllOrdersOfCourierService(limit,page,idService int) ([]dao.Order,error)
 	GetCourierCompletedOrdersByMonth(limit,page,idService,Month int) ([]dao.Order,error)
+	AssigningOrderToCourier(order dao.Order) error
 }
 
 type Service struct {
