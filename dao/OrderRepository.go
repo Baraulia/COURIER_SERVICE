@@ -14,6 +14,7 @@ func NewOrderPostgres(db *sql.DB) *OrderPostgres {
 	return &OrderPostgres{db: db}
 }
 
+
 type Order struct {
 	IdDeliveryService int `json:"delivery_service_id,omitempty"`
 	IdOrder int `json:"id"`
@@ -26,12 +27,15 @@ type Order struct {
 
 func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(limit,page,idCourier int) ([]Order,int){
 	var Orders []Order
-	db:=OpenDB()
-	defer db.Close()  //"Select id_courier,id_order, id_delivery_service,delivery_time,status, customer_address from delivery where status =`new` and status =`in progress` and status =`reade to delivery`")
+	transaction, err := r.db.Begin()
+	if err!=nil{
+		log.Fatal(err)
+	}
+	defer transaction.Commit()  //"Select id_courier,id_order, id_delivery_service,delivery_time,status, customer_address from delivery where status =`new` and status =`in progress` and status =`reade to delivery`")
 
-	res,err:=db.Query(fmt.Sprintf("SELECT courier_id,id,delivery_service_id,delivery_time,status,customer_address FROM delivery WHERE status='completed' and courier_id=%d LIMIT %d OFFSET %d",idCourier,limit,limit*(page-1)))
+	res,err:=transaction.Query(fmt.Sprintf("SELECT courier_id,id,delivery_service_id,delivery_time,status,customer_address FROM delivery WHERE status='completed' and courier_id=%d LIMIT %d OFFSET %d",idCourier,limit,limit*(page-1)))
 		if err!=nil{
-		panic(err)
+		log.Fatal(err)
 	}
 	for res.Next(){
 		var order Order
@@ -42,10 +46,12 @@ func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(limit,page,idCo
 
 		Orders = append (Orders, order)
 	}
+
+
 	var Ordersss []Order
-	resl,err:=db.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE status='completed' and courier_id=%d ",idCourier))
+	resl,err:=transaction.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE status='completed' and courier_id=%d ",idCourier))
 	if err!=nil{
-		panic(err)
+		log.Println(err)
 	}
 	for resl.Next(){
 		var order Order
@@ -56,14 +62,17 @@ func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(limit,page,idCo
 
 		Ordersss = append (Ordersss, order)
 	}
-	return Orders,len(Ordersss)
+	return Orders, len(Ordersss)
 }
 
 func (r *OrderPostgres)  GetAllOrdersOfCourierServiceWithPage_fromDB(limit,page,idService int) ([]Order,int){
 	var Orders []Order
-	db:=OpenDB()
-	defer db.Close()
-	res,err:=db.Query(fmt.Sprintf("SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE delivery_service_id=%d LIMIT %d OFFSET %d",idService,limit,limit*(page-1)))
+	transaction, err := r.db.Begin()
+	if err!=nil{
+		log.Fatal(err)
+	}
+	defer transaction.Commit()
+	res,err:=transaction.Query(fmt.Sprintf("SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE delivery_service_id=%d LIMIT %d OFFSET %d",idService,limit,limit*(page-1)))
 	if err!=nil{
 		panic(err)
 	}
@@ -78,7 +87,7 @@ func (r *OrderPostgres)  GetAllOrdersOfCourierServiceWithPage_fromDB(limit,page,
 	}
 
 	var Ordersss []Order
-	resl,err:=db.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE delivery_service_id=%d ",idService))
+	resl,err:=transaction.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE delivery_service_id=%d ",idService))
 	if err!=nil{
 		panic(err)
 	}
@@ -97,11 +106,14 @@ func (r *OrderPostgres)  GetAllOrdersOfCourierServiceWithPage_fromDB(limit,page,
 
 func (r *OrderPostgres)  GetCourierCompletedOrdersByMouthWithPage_fromDB(limit,page,idCourier,Month int) ([]Order,int){
 	var Orders []Order
-	db:=OpenDB()
+	transaction, err := r.db.Begin()
+	if err!=nil{
+		log.Fatal(err)
+	}
 	log.Println("connected to db")
 
-	defer db.Close()
-	res,err:=db.Query(fmt.Sprintf("SELECT courier_id ,id ,delivery_service_id ,delivery_time ,order_date ,status ,customer_address FROM delivery where courier_id=%d and Extract(MONTH from order_date )=%d LIMIT %d OFFSET %d ",idCourier,Month,limit,limit*(page-1)))
+	defer transaction.Commit()
+	res,err:=transaction.Query(fmt.Sprintf("SELECT courier_id ,id ,delivery_service_id ,delivery_time ,order_date ,status ,customer_address FROM delivery where courier_id=%d and Extract(MONTH from order_date )=%d LIMIT %d OFFSET %d ",idCourier,Month,limit,limit*(page-1)))
 	if err!=nil{
 		panic(err)
 	}
@@ -115,7 +127,7 @@ func (r *OrderPostgres)  GetCourierCompletedOrdersByMouthWithPage_fromDB(limit,p
 		Orders = append (Orders, order)
 	}
 	var Ordersss []Order
-	resl,err:=db.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE courier_id=%d and Extract(MONTH from order_date )=%d",idCourier,Month))
+	resl,err:=transaction.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE courier_id=%d and Extract(MONTH from order_date )=%d",idCourier,Month))
 	if err!=nil{
 		panic(err)
 	}

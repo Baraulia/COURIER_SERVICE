@@ -4,9 +4,19 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
+	"log"
 )
 
-func OpenDB() *sql.DB {
+type PostgresDB struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	DBName   string
+	SSLMode  string
+}
+
+func OpenDB() (*sql.DB,error) {
 	host     := "159.223.1.135"
 	port     := 5434
 	user     := "courierteam1"
@@ -20,12 +30,28 @@ func OpenDB() *sql.DB {
 	pgsqlConn:=fmt.Sprintf("host= %s port= %d user=%s password=%s dbname=%s sslmode=disable",host,port,user, password,dbname)
 	db, err :=sql.Open("postgres",pgsqlConn)
 	if err!=nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	if err = db.Ping(); err != nil {
-		return nil
+		return nil,err
 	}
-	return db
+	return db,err
+}
+
+
+func NewPostgresDB(dbs PostgresDB) (*sql.DB, error) {
+	pgsqlConn:=fmt.Sprintf("host= %s port= %s user=%s password=%s dbname=%s sslmode=disable",dbs.Host,dbs.Port, dbs.User, dbs.Password,dbs.DBName)
+	db, err :=sql.Open("postgres",pgsqlConn)
+	if err != nil {
+
+		return nil, fmt.Errorf("error connecting to database:%s", err)
+	}
+	err = db.Ping()
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return db, nil
 }
 
 /*
