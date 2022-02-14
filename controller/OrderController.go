@@ -108,7 +108,7 @@ func (h *Handler) GetCourierCompletedOrdersByMonth(w http.ResponseWriter, r *htt
 		return
 	}
 }
-func (h *Handler)AssignOrderToCourier(w http.ResponseWriter, r *http.Request){
+func (h *Handler)AssigningOrderToCourier(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Content-Type", "application/json")
 	decoder := json.NewDecoder(r.Body)
 	var order dao.Order
