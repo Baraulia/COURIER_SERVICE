@@ -45,11 +45,11 @@ func (h *Handler) ChangeOrderStatus(w http.ResponseWriter, r *http.Request) {
 		other.RespondWithJSON(w, 400, err.Error())
 		return
 	}
-	err = h.services.ChangeOrderStatus(l)
+	orderId, err := h.services.ChangeOrderStatus(uint16(l))
 	if err != nil {
 		other.RespondWithJSON(w, 400, err.Error())
 		return
 	}
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"Order id": id})
+		"Order id": orderId})
 }

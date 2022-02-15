@@ -38,10 +38,10 @@ func (s *DeliveryService) GetOneOrder(id int) ([]db.Order, error) {
 	return Order, nil
 }
 
-func (s *DeliveryService) ChangeOrderStatus(id int) error {
-	err := s.repo.ChangeOrderStatusInDB(id)
+func (s *DeliveryService) ChangeOrderStatus(id uint16) (uint16, error) {
+	orderId, err := s.repo.ChangeOrderStatusInDB(id)
 	if err != nil {
-		return fmt.Errorf("%w", err)
+		return 0, fmt.Errorf("%w", err)
 	}
-	return nil
+	return orderId, nil
 }

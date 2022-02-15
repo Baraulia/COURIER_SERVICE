@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 )
 
@@ -67,14 +68,15 @@ func (r *DeliveryPostgres) GetActiveOrderFromDB(Orders *[]Order, id int) error {
 	return nil
 }
 
-func (r *DeliveryPostgres) ChangeOrderStatusInDB(id int) error {
+func (r *DeliveryPostgres) ChangeOrderStatusInDB(id uint16) (uint16, error) {
 	db := ConnectDB()
 	defer db.Close()
+
 	UpdateValue := `UPDATE "delivery" SET "status" = $1 WHERE "id" = $2`
 	_, err := db.Exec(UpdateValue, "completed", id)
 	if err != nil {
 		log.Println("Error with getting order by id: " + err.Error())
-		return err
+		return 0, fmt.Errorf("updateOrder: error while scanning for order:%w", err)
 	}
-	return nil
+	return id, nil
 }
