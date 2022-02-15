@@ -37,3 +37,11 @@ func (s *DeliveryService) GetOneOrder(id int) ([]db.Order, error) {
 	}
 	return Order, nil
 }
+
+func (s *DeliveryService) ChangeOrderStatus(id int) error {
+	err := s.repo.ChangeOrderStatusInDB(id)
+	if err != nil {
+		return fmt.Errorf("%w", err)
+	}
+	return nil
+}

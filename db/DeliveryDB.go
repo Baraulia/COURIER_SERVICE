@@ -5,6 +5,12 @@ import (
 	"log"
 )
 
+const (
+	firstStatus  = "new"
+	secondStatus = "ready to delivery"
+	thirdStatus  = "completed"
+)
+
 type DeliveryPostgres struct {
 	db *sql.DB
 }
@@ -57,6 +63,18 @@ func (r *DeliveryPostgres) GetActiveOrderFromDB(Orders *[]Order, id int) error {
 		var order Order
 		err = get.Scan(&order.IdDeliveryService, &order.Id, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate)
 		*Orders = append(*Orders, order)
+	}
+	return nil
+}
+
+func (r *DeliveryPostgres) ChangeOrderStatusInDB(id int) error {
+	db := ConnectDB()
+	defer db.Close()
+	UpdateValue := `UPDATE "delivery" SET "status" = $1 WHERE "id" = $2`
+	_, err := db.Exec(UpdateValue, "completed", id)
+	if err != nil {
+		log.Println("Error with getting order by id: " + err.Error())
+		return err
 	}
 	return nil
 }

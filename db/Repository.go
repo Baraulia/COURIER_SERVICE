@@ -17,6 +17,7 @@ func NewRepository(db *sql.DB) *Repository {
 type DeliveryRep interface {
 	GetActiveOrdersFromDB(Orders *[]Order) error
 	GetActiveOrderFromDB(Orders *[]Order, id int) error
+	ChangeOrderStatusInDB(id int) error
 }
 
 type CourierRep interface {

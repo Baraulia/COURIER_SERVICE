@@ -19,5 +19,6 @@ func (h *Handler) InitRoutes() *mux.Router {
 	r.HandleFunc("/order", h.GetOneOrder).Methods("GET")
 	r.HandleFunc("/couriers", h.GetCouriers).Methods("GET")
 	r.HandleFunc("/courier", h.GetOneCourier).Methods("GET")
+	r.HandleFunc("/order/status_change", h.ChangeOrderStatus).Methods("GET")
 	return r
 }
