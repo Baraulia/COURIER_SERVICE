@@ -23,7 +23,7 @@ func main(){
 	handlers := controller.NewHandler(services)
 	s := &http.Server{
 		Addr:    ":8080",
-		Handler: handlers.InitRoutes(),
+		Handler: handlers.InitRoutesGin(),
 	}
 	s.ListenAndServe()
 /*	r := mux.NewRouter()

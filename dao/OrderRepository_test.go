@@ -3,7 +3,6 @@ package dao
 import (
 	sqlmock "github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
-	_ "github.com/stretchr/testify/assert"
 	"log"
 	"testing"
 )

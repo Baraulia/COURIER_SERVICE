@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	_ "github.com/Baraulia/COURIER_SERVICE/dao"
+	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"strconv"
@@ -13,111 +13,115 @@ import (
 
 
      var Orders []dao.Order
-func (h *Handler) GetCourierCompletedOrders(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	page,er:= strconv.Atoi(r.URL.Query().Get("page"))
+func (h *Handler) GetCourierCompletedOrders(c *gin.Context) {
+	page,er:= strconv.Atoi(c.Query("page"))
 	if er!=nil{
-		RespondWithError(w,http.StatusBadRequest,"no such page")
+		c.JSON(http.StatusBadRequest, gin.H{"message": "no such page"})
 		return
 	}
-	limit,er1:= strconv.Atoi(r.URL.Query().Get("limit"))
+	limit,er1:= strconv.Atoi(c.Query("limit"))
 	if er1!=nil{
-		RespondWithError(w,http.StatusBadRequest,"no such limit")
+		c.JSON(http.StatusBadRequest, gin.H{"message": "no such limit"})
 		return
 
 	}
-	idCourier,er:= strconv.Atoi(r.URL.Query().Get("idcourier"))
+	idCourier,er:= strconv.Atoi(c.Query("idcourier"))
 	if er!=nil{
-		RespondWithError(w,http.StatusBadRequest,"no such id of courier")
+		c.JSON(http.StatusBadRequest, gin.H{"message": "no such id"})
 		return
 	}
 	if er==nil && page!=0 && limit!=0{
 		Orders,err := h.services.OrderApp.GetCourierCompletedOrders(limit,page,idCourier)
 		if err!=nil{
-			RespondWithError(w,http.StatusBadRequest,fmt.Sprintf("Error: %s",err))
+			c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s",err)})
 			return
 		}
-	json.NewEncoder(w).Encode(Orders) }else {
-		RespondWithError(w,http.StatusBadRequest,fmt.Sprintf("Error: %s",er))
+		c.JSON(http.StatusOK, Orders)
+	}else {
+		c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s",er)})
 		return
 	}
 }
 
 
-func (h *Handler) GetAllOrdersOfCourierService(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	page,er:= strconv.Atoi(r.URL.Query().Get("page"))
+func (h *Handler) GetAllOrdersOfCourierService(c *gin.Context) {
+	page,er:= strconv.Atoi(c.Query("page"))
 	if er!=nil{
-		RespondWithError(w,http.StatusBadRequest,"no such page")
+		c.JSON(http.StatusBadRequest, gin.H{"message": "no such page"})
 		return
 	}
-	limit,er:= strconv.Atoi(r.URL.Query().Get("limit"))
+	limit,er:= strconv.Atoi(c.Query("limit"))
 	if er!=nil{
-		RespondWithError(w,http.StatusBadRequest,"no such limit")
+		c.JSON(http.StatusBadRequest, gin.H{"message": "no such limit"})
 		return
 	}
-	idService,er:= strconv.Atoi(r.URL.Query().Get("iddeliveryservice"))
+	idService,er:= strconv.Atoi(c.Query("iddeliveryservice"))
 	if er!=nil{
-		RespondWithError(w,http.StatusBadRequest,"no such id of delivery service")
+		c.JSON(http.StatusBadRequest, gin.H{"message": "no such id"})
 		return
 	}
 	if er==nil && page!=0 && limit!=0 {
 		Orders, err := h.services.OrderApp.GetAllOrdersOfCourierService( limit, page, idService)
 		if err != nil {
-			RespondWithError(w,http.StatusBadRequest,fmt.Sprintf("Error: %s",err))
+			c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s",err)})
 			return
 		}
-		json.NewEncoder(w).Encode(Orders)
+		c.JSON(http.StatusOK, Orders)
 	}else {
-		RespondWithError(w,http.StatusBadRequest,fmt.Sprintf("Error: %s",er))
+		c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s",er)})
 		return
 	}
 }
 
-func (h *Handler) GetCourierCompletedOrdersByMonth(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	page,er:= strconv.Atoi(r.URL.Query().Get("page"))
+func (h *Handler) GetCourierCompletedOrdersByMonth(c *gin.Context) {
+	page,er:= strconv.Atoi(c.Query("page"))
 	if er!=nil{
-		RespondWithError(w,http.StatusBadRequest,"no such page")
+		c.JSON(http.StatusBadRequest, gin.H{"message": "no such page"})
 		return
 	}
-	limit,er:= strconv.Atoi(r.URL.Query().Get("limit"))
+	limit,er:= strconv.Atoi(c.Query("limit"))
 	if er!=nil{
-		RespondWithError(w,http.StatusBadRequest,"no such limit")
+		c.JSON(http.StatusBadRequest, gin.H{"message": "no such limit"})
 		return
 	}
-	idCourier,er:= strconv.Atoi(r.URL.Query().Get("idcourier"))
+	idCourier,er:= strconv.Atoi(c.Query("idcourier"))
 	if er!=nil{
-		RespondWithError(w,http.StatusBadRequest,"no such id of courier")
+		c.JSON(http.StatusBadRequest, gin.H{"message": "no such id"})
 		return
 	}
-	Month,er:= strconv.Atoi(r.URL.Query().Get("month"))
+	Month,er:= strconv.Atoi(c.Query("month"))
 	if er!=nil {
-		RespondWithError(w,http.StatusBadRequest,"enter number from 1 to 12")
+		c.JSON(http.StatusBadRequest, gin.H{"message": "no such month"})
 		return
 	}
 	fmt.Println(limit,page,idCourier,Month)
 	if er==nil && Month!=0 && page!=0 && limit!=0{
 		Orders,err := h.services.OrderApp.GetCourierCompletedOrdersByMonth(	limit,page,idCourier,Month)
 		if err!=nil{
-			RespondWithError(w,http.StatusBadRequest,fmt.Sprintf("Error: %s",err))
+			c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s",err)})
 			return
 		}
-		json.NewEncoder(w).Encode(Orders) }else {
-		RespondWithError(w,http.StatusBadRequest,fmt.Sprintf("Error: %s",er))
+		c.JSON(http.StatusOK, Orders)
+	}else {
+		c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s",er)})
 		return
 	}
 }
-func (h *Handler)AssigningOrderToCourier(w http.ResponseWriter, r *http.Request){
-	w.Header().Set("Content-Type", "application/json")
-	decoder := json.NewDecoder(r.Body)
+func (h *Handler)AssigningOrderToCourier(c *gin.Context){
+	/*decoder := json.NewDecoder(r.Body)
 	var order dao.Order
 	err := decoder.Decode(&order)
 	if err != nil {
 		log.Println(err)
+	} */
+	var order dao.Order
+	if err := c.ShouldBindJSON(&order); err != nil {
+		log.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+		return
 	}
-	if err= h.services.AssigningOrderToCourier(order); err!=nil{
-		RespondWithError(w,http.StatusBadRequest,fmt.Sprintf("Error: %s",err))
+	if err := h.services.AssigningOrderToCourier(order); err!=nil{
+		c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s",err)})
 		return
 	}
 
