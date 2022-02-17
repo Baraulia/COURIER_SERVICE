@@ -34,3 +34,17 @@ func (h *Handler) GetOneCourier(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, Courier)
 }
+
+func (h *Handler) SaveCourier(c *gin.Context) {
+	var Courier *db.Courier
+	if err := c.ShouldBindJSON(&Courier); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+		return
+	}
+	Courier, err := h.services.SaveCourier(Courier)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err})
+		return
+	}
+	c.JSON(http.StatusCreated, Courier)
+}
