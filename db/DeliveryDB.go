@@ -6,12 +6,6 @@ import (
 	"log"
 )
 
-const (
-	firstStatus  = "new"
-	secondStatus = "ready to delivery"
-	thirdStatus  = "completed"
-)
-
 type DeliveryPostgres struct {
 	db *sql.DB
 }

@@ -1,8 +1,9 @@
 package Controllers
 
 import (
+	"github.com/Baraulia/COURIER_SERVICE/middleware"
 	"github.com/Baraulia/COURIER_SERVICE/service"
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
@@ -13,12 +14,35 @@ func NewHandler(services *service.Service) *Handler {
 	return &Handler{services: services}
 }
 
-func (h *Handler) InitRoutes() *mux.Router {
-	r := mux.NewRouter()
-	r.HandleFunc("/orders", h.GetOrders).Methods("GET")
-	r.HandleFunc("/order", h.GetOneOrder).Methods("GET")
-	r.HandleFunc("/couriers", h.GetCouriers).Methods("GET")
-	r.HandleFunc("/courier", h.GetOneCourier).Methods("GET")
-	r.HandleFunc("/order/status_change", h.ChangeOrderStatus).Methods("GET")
+func (h *Handler) InitRoutes() *gin.Engine {
+	r := gin.Default()
+
+	r.Use(
+		middleware.CorsMiddleware,
+	)
+
+	couriers := r.Group("/couriers")
+	{
+		couriers.GET("/", h.GetCouriers)
+
+	}
+
+	courier := r.Group("/courier")
+	{
+		courier.GET("/", h.GetOneCourier)
+	}
+
+	orders := r.Group("/orders")
+	{
+		orders.GET("/", h.GetOrders)
+
+	}
+
+	order := r.Group("/order")
+	{
+		order.GET("/", h.GetOneOrder)
+		order.GET("/status_change", h.ChangeOrderStatus)
+	}
+
 	return r
 }

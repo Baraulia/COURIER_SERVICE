@@ -1,39 +1,36 @@
 package Controllers
 
 import (
-	"encoding/json"
 	"github.com/Baraulia/COURIER_SERVICE/db"
-	"github.com/Baraulia/COURIER_SERVICE/other"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 )
 
 var Couriers []db.SmallInfo
 
-func (h *Handler) GetCouriers(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+func (h *Handler) GetCouriers(c *gin.Context) {
 	Couriers, err := h.services.GetCouriers()
 	if err != nil {
-		other.RespondWithJSON(w, 400, err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	json.NewEncoder(w).Encode(Couriers)
+	c.JSON(http.StatusOK, Couriers)
 }
 
-func (h *Handler) GetOneCourier(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+func (h *Handler) GetOneCourier(c *gin.Context) {
 	var Courier []db.SmallInfo
-	id := r.URL.Query().Get("id")
+	id := c.Query("id")
 	l, err := strconv.Atoi(id)
 	if err != nil {
-		other.RespondWithJSON(w, 400, err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
 
 	Courier, err = h.services.GetOneCourier(l)
 	if err != nil {
-		other.RespondWithJSON(w, 400, err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	json.NewEncoder(w).Encode(Courier)
+	c.JSON(http.StatusOK, Courier)
 }
