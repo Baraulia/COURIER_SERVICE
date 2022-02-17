@@ -2,7 +2,14 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
+)
+
+const (
+	firstStatus  = "new"
+	secondStatus = "ready to delivery"
+	thirdStatus  = "completed"
 )
 
 type DeliveryPostgres struct {
@@ -59,4 +66,17 @@ func (r *DeliveryPostgres) GetActiveOrderFromDB(Orders *[]Order, id int) error {
 		*Orders = append(*Orders, order)
 	}
 	return nil
+}
+
+func (r *DeliveryPostgres) ChangeOrderStatusInDB(id uint16) (uint16, error) {
+	db := ConnectDB()
+	defer db.Close()
+
+	UpdateValue := `UPDATE "delivery" SET "status" = $1 WHERE "id" = $2`
+	_, err := db.Exec(UpdateValue, "completed", id)
+	if err != nil {
+		log.Println("Error with getting order by id: " + err.Error())
+		return 0, fmt.Errorf("updateOrder: error while scanning for order:%w", err)
+	}
+	return id, nil
 }

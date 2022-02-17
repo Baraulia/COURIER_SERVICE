@@ -36,3 +36,20 @@ func (h *Handler) GetOneOrder(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(Order)
 }
+
+func (h *Handler) ChangeOrderStatus(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	id := r.URL.Query().Get("id")
+	l, err := strconv.Atoi(id)
+	if err != nil {
+		other.RespondWithJSON(w, 400, err.Error())
+		return
+	}
+	orderId, err := h.services.ChangeOrderStatus(uint16(l))
+	if err != nil {
+		other.RespondWithJSON(w, 400, err.Error())
+		return
+	}
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"Order id": orderId})
+}

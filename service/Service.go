@@ -10,6 +10,7 @@ import (
 type DeliveryApp interface {
 	GetOneOrder(id int) ([]db.Order, error)
 	GetOrders() ([]db.Order, error)
+	ChangeOrderStatus(id uint16) (uint16, error)
 }
 
 type CourierApp interface {
