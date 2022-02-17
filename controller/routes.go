@@ -24,7 +24,6 @@ func (h *Handler) InitRoutes() *mux.Router {
 	return r
 }
 
-
 func (h *Handler) InitRoutesGin() *gin.Engine {
 	router := gin.Default()
 
@@ -36,8 +35,8 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	{
 		order.GET("/completed", h.GetCourierCompletedOrders)
 		order.GET("/", h.GetAllOrdersOfCourierService)
-		order.GET("/bymonth",h.GetCourierCompletedOrdersByMonth)
-		order.PUT("/", h.AssigningOrderToCourier)
+		order.GET("/bymonth", h.GetCourierCompletedOrdersByMonth)
+		order.PUT("/", h.UpdateOrder)
 	}
 
 	return router

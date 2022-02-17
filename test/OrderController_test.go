@@ -13,7 +13,6 @@ import (
 	"testing"
 )
 
-
 func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 	type mockBehavior func(s *mocks.MockOrderApp, order []dao.Order)
 	var orders []dao.Order
@@ -37,22 +36,16 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 		expectedRequestBody string
 	}{
 		{
-			name:      "OK",
+			name: "OK",
 			//inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}`,
 			inputBody: `{"name":"Test","courier_id":1}`,
 			inputOrder: []dao.Order{
 				{
-				//IdDeliveryService: 1,
-				//IdOrder:           1,
-				IdCourier:         1,
-				//DeliveryTime:      "15:00",
-				//CustomerAddress:   "Some address",
-				//Status:            "ready to delivery",
-				//OrderDate:         "11.11.2022",
+					IdCourier: 1,
 				},
 			},
 			mockBehavior: func(s *mocks.MockOrderApp, order []dao.Order) {
-				s.EXPECT().GetCourierCompletedOrders(1,1,1).Return(orders, nil)
+				s.EXPECT().GetCourierCompletedOrders(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}]`,
@@ -79,7 +72,7 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 			r.ServeHTTP(w, req)
 
 			assert.Equal(t, testCase.expectedStatusCode, w.Code)
-			assert.Equal(t, testCase.expectedRequestBody,w.Body.String())
+			assert.Equal(t, testCase.expectedRequestBody, w.Body.String())
 			assert.Contains(t, w.Body.String(), testCase.expectedRequestBody)
 
 		})
@@ -123,7 +116,7 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 				},
 			},
 			mockBehavior: func(s *mocks.MockOrderApp, order []dao.Order) {
-				s.EXPECT().GetAllOrdersOfCourierService(1,1,1).Return(orders, nil)
+				s.EXPECT().GetAllOrdersOfCourierService(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}]`,
@@ -150,7 +143,7 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 			r.ServeHTTP(w, req)
 
 			assert.Equal(t, testCase.expectedStatusCode, w.Code)
-			assert.Equal(t, testCase.expectedRequestBody,w.Body.String())
+			assert.Equal(t, testCase.expectedRequestBody, w.Body.String())
 			assert.Contains(t, w.Body.String(), testCase.expectedRequestBody)
 
 		})
@@ -194,7 +187,7 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 				},
 			},
 			mockBehavior: func(s *mocks.MockOrderApp, order []dao.Order) {
-				s.EXPECT().GetCourierCompletedOrdersByMonth(1,1,1,11).Return(orders, nil)
+				s.EXPECT().GetCourierCompletedOrdersByMonth(1, 1, 1, 11).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}]`,
@@ -221,34 +214,33 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 			r.ServeHTTP(w, req)
 
 			assert.Equal(t, testCase.expectedStatusCode, w.Code)
-			assert.Equal(t, testCase.expectedRequestBody,w.Body.String())
+			assert.Equal(t, testCase.expectedRequestBody, w.Body.String())
 			assert.Contains(t, w.Body.String(), testCase.expectedRequestBody)
 
 		})
 	}
 }
 
-
 func TestHandler_AssigningOrderToCourier(t *testing.T) {
 	type mockBehavior func(s *mocks.MockOrderApp, order dao.Order)
 	testTable := []struct {
-		name                string
-		inputBody           string
-		inputOrder          dao.Order
-		mockBehavior        mockBehavior
-		expectedStatusCode  int
+		name               string
+		inputBody          string
+		inputOrder         dao.Order
+		mockBehavior       mockBehavior
+		expectedStatusCode int
 	}{
 		{
-			name:       "OK",
-			inputBody:  `{"id":15, "courier_id":8}`,
+			name:      "OK",
+			inputBody: `{"id":15, "courier_id":8}`,
 			inputOrder: dao.Order{
 				IdOrder:   15,
 				IdCourier: 8,
 			},
 			mockBehavior: func(s *mocks.MockOrderApp, order dao.Order) {
-				s.EXPECT().AssigningOrderToCourier(order).Return( nil)
+				s.EXPECT().AssigningOrderToCourier(order).Return(nil)
 			},
-			expectedStatusCode:  200,
+			expectedStatusCode: 200,
 		},
 	}
 	for _, testCase := range testTable {
@@ -264,7 +256,7 @@ func TestHandler_AssigningOrderToCourier(t *testing.T) {
 
 			r := gin.New()
 
-			r.PUT("/orders", handler.AssigningOrderToCourier)
+			r.PUT("/orders", handler.UpdateOrder)
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("PUT", "/orders", bytes.NewBufferString(testCase.inputBody))
