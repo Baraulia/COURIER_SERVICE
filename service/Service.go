@@ -8,7 +8,7 @@ import (
 //go:generate mockgen -source=Service.go -destination=mocks/mock.go
 
 type DeliveryApp interface {
-	GetOneOrder(id int) ([]db.Order, error)
+	GetOrder(id int) ([]db.Order, error)
 	GetOrders() ([]db.Order, error)
 }
 

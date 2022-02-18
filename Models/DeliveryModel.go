@@ -24,7 +24,7 @@ func (s *DeliveryService) GetOrders() ([]db.Order, error) {
 	return Orders, nil
 }
 
-func (s *DeliveryService) GetOneOrder(id int) ([]db.Order, error) {
+func (s *DeliveryService) GetOrder(id int) ([]db.Order, error) {
 	var Order []db.Order
 	err := s.repo.GetActiveOrderFromDB(&Order, id)
 	if err != nil {

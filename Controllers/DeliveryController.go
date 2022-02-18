@@ -1,38 +1,34 @@
 package Controllers
 
 import (
-	"encoding/json"
 	"github.com/Baraulia/COURIER_SERVICE/db"
-	"github.com/Baraulia/COURIER_SERVICE/other"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 )
 
-var Orders []db.Order
+func (h *Handler) GetOrders(c *gin.Context) {
 
-func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
 	Orders, err := h.services.GetOrders()
 	if err != nil {
-		other.RespondWithJSON(w, 400, err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	json.NewEncoder(w).Encode(Orders)
+	c.JSON(http.StatusOK, Orders)
 }
 
-func (h *Handler) GetOneOrder(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+func (h *Handler) GetOrder(c *gin.Context) {
 	var Order []db.Order
-	id := r.URL.Query().Get("id")
-	l, err := strconv.Atoi(id)
+	idQuery := c.Query("id")
+	id, err := strconv.Atoi(idQuery)
 	if err != nil {
-		other.RespondWithJSON(w, 400, err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	Order, err = h.services.GetOneOrder(l)
+	Order, err = h.services.GetOrder(id)
 	if err != nil {
-		other.RespondWithJSON(w, 400, err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	json.NewEncoder(w).Encode(Order)
+	c.JSON(http.StatusOK, Order)
 }
