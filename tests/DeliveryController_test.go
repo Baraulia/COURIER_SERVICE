@@ -136,7 +136,7 @@ func TestHandler_GetOneOrder(t *testing.T) {
 
 			r := mux.NewRouter()
 
-			r.HandleFunc("/order", handler.GetOneOrder).Methods("GET")
+			r.HandleFunc("/order", handler.GetOrder).Methods("GET")
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("GET", "/order?id=1", bytes.NewBufferString(testCase.inputBody))

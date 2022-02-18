@@ -37,7 +37,7 @@ func (m *MockDeliveryApp) EXPECT() *MockDeliveryAppMockRecorder {
 // GetOneOrder mocks base method.
 func (m *MockDeliveryApp) GetOneOrder(id int) ([]db.Order, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOneOrder", id)
+	ret := m.ctrl.Call(m, "GetOrder", id)
 	ret0, _ := ret[0].([]db.Order)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -46,7 +46,7 @@ func (m *MockDeliveryApp) GetOneOrder(id int) ([]db.Order, error) {
 // GetOneOrder indicates an expected call of GetOneOrder.
 func (mr *MockDeliveryAppMockRecorder) GetOneOrder(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOneOrder", reflect.TypeOf((*MockDeliveryApp)(nil).GetOneOrder), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrder", reflect.TypeOf((*MockDeliveryApp)(nil).GetOneOrder), id)
 }
 
 // GetOrders mocks base method.

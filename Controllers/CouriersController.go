@@ -20,14 +20,14 @@ func (h *Handler) GetCouriers(c *gin.Context) {
 
 func (h *Handler) GetOneCourier(c *gin.Context) {
 	var Courier []db.SmallInfo
-	id := c.Query("id")
-	l, err := strconv.Atoi(id)
+	idQuery := c.Query("id")
+	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
 
-	Courier, err = h.services.GetOneCourier(l)
+	Courier, err = h.services.GetOneCourier(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return

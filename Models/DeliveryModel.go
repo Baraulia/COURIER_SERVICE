@@ -15,16 +15,21 @@ func NewDeliveryService(repo db.Repository) *DeliveryService {
 	return &DeliveryService{repo: repo}
 }
 
-func (s *DeliveryService) GetOrders() ([]db.Order, error) {
+func (s *DeliveryService) GetOrders(id int) ([]db.Order, error) {
 	var Orders []db.Order
-	err := s.repo.GetActiveOrdersFromDB(&Orders)
+	err := s.repo.GetActiveOrdersFromDB(&Orders, id)
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
+	}
+	if id == 0 {
+		err := errors.New("no id")
+		log.Println("id cannot be zero")
+		return nil, fmt.Errorf("Error in DeliveryService: %s", err)
 	}
 	return Orders, nil
 }
 
-func (s *DeliveryService) GetOneOrder(id int) ([]db.Order, error) {
+func (s *DeliveryService) GetOrder(id int) ([]db.Order, error) {
 	var Order []db.Order
 	err := s.repo.GetActiveOrderFromDB(&Order, id)
 	if err != nil {

@@ -40,7 +40,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	order := r.Group("/order")
 	{
-		order.GET("/", h.GetOneOrder)
+		order.GET("/", h.GetOrder)
 		order.GET("/status_change", h.ChangeOrderStatus)
 	}
 

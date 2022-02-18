@@ -22,14 +22,16 @@ type Order struct {
 	CustomerAddress   string `json:"customer_address"`
 	Status            string `json:"status"`
 	OrderDate         string `json:"order_date"`
+	RestaurantAddress string `json:"restaurant_address"`
+	Picked            bool   `json:"picked"`
 }
 
-func (r *DeliveryPostgres) GetActiveOrdersFromDB(Orders *[]Order) error {
+func (r *DeliveryPostgres) GetActiveOrdersFromDB(Orders *[]Order, id int) error {
 	db := ConnectDB()
 	defer db.Close()
 
-	insertValue := `Select * from delivery where status = 'ready to delivery'`
-	get, err := db.Query(insertValue)
+	insertValue := `Select * from delivery where courier_id = $1 and status = 'ready to delivery'`
+	get, err := db.Query(insertValue, id)
 	if err != nil {
 		log.Println("Error with getting list of orders: " + err.Error())
 		return err
@@ -37,7 +39,7 @@ func (r *DeliveryPostgres) GetActiveOrdersFromDB(Orders *[]Order) error {
 
 	for get.Next() {
 		var order Order
-		err = get.Scan(&order.IdDeliveryService, &order.Id, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate)
+		err = get.Scan(&order.IdDeliveryService, &order.Id, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate, &order.RestaurantAddress, &order.Picked)
 		*Orders = append(*Orders, order)
 	}
 	return nil
@@ -56,7 +58,7 @@ func (r *DeliveryPostgres) GetActiveOrderFromDB(Orders *[]Order, id int) error {
 
 	for get.Next() {
 		var order Order
-		err = get.Scan(&order.IdDeliveryService, &order.Id, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate)
+		err = get.Scan(&order.IdDeliveryService, &order.Id, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate, &order.RestaurantAddress, &order.Picked)
 		*Orders = append(*Orders, order)
 	}
 	return nil

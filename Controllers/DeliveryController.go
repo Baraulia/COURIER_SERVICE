@@ -7,11 +7,15 @@ import (
 	"strconv"
 )
 
-var Orders []db.Order
-
 func (h *Handler) GetOrders(c *gin.Context) {
-
-	Orders, err := h.services.GetOrders()
+	var Orders []db.Order
+	idQuery := c.Query("id")
+	id, err := strconv.Atoi(idQuery)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err})
+		return
+	}
+	Orders, err = h.services.GetOrders(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
@@ -19,15 +23,15 @@ func (h *Handler) GetOrders(c *gin.Context) {
 	c.JSON(http.StatusOK, Orders)
 }
 
-func (h *Handler) GetOneOrder(c *gin.Context) {
+func (h *Handler) GetOrder(c *gin.Context) {
 	var Order []db.Order
-	id := c.Query("id")
-	l, err := strconv.Atoi(id)
+	idQuery := c.Query("id")
+	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	Order, err = h.services.GetOneOrder(l)
+	Order, err = h.services.GetOrder(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
@@ -36,13 +40,13 @@ func (h *Handler) GetOneOrder(c *gin.Context) {
 }
 
 func (h *Handler) ChangeOrderStatus(c *gin.Context) {
-	id := c.Query("id")
-	l, err := strconv.Atoi(id)
+	idQuery := c.Query("id")
+	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	orderId, err := h.services.ChangeOrderStatus(uint16(l))
+	orderId, err := h.services.ChangeOrderStatus(uint16(id))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
