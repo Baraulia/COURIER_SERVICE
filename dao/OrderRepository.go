@@ -26,20 +26,6 @@ type Order struct {
 	Picked            bool   `json:"picked"`
 }
 
-type Detailedorder struct {
-	IdDeliveryService  int    `json:"delivery_service_id,omitempty"`
-	IdOrder            int    `json:"id"`
-	IdCourier          int    `json:"courier_id,omitempty"`
-	DeliveryTime       string `json:"delivery_time,omitempty"`
-	CustomerAddress    string `json:"customer_address,omitempty"`
-	Status             string `json:"status"`
-	OrderDate          string `json:"order_date,omitempty"`
-	RestaurantAddress  string `json:"restaurant_address,omitempty"`
-	Picked             bool   `json:"picked"`
-	CourierName        string `json:"name"`
-	CourierPhoneNumber string `json:"phone_number"`
-}
-
 func (r *OrderPostgres) AssigningOrderToCourier_InDB(order Order) error {
 	transaction, err := r.db.Begin()
 	if err != nil {
