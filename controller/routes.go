@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"github.com/Baraulia/COURIER_SERVICE/middleware"
-	"github.com/Baraulia/COURIER_SERVICE/model"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/mux"
+	"stlab.itechart-group.com/go/food_delivery/courier_service/middleware"
+	"stlab.itechart-group.com/go/food_delivery/courier_service/model"
 )
 
 type Handler struct {
@@ -36,7 +36,6 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 		order.GET("/completed", h.GetCourierCompletedOrders)
 		order.GET("/", h.GetAllOrdersOfCourierService)
 		order.GET("/bymonth", h.GetCourierCompletedOrdersByMonth)
-		order.PUT("/", h.UpdateOrder)
 	}
 
 	return router

@@ -2,35 +2,38 @@ package test
 
 import (
 	"bytes"
-	"github.com/Baraulia/COURIER_SERVICE/controller"
-	"github.com/Baraulia/COURIER_SERVICE/dao"
-	"github.com/Baraulia/COURIER_SERVICE/model"
-	mocks "github.com/Baraulia/COURIER_SERVICE/model/mocks"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"net/http/httptest"
+	"stlab.itechart-group.com/go/food_delivery/courier_service/controller"
+	"stlab.itechart-group.com/go/food_delivery/courier_service/dao"
+	"stlab.itechart-group.com/go/food_delivery/courier_service/model"
+	mocks "stlab.itechart-group.com/go/food_delivery/courier_service/model/mocks"
 	"testing"
 )
 
 func TestHandler_GetCourierCompletedOrders(t *testing.T) {
-	type mockBehavior func(s *mocks.MockOrderApp, order []dao.Order)
-	var orders []dao.Order
-	ord := dao.Order{
-		IdDeliveryService: 1,
-		IdOrder:           1,
-		IdCourier:         1,
-		DeliveryTime:      "15:00",
-		CustomerAddress:   "Some address",
-		Status:            "ready to delivery",
-		OrderDate:         "11.11.2022",
+	type mockBehavior func(s *mocks.MockOrderApp, order []dao.Detailedorder)
+	var orders []dao.Detailedorder
+	ord := dao.Detailedorder{
+		IdDeliveryService:  1,
+		IdOrder:            1,
+		IdCourier:          1,
+		DeliveryTime:       "15:00",
+		CustomerAddress:    "Some address",
+		Status:             "ready to delivery",
+		OrderDate:          "11.11.2022",
+		CourierPhoneNumber: "",
+		CourierName:        "",
+		Picked:             false,
 	}
 	orders = append(orders, ord)
 
 	testTable := []struct {
 		name                string
 		inputBody           string
-		inputOrder          []dao.Order
+		inputOrder          []dao.Detailedorder
 		mockBehavior        mockBehavior
 		expectedStatusCode  int
 		expectedRequestBody string
@@ -39,16 +42,16 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 			name: "OK",
 			//inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}`,
 			inputBody: `{"name":"Test","courier_id":1}`,
-			inputOrder: []dao.Order{
+			inputOrder: []dao.Detailedorder{
 				{
 					IdCourier: 1,
 				},
 			},
-			mockBehavior: func(s *mocks.MockOrderApp, order []dao.Order) {
+			mockBehavior: func(s *mocks.MockOrderApp, order []dao.Detailedorder) {
 				s.EXPECT().GetCourierCompletedOrders(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}]`,
+			expectedRequestBody: `[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","phone_number":""}]`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -90,6 +93,8 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 		CustomerAddress:   "Some address",
 		Status:            "ready to delivery",
 		OrderDate:         "11.11.2022",
+		RestaurantAddress: "",
+		Picked:            false,
 	}
 	orders = append(orders, ord)
 
@@ -103,7 +108,7 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 	}{
 		{
 			name:      "OK",
-			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}`,
+			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}}`,
 			inputOrder: []dao.Order{
 				{
 					IdDeliveryService: 1,
@@ -113,13 +118,15 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 					CustomerAddress:   "Some address",
 					Status:            "ready to delivery",
 					OrderDate:         "11.11.2022",
+					RestaurantAddress: "",
+					Picked:            false,
 				},
 			},
 			mockBehavior: func(s *mocks.MockOrderApp, order []dao.Order) {
 				s.EXPECT().GetAllOrdersOfCourierService(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}]`,
+			expectedRequestBody: `[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}]`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -161,6 +168,8 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 		CustomerAddress:   "Some address",
 		Status:            "ready to delivery",
 		OrderDate:         "11.11.2022",
+		RestaurantAddress: "",
+		Picked:            false,
 	}
 	orders = append(orders, ord)
 
@@ -174,7 +183,7 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 	}{
 		{
 			name:      "OK",
-			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}`,
+			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}`,
 			inputOrder: []dao.Order{
 				{
 					IdDeliveryService: 1,
@@ -184,13 +193,15 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 					CustomerAddress:   "Some address",
 					Status:            "ready to delivery",
 					OrderDate:         "11.11.2022",
+					RestaurantAddress: "",
+					Picked:            false,
 				},
 			},
 			mockBehavior: func(s *mocks.MockOrderApp, order []dao.Order) {
 				s.EXPECT().GetCourierCompletedOrdersByMonth(1, 1, 1, 11).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}]`,
+			expectedRequestBody: `[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}]`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -219,53 +230,4 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 
 		})
 	}
-}
-
-func TestHandler_AssigningOrderToCourier(t *testing.T) {
-	type mockBehavior func(s *mocks.MockOrderApp, order dao.Order)
-	testTable := []struct {
-		name               string
-		inputBody          string
-		inputOrder         dao.Order
-		mockBehavior       mockBehavior
-		expectedStatusCode int
-	}{
-		{
-			name:      "OK",
-			inputBody: `{"id":15, "courier_id":8}`,
-			inputOrder: dao.Order{
-				IdOrder:   15,
-				IdCourier: 8,
-			},
-			mockBehavior: func(s *mocks.MockOrderApp, order dao.Order) {
-				s.EXPECT().AssigningOrderToCourier(order).Return(nil)
-			},
-			expectedStatusCode: 200,
-		},
-	}
-	for _, testCase := range testTable {
-		t.Run(testCase.name, func(t *testing.T) {
-			c := gomock.NewController(t)
-			defer c.Finish()
-
-			get := mocks.NewMockOrderApp(c)
-			testCase.mockBehavior(get, testCase.inputOrder)
-
-			services := &model.Service{OrderApp: get}
-			handler := controller.NewHandler(services)
-
-			r := gin.New()
-
-			r.PUT("/orders", handler.UpdateOrder)
-
-			w := httptest.NewRecorder()
-			req := httptest.NewRequest("PUT", "/orders", bytes.NewBufferString(testCase.inputBody))
-
-			r.ServeHTTP(w, req)
-
-			assert.Equal(t, testCase.expectedStatusCode, w.Code)
-
-		})
-	}
-
 }

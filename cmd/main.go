@@ -1,19 +1,23 @@
 package main
 
 import (
-	"github.com/Baraulia/COURIER_SERVICE/controller"
-	"github.com/Baraulia/COURIER_SERVICE/dao"
-	_ "github.com/Baraulia/COURIER_SERVICE/dao"
-	"github.com/Baraulia/COURIER_SERVICE/model"
 	_ "github.com/lib/pq"
 	"log"
 	"net/http"
+	"stlab.itechart-group.com/go/food_delivery/courier_service/controller"
+	"stlab.itechart-group.com/go/food_delivery/courier_service/dao"
+	"stlab.itechart-group.com/go/food_delivery/courier_service/model"
 )
 
 func main() {
 	log.Println("Start...")
 	db, err := dao.NewPostgresDB(dao.PostgresDB{
-		"159.223.1.135", "5434", "courierteam1", "qwerty", "courier_db", "disable"})
+		"159.223.1.135",
+		"5434",
+		"courierteam1",
+		"qwerty",
+		"courier_db",
+		"disable"})
 	if err != nil {
 		log.Println("failed to initialize db:", err.Error())
 	}
@@ -24,6 +28,9 @@ func main() {
 		Addr:    ":8080",
 		Handler: handlers.InitRoutesGin(),
 	}
-	s.ListenAndServe()
+	err = s.ListenAndServe()
+	if err != nil {
+		log.Println("failed to initialize db:", err.Error())
+	}
 
 }

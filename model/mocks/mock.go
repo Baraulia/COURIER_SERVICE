@@ -7,8 +7,8 @@ package mock_model
 import (
 	reflect "reflect"
 
-	dao "github.com/Baraulia/COURIER_SERVICE/dao"
 	gomock "github.com/golang/mock/gomock"
+	dao "stlab.itechart-group.com/go/food_delivery/courier_service/dao"
 )
 
 // MockOrderApp is a mock of OrderApp interface.
@@ -64,10 +64,10 @@ func (mr *MockOrderAppMockRecorder) GetAllOrdersOfCourierService(limit, page, id
 }
 
 // GetCourierCompletedOrders mocks base method.
-func (m *MockOrderApp) GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.Order, error) {
+func (m *MockOrderApp) GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.Detailedorder, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCourierCompletedOrders", limit, page, idCourier)
-	ret0, _ := ret[0].([]dao.Order)
+	ret0, _ := ret[0].([]dao.Detailedorder)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
