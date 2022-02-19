@@ -34,34 +34,49 @@ func (m *MockDeliveryApp) EXPECT() *MockDeliveryAppMockRecorder {
 	return m.recorder
 }
 
-// GetOneOrder mocks base method.
-func (m *MockDeliveryApp) GetOneOrder(id int) ([]db.Order, error) {
+// ChangeOrderStatus mocks base method.
+func (m *MockDeliveryApp) ChangeOrderStatus(id uint16) (uint16, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOrder", id)
-	ret0, _ := ret[0].([]db.Order)
+	ret := m.ctrl.Call(m, "ChangeOrderStatus", id)
+	ret0, _ := ret[0].(uint16)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetOneOrder indicates an expected call of GetOneOrder.
-func (mr *MockDeliveryAppMockRecorder) GetOneOrder(id interface{}) *gomock.Call {
+// ChangeOrderStatus indicates an expected call of ChangeOrderStatus.
+func (mr *MockDeliveryAppMockRecorder) ChangeOrderStatus(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrder", reflect.TypeOf((*MockDeliveryApp)(nil).GetOneOrder), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeOrderStatus", reflect.TypeOf((*MockDeliveryApp)(nil).ChangeOrderStatus), id)
+}
+
+// GetOrder mocks base method.
+func (m *MockDeliveryApp) GetOrder(id int) (db.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrder", id)
+	ret0, _ := ret[0].(db.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrder indicates an expected call of GetOrder.
+func (mr *MockDeliveryAppMockRecorder) GetOrder(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrder", reflect.TypeOf((*MockDeliveryApp)(nil).GetOrder), id)
 }
 
 // GetOrders mocks base method.
-func (m *MockDeliveryApp) GetOrders() ([]db.Order, error) {
+func (m *MockDeliveryApp) GetOrders(id int) ([]db.Order, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOrders")
+	ret := m.ctrl.Call(m, "GetOrders", id)
 	ret0, _ := ret[0].([]db.Order)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetOrders indicates an expected call of GetOrders.
-func (mr *MockDeliveryAppMockRecorder) GetOrders() *gomock.Call {
+func (mr *MockDeliveryAppMockRecorder) GetOrders(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrders", reflect.TypeOf((*MockDeliveryApp)(nil).GetOrders))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrders", reflect.TypeOf((*MockDeliveryApp)(nil).GetOrders), id)
 }
 
 // MockCourierApp is a mock of CourierApp interface.
@@ -87,6 +102,21 @@ func (m *MockCourierApp) EXPECT() *MockCourierAppMockRecorder {
 	return m.recorder
 }
 
+// GetCourier mocks base method.
+func (m *MockCourierApp) GetCourier(id int) (db.SmallInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCourier", id)
+	ret0, _ := ret[0].(db.SmallInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCourier indicates an expected call of GetCourier.
+func (mr *MockCourierAppMockRecorder) GetCourier(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCourier", reflect.TypeOf((*MockCourierApp)(nil).GetCourier), id)
+}
+
 // GetCouriers mocks base method.
 func (m *MockCourierApp) GetCouriers() ([]db.SmallInfo, error) {
 	m.ctrl.T.Helper()
@@ -100,19 +130,4 @@ func (m *MockCourierApp) GetCouriers() ([]db.SmallInfo, error) {
 func (mr *MockCourierAppMockRecorder) GetCouriers() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCouriers", reflect.TypeOf((*MockCourierApp)(nil).GetCouriers))
-}
-
-// GetOneCourier mocks base method.
-func (m *MockCourierApp) GetOneCourier(id int) ([]db.SmallInfo, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOneCourier", id)
-	ret0, _ := ret[0].([]db.SmallInfo)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetOneCourier indicates an expected call of GetOneCourier.
-func (mr *MockCourierAppMockRecorder) GetOneCourier(id interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOneCourier", reflect.TypeOf((*MockCourierApp)(nil).GetOneCourier), id)
 }

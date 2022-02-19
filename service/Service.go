@@ -8,14 +8,14 @@ import (
 //go:generate mockgen -source=Service.go -destination=mocks/mock.go
 
 type DeliveryApp interface {
-	GetOrder(id int) ([]db.Order, error)
+	GetOrder(id int) (db.Order, error)
 	GetOrders(id int) ([]db.Order, error)
 	ChangeOrderStatus(id uint16) (uint16, error)
 }
 
 type CourierApp interface {
 	GetCouriers() ([]db.SmallInfo, error)
-	GetOneCourier(id int) ([]db.SmallInfo, error)
+	GetCourier(id int) (db.SmallInfo, error)
 }
 
 type Service struct {

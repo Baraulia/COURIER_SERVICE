@@ -7,8 +7,6 @@ import (
 	"strconv"
 )
 
-var Couriers []db.SmallInfo
-
 func (h *Handler) GetCouriers(c *gin.Context) {
 	Couriers, err := h.services.GetCouriers()
 	if err != nil {
@@ -19,17 +17,16 @@ func (h *Handler) GetCouriers(c *gin.Context) {
 }
 
 func (h *Handler) GetOneCourier(c *gin.Context) {
-	var Courier []db.SmallInfo
+	var Courier db.SmallInfo
 	idQuery := c.Query("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-
-	Courier, err = h.services.GetOneCourier(id)
+	Courier, err = h.services.GetCourier(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err})
+		c.JSON(http.StatusBadRequest, gin.H{"No such courier": err})
 		return
 	}
 	c.JSON(http.StatusOK, Courier)

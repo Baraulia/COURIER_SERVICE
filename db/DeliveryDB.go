@@ -30,7 +30,7 @@ func (r *DeliveryPostgres) GetActiveOrdersFromDB(Orders *[]Order, id int) error 
 	db := ConnectDB()
 	defer db.Close()
 
-	insertValue := `Select * from delivery where courier_id = $1 and status = 'ready to delivery'`
+	insertValue := `Select delivery_service_id,id,courier_id,delivery_time,customer_address,status,order_date,restaurant_address,picked from delivery where courier_id = $1 and status = 'ready to delivery'`
 	get, err := db.Query(insertValue, id)
 	if err != nil {
 		log.Println("Error with getting list of orders: " + err.Error())
@@ -45,11 +45,11 @@ func (r *DeliveryPostgres) GetActiveOrdersFromDB(Orders *[]Order, id int) error 
 	return nil
 }
 
-func (r *DeliveryPostgres) GetActiveOrderFromDB(Orders *[]Order, id int) error {
+func (r *DeliveryPostgres) GetActiveOrderFromDB(Orders *Order, id int) error {
 	db := ConnectDB()
 	defer db.Close()
 
-	insertValue := `Select * from delivery where id = $1 AND status = 'ready to delivery'`
+	insertValue := `Select delivery_service_id,id,courier_id,delivery_time,customer_address,status,order_date,restaurant_address,picked from delivery where id = $1 AND status = 'ready to delivery'`
 	get, err := db.Query(insertValue, id)
 	if err != nil {
 		log.Println("Error with getting order by id: " + err.Error())
@@ -59,7 +59,7 @@ func (r *DeliveryPostgres) GetActiveOrderFromDB(Orders *[]Order, id int) error {
 	for get.Next() {
 		var order Order
 		err = get.Scan(&order.IdDeliveryService, &order.Id, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate, &order.RestaurantAddress, &order.Picked)
-		*Orders = append(*Orders, order)
+		*Orders = order
 	}
 	return nil
 }

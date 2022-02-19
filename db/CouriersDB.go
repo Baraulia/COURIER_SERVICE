@@ -56,7 +56,7 @@ func (r *CourierPostgres) GetCouriersFromDB(Couriers *[]SmallInfo) error {
 	return nil
 }
 
-func (r *CourierPostgres) GetOneCourierFromDB(Couriers *[]SmallInfo, id int) error {
+func (r *CourierPostgres) GetCourierFromDB(Couriers *SmallInfo, id int) error {
 	db := ConnectDB()
 	defer db.Close()
 
@@ -71,7 +71,7 @@ func (r *CourierPostgres) GetOneCourierFromDB(Couriers *[]SmallInfo, id int) err
 	for get.Next() {
 		var courier SmallInfo
 		err = get.Scan(&courier.IdCourier, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
-		*Couriers = append(*Couriers, courier)
+		*Couriers = courier
 	}
 	return nil
 }
