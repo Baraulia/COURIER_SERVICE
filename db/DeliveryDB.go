@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 )
 
 type DeliveryPostgres struct {
@@ -15,15 +16,15 @@ func NewDeliveryPostgres(db *sql.DB) *DeliveryPostgres {
 }
 
 type Order struct {
-	IdDeliveryService uint16 `json:"delivery_service_id"`
-	Id                uint16 `json:"id"`
-	IdCourier         uint16 `json:"courier_id"`
-	DeliveryTime      string `json:"delivery_time"`
-	CustomerAddress   string `json:"customer_address"`
-	Status            string `json:"status"`
-	OrderDate         string `json:"order_date"`
-	RestaurantAddress string `json:"restaurant_address"`
-	Picked            bool   `json:"picked"`
+	IdDeliveryService uint16    `json:"delivery_service_id"`
+	Id                uint16    `json:"id"`
+	IdCourier         uint16    `json:"courier_id"`
+	DeliveryTime      time.Time `json:"delivery_time"`
+	CustomerAddress   string    `json:"customer_address"`
+	Status            string    `json:"status"`
+	OrderDate         string    `json:"order_date"`
+	RestaurantAddress string    `json:"restaurant_address"`
+	Picked            bool      `json:"picked"`
 }
 
 func (r *DeliveryPostgres) GetActiveOrdersFromDB(Orders *[]Order, id int) error {
