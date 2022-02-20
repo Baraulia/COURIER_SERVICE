@@ -24,6 +24,8 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	order := router.Group("/orders")
 	{
 		order.PUT("/", h.UpdateOrder)
+		order.GET("/completed", h.GetAllCompletedOrdersByService)
+		order.GET("/",h.GetDetailedOrdersById)
 	}
 
 	return router

@@ -6,6 +6,8 @@ import "stlab.itechart-group.com/go/food_delivery/courier_service/dao"
 
 type OrderApp interface {
 	AssigningOrderToCourier(order dao.Order) error
+	GetAllServiceCompletedOrders(limit, page, idService int) ([]dao.DetailedOrder, error)
+	GetDetailedOrdersById(idOrder int) (interface{}, error)
 }
 
 type Service struct {
