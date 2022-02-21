@@ -34,6 +34,22 @@ type SmallInfo struct {
 	Surname     string `json:"surname"`
 }
 
+func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
+	db := ConnectDB()
+	defer db.Close()
+
+	insertValue := `INSERT INTO "couriers" ("name","ready to go","phone_number","email","rating","photo","surname","number of failures","deleted") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`
+
+	_, err := db.Exec(insertValue, courier.CourierName, courier.ReadyToGo, courier.PhoneNumber, courier.Email, courier.Rating, courier.Photo, courier.Surname, courier.NumberOfFailures, courier.Deleted)
+
+	if err != nil {
+
+		log.Println("Error of saving courier in db :" + err.Error())
+		return err
+	}
+	return nil
+}
+
 func (r *CourierPostgres) GetCouriersFromDB(Couriers *[]SmallInfo) error {
 	db := ConnectDB()
 	defer db.Close()
