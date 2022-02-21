@@ -14,7 +14,7 @@ func NewCourierPostgres(db *sql.DB) *CourierPostgres {
 }
 
 type Courier struct {
-	IdCourier        uint16 `json:"id_courier"`
+	Id               uint16 `json:"id_courier"`
 	CourierName      string `json:"courier_name"`
 	ReadyToGo        bool   `json:"ready_to_go"`
 	PhoneNumber      string `json:"phone_number"`
