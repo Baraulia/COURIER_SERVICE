@@ -26,7 +26,7 @@ type Order struct {
 	Picked            bool   `json:"picked"`
 }
 
-type Detailedorder struct {
+type DetailedOrder struct {
 	IdDeliveryService  int    `json:"delivery_service_id,omitempty"`
 	IdOrder            int    `json:"id"`
 	IdCourier          int    `json:"courier_id,omitempty"`
@@ -40,8 +40,8 @@ type Detailedorder struct {
 	CourierPhoneNumber string `json:"phone_number"`
 }
 
-func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(limit, page, idCourier int) ([]Detailedorder, int) {
-	var Orders []Detailedorder
+func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(limit, page, idCourier int) ([]DetailedOrder, int) {
+	var Orders []DetailedOrder
 	transaction, err := r.db.Begin()
 	if err != nil {
 		log.Fatal(err)
@@ -52,7 +52,7 @@ func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(limit, page, id
 		log.Fatal(err)
 	}
 	for res.Next() {
-		var order Detailedorder
+		var order DetailedOrder
 		err = res.Scan(&order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierPhoneNumber)
 		if err != nil {
 			panic(err)

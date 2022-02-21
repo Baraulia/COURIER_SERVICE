@@ -16,8 +16,8 @@ func NewOrderService(repo dao.Repository) *OrderService {
 	return &OrderService{repo: repo}
 }
 
-func (s *OrderService) GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.Detailedorder, error) {
-	var Order = []dao.Detailedorder{}
+func (s *OrderService) GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.DetailedOrder, error) {
+	var Order = []dao.DetailedOrder{}
 
 	if limit <= 0 || page <= 0 {
 		err := errors.New("no page or limit")

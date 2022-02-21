@@ -64,10 +64,10 @@ func (mr *MockOrderAppMockRecorder) GetAllOrdersOfCourierService(limit, page, id
 }
 
 // GetCourierCompletedOrders mocks base method.
-func (m *MockOrderApp) GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.Detailedorder, error) {
+func (m *MockOrderApp) GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.DetailedOrder, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCourierCompletedOrders", limit, page, idCourier)
-	ret0, _ := ret[0].([]dao.Detailedorder)
+	ret0, _ := ret[0].([]dao.DetailedOrder)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

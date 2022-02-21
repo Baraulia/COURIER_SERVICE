@@ -14,9 +14,9 @@ import (
 )
 
 func TestHandler_GetCourierCompletedOrders(t *testing.T) {
-	type mockBehavior func(s *mocks.MockOrderApp, order []dao.Detailedorder)
-	var orders []dao.Detailedorder
-	ord := dao.Detailedorder{
+	type mockBehavior func(s *mocks.MockOrderApp, order []dao.DetailedOrder)
+	var orders []dao.DetailedOrder
+	ord := dao.DetailedOrder{
 		IdDeliveryService:  1,
 		IdOrder:            1,
 		IdCourier:          1,
@@ -33,7 +33,7 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 	testTable := []struct {
 		name                string
 		inputBody           string
-		inputOrder          []dao.Detailedorder
+		inputOrder          []dao.DetailedOrder
 		mockBehavior        mockBehavior
 		expectedStatusCode  int
 		expectedRequestBody string
@@ -42,12 +42,12 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 			name: "OK",
 			//inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022"}`,
 			inputBody: `{"name":"Test","courier_id":1}`,
-			inputOrder: []dao.Detailedorder{
+			inputOrder: []dao.DetailedOrder{
 				{
 					IdCourier: 1,
 				},
 			},
-			mockBehavior: func(s *mocks.MockOrderApp, order []dao.Detailedorder) {
+			mockBehavior: func(s *mocks.MockOrderApp, order []dao.DetailedOrder) {
 				s.EXPECT().GetCourierCompletedOrders(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,

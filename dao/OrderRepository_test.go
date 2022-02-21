@@ -21,7 +21,7 @@ func TestRepository_GetCourierCompletedOrdersWithPage_fromDB(t *testing.T) {
 		courier_id    int
 		limit         int
 		page          int
-		expectedOrder []Detailedorder
+		expectedOrder []DetailedOrder
 	}{
 		{
 			name: "OK",
@@ -43,7 +43,7 @@ func TestRepository_GetCourierCompletedOrdersWithPage_fromDB(t *testing.T) {
 			courier_id: 1,
 			limit:      1,
 			page:       1,
-			expectedOrder: []Detailedorder{
+			expectedOrder: []DetailedOrder{
 				{
 					IdDeliveryService:  1,
 					IdOrder:            1,
