@@ -1,6 +1,7 @@
 package Controllers
 
 import (
+	_ "github.com/Baraulia/COURIER_SERVICE/docs"
 	"github.com/Baraulia/COURIER_SERVICE/middleware"
 	"github.com/Baraulia/COURIER_SERVICE/service"
 	"github.com/gin-gonic/gin"
