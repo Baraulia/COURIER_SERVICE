@@ -32,7 +32,8 @@ func TestCourierPostgres_GetCouriersFromDB(t *testing.T) {
 				rows := sqlmock.NewRows([]string{"id_courier", "courier_name", "phone_number", "photo", "surname"}).
 					AddRow(1, "Tim", "1038812", "some photo", "").
 					AddRow(2, "Kolya", "1022345", "this is photo", "").
-					AddRow(3, "Vasya", "12312345", "my sexy photo", "")
+					AddRow(3, "Vasya", "12312345", "my sexy photo", "").
+					AddRow(14, "Michael", "293845697", "URL for photo", "Kors")
 
 				mock.ExpectQuery(`SELECT id_courier,courier_name,phone_number,photo,surname FROM couriers WHERE (.+)`).
 					WillReturnRows(rows)
@@ -42,6 +43,7 @@ func TestCourierPostgres_GetCouriersFromDB(t *testing.T) {
 				{1, "Tim", "1038812", "some photo", ""},
 				{2, "Kolya", "1022345", "this is photo", ""},
 				{3, "Vasya", "12312345", "my sexy photo", ""},
+				{14, "Michael", "293845697", "URL for photo", "Kors"},
 			},
 		},
 	}

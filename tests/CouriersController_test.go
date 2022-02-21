@@ -6,8 +6,8 @@ import (
 	"github.com/Baraulia/COURIER_SERVICE/db"
 	"github.com/Baraulia/COURIER_SERVICE/service"
 	mock_service "github.com/Baraulia/COURIER_SERVICE/service/mocks"
+	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
-	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 	"net/http/httptest"
 	"testing"
@@ -61,9 +61,9 @@ func TestHandler_GetCouriers(t *testing.T) {
 			services := &service.Service{CourierApp: get}
 			handler := Controllers.NewHandler(services)
 
-			r := mux.NewRouter()
+			r := gin.New()
 
-			r.HandleFunc("/couriers", handler.GetCouriers).Methods("GET")
+			r.GET("/couriers", handler.GetCouriers)
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("GET", "/couriers", bytes.NewBufferString(testCase.inputBody))
@@ -80,7 +80,6 @@ func TestHandler_GetCouriers(t *testing.T) {
 
 func TestHandler_GetOneCourier(t *testing.T) {
 	type mockBehavior func(s *mock_service.MockCourierApp, courier db.SmallInfo)
-	var couriers []db.SmallInfo
 	cour := db.SmallInfo{
 		Id:          1,
 		CourierName: "test",
@@ -88,7 +87,6 @@ func TestHandler_GetOneCourier(t *testing.T) {
 		Photo:       "my fav photo",
 		Surname:     "Shorokhov",
 	}
-	couriers = append(couriers, cour)
 
 	testTable := []struct {
 		name                string
@@ -109,7 +107,7 @@ func TestHandler_GetOneCourier(t *testing.T) {
 				Surname:     "Shorokhov",
 			},
 			mockBehavior: func(s *mock_service.MockCourierApp, courier db.SmallInfo) {
-				s.EXPECT().GetOneCourier(1).Return(couriers, nil)
+				s.EXPECT().GetCourier(1).Return(cour, nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov"}`,
@@ -126,9 +124,9 @@ func TestHandler_GetOneCourier(t *testing.T) {
 			services := &service.Service{CourierApp: get}
 			handler := Controllers.NewHandler(services)
 
-			r := mux.NewRouter()
+			r := gin.New()
 
-			r.HandleFunc("/courier", handler.GetOneCourier).Methods("GET")
+			r.GET("/courier", handler.GetOneCourier)
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("GET", "/courier?id=1", bytes.NewBufferString(testCase.inputBody))

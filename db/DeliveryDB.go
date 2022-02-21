@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 )
 
 type DeliveryPostgres struct {
@@ -15,13 +16,15 @@ func NewDeliveryPostgres(db *sql.DB) *DeliveryPostgres {
 }
 
 type Order struct {
-	IdDeliveryService uint16 `json:"delivery_service_id"`
-	Id                uint16 `json:"id"`
-	IdCourier         uint16 `json:"courier_id"`
-	DeliveryTime      string `json:"delivery_time"`
-	CustomerAddress   string `json:"customer_address"`
-	Status            string `json:"status"`
-	OrderDate         string `json:"order_date"`
+	IdDeliveryService uint16    `json:"delivery_service_id"`
+	Id                uint16    `json:"id"`
+	IdCourier         uint16    `json:"courier_id"`
+	DeliveryTime      time.Time `json:"delivery_time"`
+	CustomerAddress   string    `json:"customer_address"`
+	Status            string    `json:"status"`
+	OrderDate         string    `json:"order_date"`
+	RestaurantAddress string    `json:"restaurant_address"`
+	Picked            bool      `json:"picked"`
 }
 
 func (r *DeliveryPostgres) GetActiveOrdersFromDB(Orders *[]Order, id int) error {
@@ -47,7 +50,7 @@ func (r *DeliveryPostgres) GetActiveOrderFromDB(Orders *Order, id int) error {
 	db := ConnectDB()
 	defer db.Close()
 
-	insertValue := `Select * from delivery where id = $1 AND status = 'ready to delivery'`
+	insertValue := `Select delivery_service_id,id,courier_id,delivery_time,customer_address,status,order_date,restaurant_address,picked from delivery where id = $1 AND status = 'ready to delivery'`
 	get, err := db.Query(insertValue, id)
 	if err != nil {
 		log.Println("Error with getting order by id: " + err.Error())
@@ -56,7 +59,7 @@ func (r *DeliveryPostgres) GetActiveOrderFromDB(Orders *Order, id int) error {
 
 	for get.Next() {
 		var order Order
-		err = get.Scan(&order.IdDeliveryService, &order.Id, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate)
+		err = get.Scan(&order.IdDeliveryService, &order.Id, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate, &order.RestaurantAddress, &order.Picked)
 		*Orders = order
 	}
 	return nil
