@@ -51,7 +51,7 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 				s.EXPECT().GetCourierCompletedOrders(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","phone_number":""}]`,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","phone_number":""}]}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -126,7 +126,7 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 				s.EXPECT().GetAllOrdersOfCourierService(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}]`,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}]}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -201,7 +201,7 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 				s.EXPECT().GetCourierCompletedOrdersByMonth(1, 1, 1, 11).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}]`,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}]}`,
 		},
 	}
 	for _, testCase := range testTable {
