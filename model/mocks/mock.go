@@ -47,3 +47,33 @@ func (mr *MockOrderAppMockRecorder) AssigningOrderToCourier(order interface{}) *
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssigningOrderToCourier", reflect.TypeOf((*MockOrderApp)(nil).AssigningOrderToCourier), order)
 }
+
+// GetAllServiceCompletedOrders mocks base method.
+func (m *MockOrderApp) GetAllServiceCompletedOrders(limit, page, idService int) ([]dao.DetailedOrder, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllServiceCompletedOrders", limit, page, idService)
+	ret0, _ := ret[0].([]dao.DetailedOrder)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllServiceCompletedOrders indicates an expected call of GetAllServiceCompletedOrders.
+func (mr *MockOrderAppMockRecorder) GetAllServiceCompletedOrders(limit, page, idService interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllServiceCompletedOrders", reflect.TypeOf((*MockOrderApp)(nil).GetAllServiceCompletedOrders), limit, page, idService)
+}
+
+// GetDetailedOrdersById mocks base method.
+func (m *MockOrderApp) GetDetailedOrdersById(Id int) (interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDetailedOrdersById", Id)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDetailedOrdersById indicates an expected call of GetDetailedOrdersById.
+func (mr *MockOrderAppMockRecorder) GetDetailedOrdersById(Id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDetailedOrdersById", reflect.TypeOf((*MockOrderApp)(nil).GetDetailedOrdersById), Id)
+}

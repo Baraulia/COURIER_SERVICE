@@ -50,13 +50,13 @@ func (s *OrderService) GetAllServiceCompletedOrders(limit, page, idService int) 
 }
 
 
-func (s *OrderService) GetDetailedOrdersById(idOrder int) (interface{}, error){
+func (s *OrderService) GetDetailedOrdersById(Id int) (dao.DetailedOrder, error){
 	var Order dao.DetailedOrder
-	Order, err :=s.repo.GetDetailedOrdersById_FromDB(idOrder)
+	Order, err :=s.repo.GetDetailedOrdersById_FromDB(Id)
 	if err!=nil{
 		err := errors.New("no id")
 		log.Println("no more id")
-		return nil, fmt.Errorf("Error in OrderService: %s", err)
+		return Order, fmt.Errorf("Error in OrderService: %s", err)
 	}
 	return Order,nil
 }
