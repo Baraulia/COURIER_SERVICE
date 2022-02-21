@@ -7,6 +7,16 @@ import (
 	"strconv"
 )
 
+// getCouriers godoc
+// @Summary getCouriers
+// @Description get all couriers
+// @Tags Couriers
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} db.SmallInfo
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /couriers [get]
 func (h *Handler) GetCouriers(c *gin.Context) {
 	Couriers, err := h.services.GetCouriers()
 	if err != nil {
@@ -16,9 +26,20 @@ func (h *Handler) GetCouriers(c *gin.Context) {
 	c.JSON(http.StatusOK, Couriers)
 }
 
-func (h *Handler) GetOneCourier(c *gin.Context) {
+// getCourier by ID godoc
+// @Summary getCourier
+// @Description get courier by ID
+// @Tags Courier
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Courier ID"
+// @Success 200 {object} db.SmallInfo
+// @Failure 400 {string} string
+// @Failure 500 {string} err
+// @Router /courier/{id} [get]
+func (h *Handler) GetCourier(c *gin.Context) {
 	var Courier db.SmallInfo
-	idQuery := c.Query("id")
+	idQuery := c.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
