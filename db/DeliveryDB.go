@@ -24,7 +24,7 @@ type Order struct {
 	OrderDate         string `json:"order_date"`
 }
 
-func (r *DeliveryPostgres) GetActiveOrdersFromDB(Orders *[]Order) error {
+func (r *DeliveryPostgres) GetActiveOrdersFromDB(Orders *Order) error {
 	db := ConnectDB()
 	defer db.Close()
 
@@ -38,7 +38,7 @@ func (r *DeliveryPostgres) GetActiveOrdersFromDB(Orders *[]Order) error {
 	for get.Next() {
 		var order Order
 		err = get.Scan(&order.IdDeliveryService, &order.Id, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate)
-		*Orders = append(*Orders, order)
+		*Orders = order
 	}
 	return nil
 }

@@ -15,7 +15,7 @@ type DeliveryApp interface {
 
 type CourierApp interface {
 	GetCouriers() ([]db.SmallInfo, error)
-	GetCourier(id int) ([]db.SmallInfo, error)
+	GetCourier(id int) (db.SmallInfo, error)
 	SaveCourier(courier *db.Courier) (*db.Courier, error)
 }
 
