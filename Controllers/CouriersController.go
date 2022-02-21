@@ -27,7 +27,7 @@ func (h *Handler) GetOneCourier(c *gin.Context) {
 		return
 	}
 
-	Courier, err = h.services.GetOneCourier(l)
+	Courier, err = h.services.GetCourier(l)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return

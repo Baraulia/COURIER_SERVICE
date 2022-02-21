@@ -24,9 +24,9 @@ func (s *CourierService) GetCouriers() ([]db.SmallInfo, error) {
 	return Couriers, nil
 }
 
-func (s *CourierService) GetOneCourier(id int) ([]db.SmallInfo, error) {
+func (s *CourierService) GetCourier(id int) ([]db.SmallInfo, error) {
 	var Courier []db.SmallInfo
-	s.repo.GetOneCourierFromDB(&Courier, id)
+	s.repo.GetCourierFromDB(&Courier, id)
 	if id == 0 {
 		err := errors.New("no id")
 		log.Println("id cannot be zero")

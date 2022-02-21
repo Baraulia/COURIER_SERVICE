@@ -105,7 +105,7 @@ func (mr *MockCourierAppMockRecorder) GetCouriers() *gomock.Call {
 // GetOneCourier mocks base method.
 func (m *MockCourierApp) GetOneCourier(id int) ([]db.SmallInfo, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOneCourier", id)
+	ret := m.ctrl.Call(m, "GetCourier", id)
 	ret0, _ := ret[0].([]db.SmallInfo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -114,5 +114,5 @@ func (m *MockCourierApp) GetOneCourier(id int) ([]db.SmallInfo, error) {
 // GetOneCourier indicates an expected call of GetOneCourier.
 func (mr *MockCourierAppMockRecorder) GetOneCourier(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOneCourier", reflect.TypeOf((*MockCourierApp)(nil).GetOneCourier), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCourier", reflect.TypeOf((*MockCourierApp)(nil).GetOneCourier), id)
 }
