@@ -27,7 +27,7 @@ type Courier struct {
 }
 
 type SmallInfo struct {
-	IdCourier   uint16 `json:"id_courier"`
+	Id          uint16 `json:"id_courier"`
 	CourierName string `json:"courier_name"`
 	PhoneNumber string `json:"phone_number"`
 	Photo       string `json:"photo"`
@@ -50,7 +50,7 @@ func (r *CourierPostgres) GetCouriersFromDB(Couriers *[]SmallInfo) error {
 
 	for get.Next() {
 		var courier SmallInfo
-		err = get.Scan(&courier.IdCourier, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
+		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
 		*Couriers = append(*Couriers, courier)
 	}
 	return nil
@@ -70,7 +70,7 @@ func (r *CourierPostgres) GetCourierFromDB(Couriers *SmallInfo, id int) error {
 
 	for get.Next() {
 		var courier SmallInfo
-		err = get.Scan(&courier.IdCourier, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
+		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
 		*Couriers = courier
 	}
 	return nil

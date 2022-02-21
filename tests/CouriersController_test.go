@@ -17,7 +17,7 @@ func TestHandler_GetCouriers(t *testing.T) {
 	type mockBehavior func(s *mock_service.MockCourierApp, courier db.SmallInfo)
 	var couriers []db.SmallInfo
 	cour := db.SmallInfo{
-		IdCourier:   1,
+		Id:          1,
 		CourierName: "test",
 		PhoneNumber: "1038812",
 		Photo:       "my fav photo",
@@ -37,7 +37,7 @@ func TestHandler_GetCouriers(t *testing.T) {
 			name:      "OK",
 			inputBody: `{"name":"Test","id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov"}`,
 			inputCourier: db.SmallInfo{
-				IdCourier:   1,
+				Id:          1,
 				CourierName: "test",
 				PhoneNumber: "1038812",
 				Photo:       "my fav photo",
@@ -81,7 +81,7 @@ func TestHandler_GetCouriers(t *testing.T) {
 func TestHandler_GetOneCourier(t *testing.T) {
 	type mockBehavior func(s *mock_service.MockCourierApp, courier db.SmallInfo)
 	cour := db.SmallInfo{
-		IdCourier:   1,
+		Id:          1,
 		CourierName: "test",
 		PhoneNumber: "1038812",
 		Photo:       "my fav photo",
@@ -100,7 +100,7 @@ func TestHandler_GetOneCourier(t *testing.T) {
 			name:      "OK",
 			inputBody: `{"name":"Test","id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov"}`,
 			inputCourier: db.SmallInfo{
-				IdCourier:   1,
+				Id:          1,
 				CourierName: "test",
 				PhoneNumber: "1038812",
 				Photo:       "my fav photo",
