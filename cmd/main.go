@@ -21,18 +21,18 @@ func main() {
 		"courier_db",
 		"disable"})
 	if err != nil {
-		log.Println("failed to initialize db:", err.Error())
+		log.Fatal("failed to initialize db:", err.Error())
 	}
 	repos := dao.NewRepository(db)
 	services := model.NewService(repos)
 	handlers := controller.NewHandler(services)
 	s := &http.Server{
-		Addr:    ":8080",
+		Addr:    ":8080", //os.Getenv("API_SERVER_PORT")
 		Handler: handlers.InitRoutesGin(),
 	}
 	err = s.ListenAndServe()
 	if err != nil {
-		log.Println("failed to initialize db:", err.Error())
+		log.Println("failed to initialize port:", err.Error())
 	}
 
 }

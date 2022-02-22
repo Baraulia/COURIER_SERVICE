@@ -145,6 +145,7 @@ func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T
 		limit         int
 		page          int
 		month         int
+		year          int
 		expectedOrder []Order
 	}{
 		{
@@ -168,6 +169,7 @@ func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T
 			limit:      1,
 			page:       1,
 			month:      1,
+			year:       2022,
 			expectedOrder: []Order{
 				{
 					IdDeliveryService: 1,
@@ -186,7 +188,7 @@ func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T
 	for _, tt := range testTable {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock(tt.courier_id, tt.limit, tt.page)
-			got, _ := r.GetCourierCompletedOrdersByMouthWithPage_fromDB(tt.courier_id, tt.limit, tt.page, tt.month)
+			got, _ := r.GetCourierCompletedOrdersByMouthWithPage_fromDB(tt.courier_id, tt.limit, tt.page, tt.month, tt.year)
 
 			assert.Equal(t, tt.expectedOrder, got)
 			assert.NoError(t, mock.ExpectationsWereMet())

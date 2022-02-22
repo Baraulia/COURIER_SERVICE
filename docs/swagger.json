@@ -1,0 +1,283 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API Server",
+        "title": "COURIER_SERVICE",
+        "contact": {}
+    },
+    "paths": {
+        "/orders": {
+            "get": {
+                "description": "get list of all orders by courier service id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "GetAllOrdersOfCourierService",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "iddeliveryservice",
+                        "name": "iddeliveryservice",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.listShortOrders"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/bymonth": {
+            "get": {
+                "description": "get list of completed orders by courier id sorted by month",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "GetCourierCompletedOrdersByMonth",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "idcourier",
+                        "name": "idcourier",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "month",
+                        "name": "month",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "year",
+                        "name": "year",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.listShortOrders"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/completed": {
+            "get": {
+                "description": "get list of completed orders by courier id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "GetCourierCompletedOrders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "idcourier",
+                        "name": "idcourier",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.listOrders"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controller.listOrders": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.DetailedOrder"
+                    }
+                }
+            }
+        },
+        "controller.listShortOrders": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.Order"
+                    }
+                }
+            }
+        },
+        "dao.DetailedOrder": {
+            "type": "object",
+            "properties": {
+                "courier_id": {
+                    "type": "integer"
+                },
+                "customer_address": {
+                    "type": "string"
+                },
+                "delivery_service_id": {
+                    "type": "integer"
+                },
+                "delivery_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order_date": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "picked": {
+                    "type": "boolean"
+                },
+                "restaurant_address": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "dao.Order": {
+            "type": "object",
+            "properties": {
+                "courier_id": {
+                    "type": "integer"
+                },
+                "customer_address": {
+                    "type": "string"
+                },
+                "delivery_service_id": {
+                    "type": "integer"
+                },
+                "delivery_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "order_date": {
+                    "type": "string"
+                },
+                "picked": {
+                    "type": "boolean"
+                },
+                "restaurant_address": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

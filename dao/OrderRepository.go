@@ -115,7 +115,7 @@ func (r *OrderPostgres) GetAllOrdersOfCourierServiceWithPage_fromDB(limit, page,
 	return Orders, len(Ordersss)
 }
 
-func (r *OrderPostgres) GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month int) ([]Order, int) {
+func (r *OrderPostgres) GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year int) ([]Order, int) {
 	var Orders []Order
 	transaction, err := r.db.Begin()
 	if err != nil {
@@ -124,7 +124,7 @@ func (r *OrderPostgres) GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, p
 	log.Println("connected to db")
 
 	defer transaction.Commit()
-	res, err := transaction.Query(fmt.Sprintf("SELECT courier_id ,id ,delivery_service_id ,delivery_time ,order_date ,status ,customer_address, restaurant_address FROM delivery where courier_id=%d and Extract(MONTH from order_date )=%d LIMIT %d OFFSET %d ", idCourier, Month, limit, limit*(page-1)))
+	res, err := transaction.Query(fmt.Sprintf("SELECT courier_id ,id ,delivery_service_id ,delivery_time ,order_date ,status ,customer_address, restaurant_address FROM delivery where courier_id=%d and Extract(MONTH from order_date )=%d and Extract(Year from order_date )=%d LIMIT %d OFFSET %d ", idCourier, Month, Year, limit, limit*(page-1)))
 	if err != nil {
 		panic(err)
 	}

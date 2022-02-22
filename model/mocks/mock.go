@@ -34,20 +34,6 @@ func (m *MockOrderApp) EXPECT() *MockOrderAppMockRecorder {
 	return m.recorder
 }
 
-// AssigningOrderToCourier mocks base method.
-func (m *MockOrderApp) AssigningOrderToCourier(order dao.Order) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AssigningOrderToCourier", order)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// AssigningOrderToCourier indicates an expected call of AssigningOrderToCourier.
-func (mr *MockOrderAppMockRecorder) AssigningOrderToCourier(order interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssigningOrderToCourier", reflect.TypeOf((*MockOrderApp)(nil).AssigningOrderToCourier), order)
-}
-
 // GetAllOrdersOfCourierService mocks base method.
 func (m *MockOrderApp) GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error) {
 	m.ctrl.T.Helper()
@@ -79,16 +65,16 @@ func (mr *MockOrderAppMockRecorder) GetCourierCompletedOrders(limit, page, idCou
 }
 
 // GetCourierCompletedOrdersByMonth mocks base method.
-func (m *MockOrderApp) GetCourierCompletedOrdersByMonth(limit, page, idService, Month int) ([]dao.Order, error) {
+func (m *MockOrderApp) GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCourierCompletedOrdersByMonth", limit, page, idService, Month)
+	ret := m.ctrl.Call(m, "GetCourierCompletedOrdersByMonth", limit, page, idService, Month, Year)
 	ret0, _ := ret[0].([]dao.Order)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetCourierCompletedOrdersByMonth indicates an expected call of GetCourierCompletedOrdersByMonth.
-func (mr *MockOrderAppMockRecorder) GetCourierCompletedOrdersByMonth(limit, page, idService, Month interface{}) *gomock.Call {
+func (mr *MockOrderAppMockRecorder) GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCourierCompletedOrdersByMonth", reflect.TypeOf((*MockOrderApp)(nil).GetCourierCompletedOrdersByMonth), limit, page, idService, Month)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCourierCompletedOrdersByMonth", reflect.TypeOf((*MockOrderApp)(nil).GetCourierCompletedOrdersByMonth), limit, page, idService, Month, Year)
 }

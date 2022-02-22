@@ -198,7 +198,7 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 				},
 			},
 			mockBehavior: func(s *mocks.MockOrderApp, order []dao.Order) {
-				s.EXPECT().GetCourierCompletedOrdersByMonth(1, 1, 1, 11).Return(orders, nil)
+				s.EXPECT().GetCourierCompletedOrdersByMonth(1, 1, 1, 11, 2022).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}]}`,
@@ -220,7 +220,7 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 			r.GET("/orders/bymonth", handler.GetCourierCompletedOrdersByMonth)
 
 			w := httptest.NewRecorder()
-			req := httptest.NewRequest("GET", "/orders/bymonth?limit=1&page=1&idcourier=1&month=11", bytes.NewBufferString(testCase.inputBody))
+			req := httptest.NewRequest("GET", "/orders/bymonth?limit=1&page=1&idcourier=1&month=11&year=2022", bytes.NewBufferString(testCase.inputBody))
 
 			r.ServeHTTP(w, req)
 

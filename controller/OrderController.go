@@ -26,12 +26,12 @@ type listOrders struct {
 func (h *Handler) GetCourierCompletedOrders(ctx *gin.Context) {
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page == 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
 		return
 	}
 	limit, er1 := strconv.Atoi(ctx.Query("limit"))
 	if er1 != nil || limit == 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
 		return
 	}
 	idCourier, er := strconv.Atoi(ctx.Query("idcourier"))
@@ -67,12 +67,12 @@ type listShortOrders struct {
 func (h *Handler) GetAllOrdersOfCourierService(ctx *gin.Context) {
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page == 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
 		return
 	}
 	limit, er1 := strconv.Atoi(ctx.Query("limit"))
 	if er1 != nil || limit == 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
 		return
 	}
 	idService, er := strconv.Atoi(ctx.Query("iddeliveryservice"))
@@ -98,6 +98,7 @@ func (h *Handler) GetAllOrdersOfCourierService(ctx *gin.Context) {
 // @Param limit query int true "limit"
 // @Param idcourier query int true "idcourier"
 // @Param month query int true "month"
+// @Param year query int true "year"
 // @Success 200 {object} listShortOrders
 // @Failure 400 {string} string
 // @Failure 500 {string} string
@@ -105,12 +106,12 @@ func (h *Handler) GetAllOrdersOfCourierService(ctx *gin.Context) {
 func (h *Handler) GetCourierCompletedOrdersByMonth(ctx *gin.Context) {
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page == 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
 		return
 	}
 	limit, er1 := strconv.Atoi(ctx.Query("limit"))
 	if er1 != nil || limit == 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": " expect an integer greater than 0"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": " limit query param is wrong. Expected an integer greater than 0"})
 		return
 	}
 	idCourier, er := strconv.Atoi(ctx.Query("idcourier"))
@@ -123,7 +124,12 @@ func (h *Handler) GetCourierCompletedOrdersByMonth(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": " expect an integer from 1 to 12"})
 		return
 	}
-	Orders, err := h.services.OrderApp.GetCourierCompletedOrdersByMonth(limit, page, idCourier, Month)
+	Year, er := strconv.Atoi(ctx.Query("year"))
+	if er != nil || Month == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 2021"})
+		return
+	}
+	Orders, err := h.services.OrderApp.GetCourierCompletedOrdersByMonth(limit, page, idCourier, Month, Year)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
