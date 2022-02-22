@@ -61,6 +61,8 @@ definitions:
     type: object
 info:
   contact: {}
+  description: API Server
+  title: COURIER_SERVICE
 paths:
   /orders:
     get:

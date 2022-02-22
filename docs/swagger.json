@@ -1,6 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
+        "description": "API Server",
+        "title": "COURIER_SERVICE",
         "contact": {}
     },
     "paths": {

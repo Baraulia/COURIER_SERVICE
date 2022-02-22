@@ -151,10 +151,10 @@ func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T
 			name: "OK",
 			mock: func(courier_id, limit, page int) {
 				mock.ExpectBegin()
-				rows := sqlmock.NewRows([]string{"courier_id", "id", "delivery_service_id", "delivery_time", "order_date", "status", "customer_address"}).
-					AddRow(1, 1, 1, "12:00:00", "2022-02-02", "completed", "address")
+				rows := sqlmock.NewRows([]string{"courier_id", "id", "delivery_service_id", "delivery_time", "order_date", "status", "customer_address", "restaurant_address"}).
+					AddRow(1, 1, 1, "12:00:00", "2022-02-02", "completed", "address", "restaurant_address")
 
-				mock.ExpectQuery(`SELECT courier_id ,id ,delivery_service_id ,delivery_time ,order_date ,status ,customer_address FROM delivery where (.+)`).
+				mock.ExpectQuery(`SELECT courier_id ,id ,delivery_service_id ,delivery_time ,order_date ,status ,customer_address, restaurant_address FROM delivery where (.+)`).
 					WillReturnRows(rows)
 
 				rows2 := sqlmock.NewRows([]string{"courier_id"}).
@@ -176,6 +176,7 @@ func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T
 					DeliveryTime:      "12:00:00",
 					OrderDate:         "2022-02-02",
 					CustomerAddress:   "address",
+					RestaurantAddress: "restaurant_address",
 					Status:            "completed",
 				},
 			},

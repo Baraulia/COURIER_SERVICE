@@ -9,6 +9,8 @@ import (
 	"stlab.itechart-group.com/go/food_delivery/courier_service/model"
 )
 
+// @title COURIER_SERVICE
+// @description API Server
 func main() {
 	log.Println("Start...")
 	db, err := dao.NewPostgresDB(dao.PostgresDB{
