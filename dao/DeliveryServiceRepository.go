@@ -30,7 +30,7 @@ func (r *DeliveryServicePostgres) SaveDeliveryService_InDB(service *DeliveryServ
 		log.Println(fmt.Sprintf("Create Delivery Service: error:%s", err))
 		return nil, fmt.Errorf("Create Delivery : error:%s", err)
 	}
-	row := transaction.QueryRow("INSERT INTO delivery_service (name, email, working_now, description, deleted) VALUES ($1, $2, $3, $4, $5) RETURNING id", service.Name, service.Email, service.WorkingNow, service.Description, service.Deleted)
+	row := transaction.QueryRow("INSERT INTO delivery_service (name, email, photo, working_now, description, deleted) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id", service.Name, service.Email,service.Photo, service.WorkingNow, service.Description, service.Deleted)
 	var newService DeliveryService
 	var id int
 	if err := row.Scan(&id); err != nil {
