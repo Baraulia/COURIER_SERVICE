@@ -38,9 +38,9 @@ func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
 	db := ConnectDB()
 	defer db.Close()
 
-	insertValue := `INSERT INTO "couriers" ("name","ready to go","phone_number","email","rating","photo","surname","number of failures","deleted") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`
+	insertValue := `INSERT INTO "couriers" ("name","ready to go","phone_number","email","photo","surname") VALUES ($1,$2,$3,$4,$5,$6)`
 
-	_, err := db.Exec(insertValue, courier.CourierName, courier.ReadyToGo, courier.PhoneNumber, courier.Email, courier.Rating, courier.Photo, courier.Surname, courier.NumberOfFailures, courier.Deleted)
+	_, err := db.Exec(insertValue, courier.CourierName, courier.ReadyToGo, courier.PhoneNumber, courier.Email, courier.Photo, courier.Surname)
 
 	if err != nil {
 

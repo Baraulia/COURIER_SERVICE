@@ -19,5 +19,4 @@ func main() {
 		Handler: handlers.InitRoutes(),
 	}
 	s.ListenAndServe()
-
 }

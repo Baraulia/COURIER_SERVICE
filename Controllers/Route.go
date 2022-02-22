@@ -30,7 +30,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	courier := r.Group("/courier")
 	{
 		courier.GET("/", h.GetOneCourier)
-		courier.POST("/create", h.SaveCourier)
+		courier.POST("/", h.SaveCourier)
 	}
 
 	orders := r.Group("/orders")
