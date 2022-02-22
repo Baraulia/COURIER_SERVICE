@@ -8,15 +8,23 @@ import (
 	"stlab.itechart-group.com/go/food_delivery/courier_service/model"
 )
 
+
+// @title COURIER_SERVICE
+// @description API Server for TodoList Application
 func main() {
 	log.Println("Start...")
+
 	db, err := dao.NewPostgresDB(dao.PostgresDB{
+
 		"159.223.1.135",
 		"5434",
 		"courierteam1",
 		"qwerty",
 		"courier_db",
-		"disable"})
+		"disable",
+
+		})
+
 	if err != nil {
 		log.Println("failed to initialize db:", err.Error())
 	}

@@ -14,6 +14,8 @@ func NewRepository(db *sql.DB) *Repository {
 
 type OrderRep interface {
 	AssigningOrderToCourier_InDB(order Order) error
+	GetAllServiceCompletedOrders_fromDB(limit, page, idService int) ([]DetailedOrder, int)
+	GetDetailedOrdersById_FromDB(Id int) (DetailedOrder, error)
 }
 
 

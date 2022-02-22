@@ -25,7 +25,7 @@ func TestHandler_AssigningOrderToCourier(t *testing.T) {
 			name:      "OK",
 			inputBody: `{"id":15, "courier_id":8}`,
 			inputOrder: dao.Order{
-				IdOrder:   15,
+				Id:   15,
 				IdCourier: 8,
 			},
 			mockBehavior: func(s *mocks.MockOrderApp, order dao.Order) {
