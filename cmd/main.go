@@ -27,8 +27,9 @@ func main() {
 	repos := dao.NewRepository(db)
 	services := model.NewService(repos)
 	handlers := controller.NewHandler(services)
+	host := os.Getenv("API_SERVER_PORT")
 	s := &http.Server{
-		Addr:    os.Getenv("API_SERVER_PORT"),
+		Addr:    ":" + host,
 		Handler: handlers.InitRoutesGin(),
 	}
 	err = s.ListenAndServe()
