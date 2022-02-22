@@ -26,7 +26,7 @@ func (h *Handler) GetOneCourier(c *gin.Context) {
 	}
 	Courier, err = h.services.GetCourier(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"No such courier": err})
+		c.JSON(http.StatusBadRequest, gin.H{"No such courier": err})
 		return
 	}
 	c.JSON(http.StatusOK, Courier)
