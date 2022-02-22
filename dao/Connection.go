@@ -16,28 +16,6 @@ type PostgresDB struct {
 	SSLMode  string
 }
 
-func OpenDB() (*sql.DB,error) {
-	host     := "159.223.1.135"
-	port     := 5434
-	user     := "courierteam1"
-	password := "qwerty"
-	dbname   := "courier_db"
-	/*host:="localhost"
-	port:=5433
-	user:="postgres"
-	password:="postgres"
-	dbname:="courier_db"*/
-	pgsqlConn:=fmt.Sprintf("host= %s port= %d user=%s password=%s dbname=%s sslmode=disable",host,port,user, password,dbname)
-	db, err :=sql.Open("postgres",pgsqlConn)
-	if err!=nil {
-		log.Fatal(err)
-	}
-	if err = db.Ping(); err != nil {
-		return nil,err
-	}
-	return db,err
-}
-
 
 func NewPostgresDB(dbs PostgresDB) (*sql.DB, error) {
 	pgsqlConn:=fmt.Sprintf("host= %s port= %s user=%s password=%s dbname=%s sslmode=disable",dbs.Host,dbs.Port, dbs.User, dbs.Password,dbs.DBName)
