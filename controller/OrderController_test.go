@@ -31,7 +31,7 @@ func TestHandler_AssigningOrderToCourier(t *testing.T) {
 			mockBehavior: func(s *mocks.MockOrderApp, order dao.Order) {
 				s.EXPECT().AssigningOrderToCourier(order).Return(nil)
 			},
-			expectedStatusCode: 200,
+			expectedStatusCode: 204,
 		},
 	}
 	for _, testCase := range testTable {
