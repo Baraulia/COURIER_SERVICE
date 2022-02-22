@@ -16,21 +16,20 @@ func NewCourierService(repo db.Repository) *CourierService {
 }
 
 func (s *CourierService) GetCouriers() ([]db.SmallInfo, error) {
-	var Couriers []db.SmallInfo
-	err := s.repo.GetCouriersFromDB(&Couriers)
-	if []db.SmallInfo{} == nil {
+
+	get, err := s.repo.GetCouriersFromDB()
+	if get == nil {
 		return []db.SmallInfo{}, fmt.Errorf("Error in CourierService: %s", err)
 	}
 	if err != nil {
-		return nil, fmt.Errorf("%w", err)
+		return nil, fmt.Errorf("Error with database: %s", err)
 	}
-	return Couriers, nil
+	return get, nil
 }
 
 func (s *CourierService) GetCourier(id int) (db.SmallInfo, error) {
-	var Courier db.SmallInfo
-	err := s.repo.GetCourierFromDB(&Courier, id)
-	if (db.SmallInfo{} == Courier) {
+	get, err := s.repo.GetCourierFromDB(id)
+	if (get == db.SmallInfo{}) {
 		return db.SmallInfo{}, fmt.Errorf("Error in CourierService: %s", err)
 	}
 	if id == 0 {
@@ -38,5 +37,5 @@ func (s *CourierService) GetCourier(id int) (db.SmallInfo, error) {
 		log.Println("id cannot be zero")
 		return db.SmallInfo{}, fmt.Errorf("Error in CourierService: %s", err)
 	}
-	return Courier, nil
+	return get, nil
 }

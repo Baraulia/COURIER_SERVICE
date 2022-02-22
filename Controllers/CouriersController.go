@@ -20,7 +20,7 @@ import (
 func (h *Handler) GetCouriers(c *gin.Context) {
 	Couriers, err := h.services.GetCouriers()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err})
 		return
 	}
 	c.JSON(http.StatusOK, Couriers)
@@ -47,7 +47,7 @@ func (h *Handler) GetCourier(c *gin.Context) {
 	}
 	Courier, err = h.services.GetCourier(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"No such courier": err})
+		c.JSON(http.StatusInternalServerError, gin.H{"No such courier": err})
 		return
 	}
 	c.JSON(http.StatusOK, Courier)
