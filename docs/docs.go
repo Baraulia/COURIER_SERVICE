@@ -17,45 +17,6 @@ const docTemplate_swagger = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/orders": {
-            "get": {
-                "description": "get detailed order by id",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "order"
-                ],
-                "summary": "GetDetailedOrdersById",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "id",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dao.DetailedOrder"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
             "put": {
                 "description": "assign order to courier",
                 "consumes": [
@@ -104,113 +65,9 @@ const docTemplate_swagger = `{
                     }
                 }
             }
-        },
-        "/orders/completed": {
-            "get": {
-                "description": "get list of orderss",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "order"
-                ],
-                "summary": "GetAllCompletedOrdersByService",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "page",
-                        "name": "page",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "limit",
-                        "name": "limit",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "idservice",
-                        "name": "idservice",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controller.listOrders"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
-        "controller.listOrders": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dao.DetailedOrder"
-                    }
-                }
-            }
-        },
-        "dao.DetailedOrder": {
-            "type": "object",
-            "properties": {
-                "courier_id": {
-                    "type": "integer"
-                },
-                "customer_address": {
-                    "type": "string"
-                },
-                "delivery_service_id": {
-                    "type": "integer"
-                },
-                "delivery_time": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "order_date": {
-                    "type": "string"
-                },
-                "phone_number": {
-                    "type": "string"
-                },
-                "picked": {
-                    "type": "boolean"
-                },
-                "restaurant_address": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
         "dao.Order": {
             "type": "object",
             "properties": {

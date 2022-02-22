@@ -1,36 +1,4 @@
 definitions:
-  controller.listOrders:
-    properties:
-      data:
-        items:
-          $ref: '#/definitions/dao.DetailedOrder'
-        type: array
-    type: object
-  dao.DetailedOrder:
-    properties:
-      courier_id:
-        type: integer
-      customer_address:
-        type: string
-      delivery_service_id:
-        type: integer
-      delivery_time:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      order_date:
-        type: string
-      phone_number:
-        type: string
-      picked:
-        type: boolean
-      restaurant_address:
-        type: string
-      status:
-        type: string
-    type: object
   dao.Order:
     properties:
       courier_id:
@@ -58,32 +26,6 @@ info:
   title: COURIER_SERVICE
 paths:
   /orders:
-    get:
-      description: get detailed order by id
-      parameters:
-      - description: id
-        in: query
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dao.DetailedOrder'
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: GetDetailedOrdersById
-      tags:
-      - order
     put:
       consumes:
       - application/json
@@ -114,43 +56,6 @@ paths:
           schema:
             type: string
       summary: UpdateOrder
-      tags:
-      - order
-  /orders/completed:
-    get:
-      description: get list of orderss
-      parameters:
-      - description: page
-        in: query
-        name: page
-        required: true
-        type: integer
-      - description: limit
-        in: query
-        name: limit
-        required: true
-        type: integer
-      - description: idservice
-        in: query
-        name: idservice
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controller.listOrders'
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: GetAllCompletedOrdersByService
       tags:
       - order
 swagger: "2.0"
