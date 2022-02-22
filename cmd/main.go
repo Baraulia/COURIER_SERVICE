@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"stlab.itechart-group.com/go/food_delivery/courier_service/controller"
 	"stlab.itechart-group.com/go/food_delivery/courier_service/dao"
 	"stlab.itechart-group.com/go/food_delivery/courier_service/model"
@@ -31,8 +32,9 @@ func main() {
 	repos := dao.NewRepository(db)
 	services := model.NewService(repos)
 	handlers := controller.NewHandler(services)
+	host := os.Getenv("API_SERVER_PORT")
 	s:= &http.Server{
-		Addr:    ":8080",
+		Addr:    ":" + host,
 		Handler: handlers.InitRoutesGin(),
 	}
 	err=s.ListenAndServe()
