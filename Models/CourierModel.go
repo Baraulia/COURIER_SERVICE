@@ -16,7 +16,6 @@ func NewCourierService(repo db.Repository) *CourierService {
 }
 
 func (s *CourierService) GetCouriers() ([]db.SmallInfo, error) {
-
 	get, err := s.repo.GetCouriersFromDB()
 	if get == nil {
 		return []db.SmallInfo{}, fmt.Errorf("Error in CourierService: %s", err)

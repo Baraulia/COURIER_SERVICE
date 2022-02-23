@@ -39,7 +39,7 @@ func (h *Handler) GetCouriers(ctx *gin.Context) {
 // @Router /courier/{id} [get]
 func (h *Handler) GetCourier(ctx *gin.Context) {
 	var Courier db.SmallInfo
-	idQuery := ctx.Query("id")
+	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})

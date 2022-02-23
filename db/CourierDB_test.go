@@ -31,7 +31,10 @@ func TestCourierPostgres_GetCouriersFromDB(t *testing.T) {
 					AddRow(1, "Tim", "1038812", "some photo", "").
 					AddRow(2, "Kolya", "1022345", "this is photo", "").
 					AddRow(3, "Vasya", "12312345", "my sexy photo", "").
-					AddRow(14, "Michael", "293845697", "URL for photo", "Kors")
+					AddRow(14, "Michael", "293845697", "URL for photo", "Kors").
+					AddRow(16, "Robert", "1039913", "some url for photo", "Kuchinskiy").
+					AddRow(17, "Robert", "1039913", "some url for photo", "Kuchinskiy").
+					AddRow(23, "Kseniya", "1039913", "some url for photo", "Lesnikova")
 
 				mock.ExpectQuery(`SELECT id_courier,courier_name,phone_number,photo,surname FROM couriers WHERE (.+)`).
 					WillReturnRows(rows)
@@ -42,6 +45,9 @@ func TestCourierPostgres_GetCouriersFromDB(t *testing.T) {
 				{2, "Kolya", "1022345", "this is photo", ""},
 				{3, "Vasya", "12312345", "my sexy photo", ""},
 				{14, "Michael", "293845697", "URL for photo", "Kors"},
+				{16, "Robert", "1039913", "some url for photo", "Kuchinskiy"},
+				{17, "Robert", "1039913", "some url for photo", "Kuchinskiy"},
+				{23, "Kseniya", "1039913", "some url for photo", "Lesnikova"},
 			},
 		},
 	}

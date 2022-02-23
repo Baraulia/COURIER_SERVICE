@@ -20,7 +20,7 @@ import (
 // @Router /orders/{id} [get]
 func (h *Handler) GetOrders(ctx *gin.Context) {
 	var Orders []db.Order
-	idQuery := ctx.Query("id")
+	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
@@ -47,7 +47,7 @@ func (h *Handler) GetOrders(ctx *gin.Context) {
 // @Router /order/{id} [get]
 func (h *Handler) GetOrder(ctx *gin.Context) {
 	var Order db.Order
-	idQuery := ctx.Query("id")
+	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
@@ -73,7 +73,7 @@ func (h *Handler) GetOrder(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /order/status_change/{id} [put]
 func (h *Handler) ChangeOrderStatus(ctx *gin.Context) {
-	idQuery := ctx.Query("id")
+	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
