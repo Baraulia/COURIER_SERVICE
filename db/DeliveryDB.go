@@ -29,11 +29,9 @@ type Order struct {
 
 func (r *DeliveryPostgres) GetActiveOrdersFromDB(id int) ([]Order, error) {
 	var Orders []Order
-	db := ConnectDB()
-	defer db.Close()
 
 	insertValue := `Select delivery_service_id,id,courier_id,delivery_time,customer_address,status,order_date,restaurant_address,picked from delivery where courier_id = $1 and status = 'ready to delivery'`
-	get, err := db.Query(insertValue, id)
+	get, err := r.db.Query(insertValue, id)
 	if err != nil {
 		log.Println("Error with getting list of orders: " + err.Error())
 		return nil, err
@@ -49,11 +47,9 @@ func (r *DeliveryPostgres) GetActiveOrdersFromDB(id int) ([]Order, error) {
 
 func (r *DeliveryPostgres) GetActiveOrderFromDB(id int) (Order, error) {
 	var Ord Order
-	db := ConnectDB()
-	defer db.Close()
 
 	insertValue := `Select delivery_service_id,id,courier_id,delivery_time,customer_address,status,order_date,restaurant_address,picked from delivery where id = $1 AND status = 'ready to delivery'`
-	get, err := db.Query(insertValue, id)
+	get, err := r.db.Query(insertValue, id)
 	if err != nil {
 		log.Println("Error with getting order by id: " + err.Error())
 		return Order{}, err
@@ -68,11 +64,9 @@ func (r *DeliveryPostgres) GetActiveOrderFromDB(id int) (Order, error) {
 }
 
 func (r *DeliveryPostgres) ChangeOrderStatusInDB(id uint16) (uint16, error) {
-	db := ConnectDB()
-	defer db.Close()
 
 	UpdateValue := `UPDATE "delivery" SET "status" = $1 WHERE "id" = $2`
-	_, err := db.Exec(UpdateValue, "completed", id)
+	_, err := r.db.Exec(UpdateValue, "completed", id)
 	if err != nil {
 		log.Println("Error with getting order by id: " + err.Error())
 		return 0, fmt.Errorf("updateOrder: error while scanning for order:%w", err)

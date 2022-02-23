@@ -3,22 +3,29 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log"
 )
 
-const (
-	host     = "159.223.1.135"
-	port     = 5434
-	user     = "courierteam1"
-	password = "qwerty"
-	dbname   = "courier_db"
-)
+type PostgresDB struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	DBName   string
+	SSLMode  string
+}
 
-func ConnectDB() *sql.DB {
-	psqlconn := fmt.Sprintf("host= %s port= %d user = %s password = %s dbname = %s sslmode=disable", host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlconn)
-
+func NewPostgresDB(dbs PostgresDB) (*sql.DB, error) {
+	pgsqlConn := fmt.Sprintf("host= %s port= %s user=%s password=%s dbname=%s sslmode=disable", dbs.Host, dbs.Port, dbs.User, dbs.Password, dbs.DBName)
+	db, err := sql.Open("postgres", pgsqlConn)
 	if err != nil {
-		fmt.Println(err)
+
+		return nil, fmt.Errorf("error connecting to database:%s", err)
 	}
-	return db
+	err = db.Ping()
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return db, nil
 }

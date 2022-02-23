@@ -35,12 +35,10 @@ type SmallInfo struct {
 }
 
 func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
-	db := ConnectDB()
-	defer db.Close()
 
 	insertValue := `INSERT INTO "couriers" ("name","ready to go","phone_number","email","photo","surname") VALUES ($1,$2,$3,$4,$5,$6)`
 
-	_, err := db.Exec(insertValue, courier.CourierName, courier.ReadyToGo, courier.PhoneNumber, courier.Email, courier.Photo, courier.Surname)
+	_, err := r.db.Exec(insertValue, courier.CourierName, courier.ReadyToGo, courier.PhoneNumber, courier.Email, courier.Photo, courier.Surname)
 
 	if err != nil {
 
@@ -52,12 +50,10 @@ func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
 
 func (r *CourierPostgres) GetCouriersFromDB() ([]SmallInfo, error) {
 	var Couriers []SmallInfo
-	db := ConnectDB()
-	defer db.Close()
 
 	selectValue := `Select "id_courier","name", "phone_number","photo", "surname" from "couriers"`
 
-	get, err := db.Query(selectValue)
+	get, err := r.db.Query(selectValue)
 
 	if err != nil {
 
@@ -75,11 +71,10 @@ func (r *CourierPostgres) GetCouriersFromDB() ([]SmallInfo, error) {
 
 func (r *CourierPostgres) GetCourierFromDB(id int) (SmallInfo, error) {
 	var cour SmallInfo
-	db := ConnectDB()
-	defer db.Close()
 
 	selectValue := `Select id_courier,name,phone_number,photo, surname from couriers where id_courier = $1`
-	get, err := db.Query(selectValue, id)
+
+	get, err := r.db.Query(selectValue, id)
 
 	if err != nil {
 		log.Println("Error of getting courier :" + err.Error())
