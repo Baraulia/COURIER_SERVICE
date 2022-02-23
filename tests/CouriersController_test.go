@@ -126,10 +126,10 @@ func TestHandler_GetOneCourier(t *testing.T) {
 
 			r := gin.New()
 
-			r.GET("/courier", handler.GetOneCourier)
+			r.GET("/courier/:id", handler.GetCourier)
 
 			w := httptest.NewRecorder()
-			req := httptest.NewRequest("GET", "/courier?id=1", bytes.NewBufferString(testCase.inputBody))
+			req := httptest.NewRequest("GET", "/courier/1", bytes.NewBufferString(testCase.inputBody))
 
 			r.ServeHTTP(w, req)
 

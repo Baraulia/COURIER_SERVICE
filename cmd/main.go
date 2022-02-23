@@ -9,6 +9,9 @@ import (
 	"net/http"
 )
 
+// @title Courier Service
+// @description Courier Service for Food Delivery Application
+
 func main() {
 	var database *sql.DB
 	repos := db.NewRepository(database)

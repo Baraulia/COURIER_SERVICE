@@ -68,10 +68,10 @@ func TestHandler_GetOrders(t *testing.T) {
 
 			r := gin.New()
 
-			r.GET("/orders", handler.GetOrders)
+			r.GET("/orders/:id", handler.GetOrders)
 
 			w := httptest.NewRecorder()
-			req := httptest.NewRequest("GET", "/orders?id=3", bytes.NewBufferString(testCase.inputBody))
+			req := httptest.NewRequest("GET", "/orders/3", bytes.NewBufferString(testCase.inputBody))
 
 			r.ServeHTTP(w, req)
 
@@ -136,10 +136,10 @@ func TestHandler_GetOneOrder(t *testing.T) {
 
 			r := gin.New()
 
-			r.GET("/order", handler.GetOrder)
+			r.GET("/order/:id", handler.GetOrder)
 
 			w := httptest.NewRecorder()
-			req := httptest.NewRequest("GET", "/order?id=1", bytes.NewBufferString(testCase.inputBody))
+			req := httptest.NewRequest("GET", "/order/1", bytes.NewBufferString(testCase.inputBody))
 
 			r.ServeHTTP(w, req)
 
