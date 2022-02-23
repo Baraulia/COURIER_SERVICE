@@ -29,7 +29,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	courier := r.Group("/courier")
 	{
-		courier.GET("/", h.GetOneCourier)
+		courier.GET("/", h.GetCourier)
 		courier.POST("/", h.SaveCourier)
 	}
 
