@@ -1,4 +1,4 @@
-package model
+package service
 
 import "stlab.itechart-group.com/go/food_delivery/courier_service/dao"
 

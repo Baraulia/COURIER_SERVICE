@@ -8,8 +8,8 @@ import (
 	"net/http/httptest"
 	"stlab.itechart-group.com/go/food_delivery/courier_service/controller"
 	"stlab.itechart-group.com/go/food_delivery/courier_service/dao"
-	"stlab.itechart-group.com/go/food_delivery/courier_service/model"
-	mocks "stlab.itechart-group.com/go/food_delivery/courier_service/model/mocks"
+	"stlab.itechart-group.com/go/food_delivery/courier_service/service"
+	mocks "stlab.itechart-group.com/go/food_delivery/courier_service/service/mocks"
 	"testing"
 )
 
@@ -62,7 +62,7 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 			get := mocks.NewMockOrderApp(c)
 			testCase.mockBehavior(get, testCase.inputOrder)
 
-			services := &model.Service{OrderApp: get}
+			services := &service.Service{OrderApp: get}
 			handler := controller.NewHandler(services)
 
 			r := gin.New()
@@ -137,7 +137,7 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 			get := mocks.NewMockOrderApp(c)
 			testCase.mockBehavior(get, testCase.inputOrder)
 
-			services := &model.Service{OrderApp: get}
+			services := &service.Service{OrderApp: get}
 			handler := controller.NewHandler(services)
 
 			r := gin.New()
@@ -212,7 +212,7 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 			get := mocks.NewMockOrderApp(c)
 			testCase.mockBehavior(get, testCase.inputOrder)
 
-			services := &model.Service{OrderApp: get}
+			services := &service.Service{OrderApp: get}
 			handler := controller.NewHandler(services)
 
 			r := gin.New()

@@ -6,14 +6,14 @@ import (
 	"github.com/swaggo/gin-swagger"
 	_ "stlab.itechart-group.com/go/food_delivery/courier_service/docs"
 	"stlab.itechart-group.com/go/food_delivery/courier_service/middleware"
-	"stlab.itechart-group.com/go/food_delivery/courier_service/model"
+	"stlab.itechart-group.com/go/food_delivery/courier_service/service"
 )
 
 type Handler struct {
-	services *model.Service
+	services *service.Service
 }
 
-func NewHandler(services *model.Service) *Handler {
+func NewHandler(services *service.Service) *Handler {
 	return &Handler{services: services}
 }
 
