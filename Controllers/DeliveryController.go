@@ -7,6 +7,17 @@ import (
 	"strconv"
 )
 
+// getOrders by courier ID godoc
+// @Summary getOrder
+// @Description get orders by courier ID
+// @Tags Orders
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Courier ID"
+// @Success 200 {object} db.Order
+// @Failure 400 {string} string
+// @Failure 500 {string} err
+// @Router /orders/{id} [get]
 func (h *Handler) GetOrders(ctx *gin.Context) {
 	var Orders []db.Order
 	idQuery := ctx.Query("id")
@@ -23,6 +34,17 @@ func (h *Handler) GetOrders(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, Orders)
 }
 
+// getOrder by order ID godoc
+// @Summary getOrder
+// @Description get orders by order ID
+// @Tags Order
+// @Accept  json
+// @Produce  json
+// @Param id path int true "ID"
+// @Success 200 {object} db.Order
+// @Failure 400 {string} string
+// @Failure 500 {string} err
+// @Router /order/{id} [get]
 func (h *Handler) GetOrder(ctx *gin.Context) {
 	var Order db.Order
 	idQuery := ctx.Query("id")
@@ -39,6 +61,17 @@ func (h *Handler) GetOrder(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, Order)
 }
 
+// putOrderStatus by order ID godoc
+// @Summary putOrderStatus
+// @Description put order status by order ID
+// @Tags OrderStatusChange
+// @Accept  json
+// @Produce  json
+// @Param id path int true "ID"
+// @Success 200 {object} db.Order
+// @Failure 400 {string} string
+// @Failure 500 {string} err
+// @Router /order/status_change/{id} [put]
 func (h *Handler) ChangeOrderStatus(ctx *gin.Context) {
 	idQuery := ctx.Query("id")
 	id, err := strconv.Atoi(idQuery)
