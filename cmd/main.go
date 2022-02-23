@@ -39,3 +39,33 @@ func main() {
 	}
 
 }
+
+/*
+func main() {
+	log.Println("Start...")
+	database, err := db.NewPostgresDB(db.PostgresDB{
+		"159.223.1.135",
+		"5434",
+		"courierteam1",
+		"qwerty",
+		"courier_db",
+		"disable"})
+	if err != nil {
+		log.Fatal("failed to initialize db:", err.Error())
+	}
+	repos := db.NewRepository(database)
+	services := service.NewService(repos)
+	handlers := Controllers.NewHandler(services)
+	//host:=os.Getenv("API_SERVER_PORT")
+	s := &http.Server{
+		Addr:    ":8080", // ":"+host,
+		Handler: handlers.InitRoutes(),
+	}
+	err = s.ListenAndServe()
+	if err != nil {
+		log.Println("failed to initialize port:", err.Error())
+	}
+
+}
+
+*/
