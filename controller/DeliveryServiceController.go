@@ -1,13 +1,13 @@
 package controller
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"stlab.itechart-group.com/go/food_delivery/courier_service/dao"
 )
-
 
 // @Summary  CreateDeliveryService
 // @Tags DeliveryService
@@ -27,10 +27,15 @@ func (h *Handler) CreateDeliveryService(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
 		return
 	}
-	newDelivServ, err:=h.services.CreateDeliveryService(service)
+	if service.Email == "" || service.Name == "" {
+		log.Println(errors.New("empty fields"))
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "empty fields"})
+		return
+	}
+	idService, err := h.services.CreateDeliveryService(service)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
 	}
-	ctx.JSON(http.StatusOK, newDelivServ)
+	ctx.JSON(http.StatusOK, map[string]interface{}{"id": idService})
 }

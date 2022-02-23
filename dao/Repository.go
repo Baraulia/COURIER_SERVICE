@@ -12,7 +12,6 @@ func NewRepository(db *sql.DB) *Repository {
 	}
 }
 
-
 type DeliveryServiceRep interface {
-	SaveDeliveryService_InDB(service *DeliveryService) (*DeliveryService, error)
+	SaveDeliveryServiceInDB(service *DeliveryService) (int, error)
 }

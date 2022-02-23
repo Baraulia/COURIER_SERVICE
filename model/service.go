@@ -5,7 +5,7 @@ import "stlab.itechart-group.com/go/food_delivery/courier_service/dao"
 //go:generate mockgen -source=Service.go -destination=mocks/mock.go
 
 type DeliveryServiceApp interface {
-	CreateDeliveryService(DeliveryService dao.DeliveryService) (*dao.DeliveryService, error)
+	CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error)
 }
 
 type Service struct {

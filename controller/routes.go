@@ -18,7 +18,8 @@ func NewHandler(services *model.Service) *Handler {
 }
 
 func (h *Handler) InitRoutesGin() *gin.Engine {
-	router := gin.Default()
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
 
 	router.Use(
 		middleware.CorsMiddleware,
@@ -28,6 +29,5 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	{
 		order.POST("/", h.CreateDeliveryService)
 	}
-
 	return router
 }
