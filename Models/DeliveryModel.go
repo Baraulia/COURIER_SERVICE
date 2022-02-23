@@ -16,37 +16,35 @@ func NewDeliveryService(repo db.Repository) *DeliveryService {
 }
 
 func (s *DeliveryService) GetOrders(id int) ([]db.Order, error) {
-	var Orders []db.Order
-	err := s.repo.GetActiveOrdersFromDB(&Orders, id)
-	if Orders == nil {
+	get, err := s.repo.GetActiveOrdersFromDB(id)
+	if get == nil {
 		return []db.Order{}, fmt.Errorf("Error in DeliveryService: %s", err)
 	}
 	if err != nil {
-		return nil, fmt.Errorf("%w", err)
+		return nil, fmt.Errorf("Error with database: %s", err)
 	}
 	if id == 0 {
 		err := errors.New("no id")
 		log.Println("id cannot be zero")
 		return nil, fmt.Errorf("Error in DeliveryService: %s", err)
 	}
-	return Orders, nil
+	return get, nil
 }
 
 func (s *DeliveryService) GetOrder(id int) (db.Order, error) {
-	var Order db.Order
-	err := s.repo.GetActiveOrderFromDB(&Order, id)
-	if (db.Order{} == Order) {
+	get, err := s.repo.GetActiveOrderFromDB(id)
+	if (get == db.Order{}) {
 		return db.Order{}, fmt.Errorf("Error in DeliveryService: %s", err)
 	}
 	if err != nil {
-		return db.Order{}, fmt.Errorf("%w", err)
+		return db.Order{}, fmt.Errorf("Error with database: %s", err)
 	}
 	if id == 0 {
 		err := errors.New("no id")
 		log.Println("id cannot be zero")
 		return db.Order{}, fmt.Errorf("Error in DeliveryService: %s", err)
 	}
-	return Order, nil
+	return get, nil
 }
 
 func (s *DeliveryService) ChangeOrderStatus(id uint16) (uint16, error) {
@@ -56,7 +54,7 @@ func (s *DeliveryService) ChangeOrderStatus(id uint16) (uint16, error) {
 	}
 	orderId, err := s.repo.ChangeOrderStatusInDB(id)
 	if err != nil {
-		return 0, fmt.Errorf("%w", err)
+		return 0, fmt.Errorf("Error with database: %s", err)
 	}
 	return orderId, nil
 }

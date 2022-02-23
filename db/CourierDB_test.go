@@ -17,8 +17,6 @@ func TestCourierPostgres_GetCouriersFromDB(t *testing.T) {
 
 	r := NewCourierPostgres(db)
 
-	var couriers []SmallInfo
-
 	tests := []struct {
 		name    string
 		mock    func()
@@ -51,13 +49,13 @@ func TestCourierPostgres_GetCouriersFromDB(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			r.GetCouriersFromDB(&couriers)
+			get, err := r.GetCouriersFromDB()
 
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
-				assert.Equal(t, tt.want, couriers)
+				assert.Equal(t, tt.want, get)
 			}
 			assert.NoError(t, mock.ExpectationsWereMet())
 

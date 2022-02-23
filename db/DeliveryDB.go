@@ -27,7 +27,8 @@ type Order struct {
 	Picked            bool      `json:"picked"`
 }
 
-func (r *DeliveryPostgres) GetActiveOrdersFromDB(Orders *[]Order, id int) error {
+func (r *DeliveryPostgres) GetActiveOrdersFromDB(id int) ([]Order, error) {
+	var Orders []Order
 	db := ConnectDB()
 	defer db.Close()
 
@@ -35,18 +36,19 @@ func (r *DeliveryPostgres) GetActiveOrdersFromDB(Orders *[]Order, id int) error 
 	get, err := db.Query(insertValue, id)
 	if err != nil {
 		log.Println("Error with getting list of orders: " + err.Error())
-		return err
+		return nil, err
 	}
 
 	for get.Next() {
 		var order Order
 		err = get.Scan(&order.IdDeliveryService, &order.Id, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate, &order.RestaurantAddress, &order.Picked)
-		*Orders = append(*Orders, order)
+		Orders = append(Orders, order)
 	}
-	return nil
+	return Orders, nil
 }
 
-func (r *DeliveryPostgres) GetActiveOrderFromDB(Orders *Order, id int) error {
+func (r *DeliveryPostgres) GetActiveOrderFromDB(id int) (Order, error) {
+	var Ord Order
 	db := ConnectDB()
 	defer db.Close()
 
@@ -54,15 +56,15 @@ func (r *DeliveryPostgres) GetActiveOrderFromDB(Orders *Order, id int) error {
 	get, err := db.Query(insertValue, id)
 	if err != nil {
 		log.Println("Error with getting order by id: " + err.Error())
-		return err
+		return Order{}, err
 	}
 
 	for get.Next() {
 		var order Order
 		err = get.Scan(&order.IdDeliveryService, &order.Id, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate, &order.RestaurantAddress, &order.Picked)
-		*Orders = order
+		Ord = order
 	}
-	return nil
+	return Ord, nil
 }
 
 func (r *DeliveryPostgres) ChangeOrderStatusInDB(id uint16) (uint16, error) {

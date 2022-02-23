@@ -50,7 +50,8 @@ func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
 	return nil
 }
 
-func (r *CourierPostgres) GetCouriersFromDB(Couriers *[]SmallInfo) error {
+func (r *CourierPostgres) GetCouriersFromDB() ([]SmallInfo, error) {
+	var Couriers []SmallInfo
 	db := ConnectDB()
 	defer db.Close()
 
@@ -61,18 +62,19 @@ func (r *CourierPostgres) GetCouriersFromDB(Couriers *[]SmallInfo) error {
 	if err != nil {
 
 		log.Println("Error of getting list of couriers :" + err.Error())
-		return err
+		return []SmallInfo{}, err
 	}
 
 	for get.Next() {
 		var courier SmallInfo
 		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
-		*Couriers = append(*Couriers, courier)
+		Couriers = append(Couriers, courier)
 	}
-	return nil
+	return Couriers, nil
 }
 
-func (r *CourierPostgres) GetCourierFromDB(Couriers *SmallInfo, id int) error {
+func (r *CourierPostgres) GetCourierFromDB(id int) (SmallInfo, error) {
+	var cour SmallInfo
 	db := ConnectDB()
 	defer db.Close()
 
@@ -81,13 +83,13 @@ func (r *CourierPostgres) GetCourierFromDB(Couriers *SmallInfo, id int) error {
 
 	if err != nil {
 		log.Println("Error of getting courier :" + err.Error())
-		return err
+		return SmallInfo{}, err
 	}
 
 	for get.Next() {
 		var courier SmallInfo
 		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
-		*Couriers = courier
+		cour = courier
 	}
-	return nil
+	return cour, nil
 }
