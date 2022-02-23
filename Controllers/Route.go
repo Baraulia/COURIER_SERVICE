@@ -29,19 +29,19 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	courier := r.Group("/courier")
 	{
-		courier.GET("/", h.GetCourier)
+		courier.GET("/:id", h.GetCourier)
 		courier.POST("/", h.SaveCourier)
 	}
 
 	orders := r.Group("/orders")
 	{
-		orders.GET("/", h.GetOrders)
+		orders.GET("/:id", h.GetOrders)
 
 	}
 
 	order := r.Group("/order")
 	{
-		order.GET("/", h.GetOrder)
+		order.GET("/:id", h.GetOrder)
 		order.GET("/status_change", h.ChangeOrderStatus)
 	}
 
