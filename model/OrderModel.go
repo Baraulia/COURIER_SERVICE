@@ -31,11 +31,6 @@ func (s *OrderService) GetCourierCompletedOrders(limit, page, idCourier int) ([]
 		log.Println("no more pages")
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
-	if Order == nil {
-		err := errors.New("no id")
-		log.Println("no more id")
-		return nil, fmt.Errorf("Error in OrderService: %s", err)
-	}
 	fmt.Println(Order)
 	return Order, nil
 }
@@ -52,11 +47,6 @@ func (s *OrderService) GetAllOrdersOfCourierService(limit, page, idService int) 
 	if LimitOfPages < page {
 		err := errors.New("no page")
 		log.Println("no more pages")
-		return nil, fmt.Errorf("Error in OrderService: %s", err)
-	}
-	if Order == nil {
-		err := errors.New("no id")
-		log.Println("no more id")
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
 	fmt.Println(Order)
@@ -82,10 +72,6 @@ func (s *OrderService) GetCourierCompletedOrdersByMonth(limit, page, idService, 
 		log.Println("enter correct month")
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
-	if Order == nil {
-		err := errors.New("no id")
-		log.Println("no more id")
-		return nil, fmt.Errorf("Error in OrderService: %s", err)
-	}
+
 	return Order, nil
 }

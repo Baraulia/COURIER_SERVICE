@@ -15,12 +15,13 @@ import (
 func main() {
 	log.Println("Start...")
 	db, err := dao.NewPostgresDB(dao.PostgresDB{
-		"159.223.1.135",
-		"5434",
-		"courierteam1",
-		"qwerty",
-		"courier_db",
-		"disable"})
+		Host:     os.Getenv("HOST"),
+		Port:     os.Getenv("DB_PORT"),
+		User:     os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
+		DBName:   os.Getenv("DB_DATABASE"),
+		SSLMode:  os.Getenv("DB_SSL_MODE"),
+	})
 	if err != nil {
 		log.Fatal("failed to initialize db:", err.Error())
 	}
