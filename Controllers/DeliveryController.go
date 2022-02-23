@@ -1,6 +1,7 @@
 package Controllers
 
 import (
+	"github.com/Baraulia/COURIER_SERVICE/db"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -17,19 +18,20 @@ import (
 // @Failure 400 {string} string
 // @Failure 500 {string} err
 // @Router /orders/{id} [get]
-func (h *Handler) GetOrders(c *gin.Context) {
-	idQuery := c.Param("id")
+func (h *Handler) GetOrders(ctx *gin.Context) {
+	var Orders []db.Order
+	idQuery := ctx.Query("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	get, err := h.services.GetOrders(id)
+	Orders, err = h.services.GetOrders(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"No such orders": err})
+		ctx.JSON(http.StatusBadRequest, gin.H{"No such orders": err})
 		return
 	}
-	c.JSON(http.StatusOK, get)
+	ctx.JSON(http.StatusOK, Orders)
 }
 
 // getOrder by order ID godoc
@@ -43,19 +45,20 @@ func (h *Handler) GetOrders(c *gin.Context) {
 // @Failure 400 {string} string
 // @Failure 500 {string} err
 // @Router /order/{id} [get]
-func (h *Handler) GetOrder(c *gin.Context) {
-	idQuery := c.Param("id")
+func (h *Handler) GetOrder(ctx *gin.Context) {
+	var Order db.Order
+	idQuery := ctx.Query("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
+		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
 		return
 	}
-	get, err := h.services.GetOrder(id)
+	Order, err = h.services.GetOrder(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"No such order": err})
+		ctx.JSON(http.StatusBadRequest, gin.H{"No such order": err})
 		return
 	}
-	c.JSON(http.StatusOK, get)
+	ctx.JSON(http.StatusOK, Order)
 }
 
 // putOrderStatus by order ID godoc
@@ -69,18 +72,18 @@ func (h *Handler) GetOrder(c *gin.Context) {
 // @Failure 400 {string} string
 // @Failure 500 {string} err
 // @Router /order/status_change/{id} [put]
-func (h *Handler) ChangeOrderStatus(c *gin.Context) {
-	idQuery := c.Param("id")
+func (h *Handler) ChangeOrderStatus(ctx *gin.Context) {
+	idQuery := ctx.Query("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
+		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
 		return
 	}
 	orderId, err := h.services.ChangeOrderStatus(uint16(id))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"No such order": err})
+		ctx.JSON(http.StatusBadRequest, gin.H{"No such order": err})
 		return
 	}
-	c.JSON(http.StatusOK, map[string]interface{}{
+	ctx.JSON(http.StatusOK, map[string]interface{}{
 		"Order id": orderId})
 }

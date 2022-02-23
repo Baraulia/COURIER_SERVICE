@@ -1,4 +1,27 @@
 definitions:
+  db.Courier:
+    properties:
+      courier_name:
+        type: string
+      deleted:
+        type: boolean
+      email:
+        type: string
+      id_courier:
+        type: integer
+      number_of_failures:
+        type: integer
+      phone_number:
+        type: string
+      photo:
+        type: string
+      rating:
+        type: integer
+      ready_to_go:
+        type: boolean
+      surname:
+        type: string
+    type: object
   db.Order:
     properties:
       courier_id:
@@ -38,6 +61,36 @@ info:
   description: Courier Service for Food Delivery Application
   title: Courier Service
 paths:
+  /courier:
+    post:
+      consumes:
+      - application/json
+      description: post new courier
+      parameters:
+      - description: Courier
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/db.Courier'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.Courier'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: postCourier
+      tags:
+      - Courier
   /courier/{id}:
     get:
       consumes:

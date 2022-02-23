@@ -34,6 +34,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	courier := r.Group("/courier")
 	{
 		courier.GET("/:id", h.GetCourier)
+		courier.POST("/", h.SaveCourier)
 	}
 
 	orders := r.Group("/orders")
@@ -45,7 +46,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	order := r.Group("/order")
 	{
 		order.GET("/:id", h.GetOrder)
-		order.PUT("/status_change/:id", h.ChangeOrderStatus)
+		order.GET("/status_change", h.ChangeOrderStatus)
 	}
 
 	return r

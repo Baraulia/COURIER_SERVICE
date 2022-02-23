@@ -39,3 +39,12 @@ func (s *CourierService) GetCourier(id int) (db.SmallInfo, error) {
 	}
 	return get, nil
 }
+
+func (s *CourierService) SaveCourier(courier *db.Courier) (*db.Courier, error) {
+
+	err := s.repo.SaveCourierInDB(courier)
+	if err != nil {
+		return nil, fmt.Errorf("%w", err)
+	}
+	return courier, nil
+}

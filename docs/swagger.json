@@ -6,6 +6,52 @@
         "contact": {}
     },
     "paths": {
+        "/courier": {
+            "post": {
+                "description": "post new courier",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Courier"
+                ],
+                "summary": "postCourier",
+                "parameters": [
+                    {
+                        "description": "Courier",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.Courier"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/db.Courier"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/courier/{id}": {
             "get": {
                 "description": "get courier by ID",
@@ -219,6 +265,41 @@
         }
     },
     "definitions": {
+        "db.Courier": {
+            "type": "object",
+            "properties": {
+                "courier_name": {
+                    "type": "string"
+                },
+                "deleted": {
+                    "type": "boolean"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id_courier": {
+                    "type": "integer"
+                },
+                "number_of_failures": {
+                    "type": "integer"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "photo": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "integer"
+                },
+                "ready_to_go": {
+                    "type": "boolean"
+                },
+                "surname": {
+                    "type": "string"
+                }
+            }
+        },
         "db.Order": {
             "type": "object",
             "properties": {
