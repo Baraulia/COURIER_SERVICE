@@ -25,14 +25,19 @@ info:
   description: API Server for TodoList Application
   title: COURIER_SERVICE
 paths:
-  /orders:
+  /orders/{id}:
     put:
       consumes:
       - application/json
       description: assign order to courier
       operationId: UpdateOrder
       parameters:
-      - description: id courier/id order
+      - description: order_id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: id courier
         in: body
         name: input
         required: true
@@ -45,14 +50,6 @@ paths:
           description: ""
         "400":
           description: Bad Request
-          schema:
-            type: string
-        "404":
-          description: Not Found
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
           schema:
             type: string
       summary: UpdateOrder

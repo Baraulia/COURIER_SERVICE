@@ -16,7 +16,7 @@ const docTemplate_swagger = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/orders": {
+        "/orders/{id}": {
             "put": {
                 "description": "assign order to courier",
                 "consumes": [
@@ -32,7 +32,14 @@ const docTemplate_swagger = `{
                 "operationId": "UpdateOrder",
                 "parameters": [
                     {
-                        "description": "id courier/id order",
+                        "type": "integer",
+                        "description": "order_id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "id courier",
                         "name": "input",
                         "in": "body",
                         "required": true,
@@ -47,18 +54,6 @@ const docTemplate_swagger = `{
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
                         "schema": {
                             "type": "string"
                         }
