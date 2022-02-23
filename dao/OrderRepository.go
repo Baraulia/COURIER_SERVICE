@@ -2,7 +2,6 @@ package dao
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 )
 
@@ -16,7 +15,7 @@ func NewOrderPostgres(db *sql.DB) *OrderPostgres {
 
 type Order struct {
 	IdDeliveryService int    `json:"delivery_service_id,omitempty"`
-	Id           int    `json:"id"`
+	Id                int    `json:"id"`
 	IdCourier         int    `json:"courier_id,omitempty"`
 	DeliveryTime      string `json:"delivery_time,omitempty"`
 	CustomerAddress   string `json:"customer_address,omitempty"`
@@ -28,7 +27,7 @@ type Order struct {
 
 type DetailedOrder struct {
 	IdDeliveryService  int    `json:"delivery_service_id,omitempty"`
-	Id            int    `json:"id"`
+	Id                 int    `json:"id"`
 	IdCourier          int    `json:"courier_id,omitempty"`
 	DeliveryTime       string `json:"delivery_time,omitempty"`
 	CustomerAddress    string `json:"customer_address,omitempty"`
@@ -40,17 +39,11 @@ type DetailedOrder struct {
 	CourierPhoneNumber string `json:"phone_number,omitempty"`
 }
 
-func (r *OrderPostgres) AssigningOrderToCourier_InDB(order Order) error {
-	transaction, err := r.db.Begin()
-	if err != nil {
-		log.Fatal(err)
-	}
+func (r *OrderPostgres) AssigningOrderToCourierInDB(order Order) error {
 	log.Println("connected to db")
-
-	defer transaction.Commit()
-	s := fmt.Sprintf("UPDATE delivery SET courier_id = %d WHERE id = %d", order.IdCourier, order.Id)
+	s := "UPDATE delivery SET courier_id = $1 WHERE id = $2"
 	log.Println(s)
-	insert, err := transaction.Query(s)
+	insert, err := r.db.Query(s, order.IdCourier, order.Id)
 	defer insert.Close()
 	if err != nil {
 		log.Println(err)
@@ -58,61 +51,3 @@ func (r *OrderPostgres) AssigningOrderToCourier_InDB(order Order) error {
 	}
 	return nil
 }
-
-func(r *OrderPostgres) GetAllServiceCompletedOrders_fromDB(limit, page, idService int) ([]DetailedOrder, int){
-	var Orders []DetailedOrder
-	transaction, err := r.db.Begin()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer transaction.Commit()
-	res, err := transaction.Query(fmt.Sprintf("SELECT delivery.order_date, delivery.courier_id,delivery.id,delivery.customer_address,delivery.restaurant_address,couriers.name,couriers.phone_number FROM delivery JOIN couriers ON couriers.id_courier=delivery.courier_id Where delivery.status='completed' and delivery.delivery_service_id=%d LIMIT %d OFFSET %d", idService, limit, limit*(page-1)))
-	if err != nil {
-		log.Fatal(err)
-	}
-	for res.Next() {
-		var order DetailedOrder
-		err = res.Scan(&order.OrderDate, &order.IdCourier, &order.Id, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierPhoneNumber)
-		if err != nil {
-			panic(err)
-		}
-		Orders = append(Orders, order)
-	}
-
-	var Ordersss []Order
-	resl, err := transaction.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE status='completed' and delivery_service_id=%d ", idService))
-	if err != nil {
-		log.Println(err)
-	}
-	for resl.Next() {
-		var order1 Order
-		err = resl.Scan(&order1.IdCourier)
-		if err != nil {
-			panic(err)
-		}
-
-		Ordersss = append(Ordersss, order1)
-	}
-	return Orders, len(Ordersss)
-}
-
-func(r *OrderPostgres) GetDetailedOrdersById_FromDB(Id int) (DetailedOrder, error){
-	var order DetailedOrder
-	transaction, err := r.db.Begin()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer transaction.Commit()
-	res, err := transaction.Query(fmt.Sprintf("SELECT delivery.order_date, delivery.courier_id,delivery.id,delivery.delivery_service_id,delivery.delivery_time,delivery.status,delivery.customer_address,delivery.restaurant_address,couriers.name,couriers.phone_number FROM delivery JOIN couriers ON couriers.id_courier=delivery.courier_id Where delivery.status='completed' and delivery.id=%d", Id))
-	if err != nil {
-		log.Fatal(err)
-	}
-	for res.Next() {
-		err = res.Scan(&order.OrderDate, &order.IdCourier, &order.Id, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierPhoneNumber)
-		if err != nil {
-			panic(err)
-		}
-	}
-	return order, nil
-}
-

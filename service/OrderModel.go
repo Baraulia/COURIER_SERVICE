@@ -1,4 +1,4 @@
-package model
+package service
 
 import (
 	"fmt"
@@ -15,12 +15,10 @@ func NewOrderService(repo dao.Repository) *OrderService {
 	return &OrderService{repo: repo}
 }
 
-
 func (s *OrderService) AssigningOrderToCourier(order dao.Order) error {
-	if err := s.repo.AssigningOrderToCourier_InDB(order); err != nil {
+	if err := s.repo.AssigningOrderToCourierInDB(order); err != nil {
 		log.Println(err)
 		return fmt.Errorf("Error in OrderService: %s", err)
 	}
 	return nil
 }
-

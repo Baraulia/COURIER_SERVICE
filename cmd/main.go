@@ -3,12 +3,10 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
 	"stlab.itechart-group.com/go/food_delivery/courier_service/controller"
 	"stlab.itechart-group.com/go/food_delivery/courier_service/dao"
-	"stlab.itechart-group.com/go/food_delivery/courier_service/model"
+	"stlab.itechart-group.com/go/food_delivery/courier_service/service"
 )
-
 
 // @title COURIER_SERVICE
 // @description API Server for TodoList Application
@@ -23,22 +21,21 @@ func main() {
 		"qwerty",
 		"courier_db",
 		"disable",
-
-		})
+	})
 
 	if err != nil {
-		log.Println("failed to initialize db:", err.Error())
+		log.Fatal("failed to initialize db:", err.Error())
 	}
 	repos := dao.NewRepository(db)
-	services := model.NewService(repos)
+	services := service.NewService(repos)
 	handlers := controller.NewHandler(services)
-	host := os.Getenv("API_SERVER_PORT")
-	s:= &http.Server{
-		Addr:    ":" + host,
+	//host := os.Getenv("API_SERVER_PORT")
+	s := &http.Server{
+		Addr:    ":8080", // ":" + host,
 		Handler: handlers.InitRoutesGin(),
 	}
-	err=s.ListenAndServe()
+	err = s.ListenAndServe()
 	if err != nil {
-		log.Println("failed to initialize db:", err.Error())
+		log.Println("failed to initialize server:", err.Error())
 	}
 }
