@@ -1,9 +1,9 @@
-package db
+package dao
 
 import "database/sql"
 
 type Repository struct {
-	DeliveryRep
+	OrderRep
 	CourierRep
 }
 
@@ -14,10 +14,13 @@ func NewRepository(db *sql.DB) *Repository {
 	}
 }
 
-type DeliveryRep interface {
+type OrderRep interface {
 	GetActiveOrdersFromDB(id int) ([]Order, error)
 	GetActiveOrderFromDB(id int) (Order, error)
 	ChangeOrderStatusInDB(id uint16) (uint16, error)
+	GetCourierCompletedOrdersWithPage_fromDB(limit, page, idCourier int) ([]DetailedOrder, int)
+	GetAllOrdersOfCourierServiceWithPage_fromDB(limit, page, idService int) ([]Order, int)
+	GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year int) ([]Order, int)
 }
 
 type CourierRep interface {

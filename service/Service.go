@@ -1,32 +1,34 @@
 package service
 
 import (
-	"github.com/Baraulia/COURIER_SERVICE/Models"
-	"github.com/Baraulia/COURIER_SERVICE/db"
+	"github.com/Baraulia/COURIER_SERVICE/dao"
 )
 
 //go:generate mockgen -source=Service.go -destination=mocks/mock.go
 
-type DeliveryApp interface {
-	GetOrder(id int) (db.Order, error)
-	GetOrders(id int) ([]db.Order, error)
+type OrderApp interface {
+	GetOrder(id int) (dao.Order, error)
+	GetOrders(id int) ([]dao.Order, error)
 	ChangeOrderStatus(id uint16) (uint16, error)
+	GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.DetailedOrder, error)
+	GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
+	GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error)
 }
 
 type CourierApp interface {
-	GetCouriers() ([]db.SmallInfo, error)
-	GetCourier(id int) (db.SmallInfo, error)
-	SaveCourier(courier *db.Courier) (*db.Courier, error)
+	GetCouriers() ([]dao.SmallInfo, error)
+	GetCourier(id int) (dao.SmallInfo, error)
+	SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 }
 
 type Service struct {
-	DeliveryApp
+	OrderApp
 	CourierApp
 }
 
-func NewService(rep *db.Repository) *Service {
+func NewService(rep *dao.Repository) *Service {
 	return &Service{
-		Models.NewDeliveryService(*rep),
-		Models.NewCourierService(*rep),
+		NewOrderService(*rep),
+		NewCourierService(*rep),
 	}
 }

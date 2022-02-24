@@ -7,35 +7,35 @@ package mock_service
 import (
 	reflect "reflect"
 
-	db "github.com/Baraulia/COURIER_SERVICE/db"
+	dao "github.com/Baraulia/COURIER_SERVICE/dao"
 	gomock "github.com/golang/mock/gomock"
 )
 
-// MockDeliveryApp is a mock of DeliveryApp interface.
-type MockDeliveryApp struct {
+// MockOrderApp is a mock of OrderApp interface.
+type MockOrderApp struct {
 	ctrl     *gomock.Controller
-	recorder *MockDeliveryAppMockRecorder
+	recorder *MockOrderAppMockRecorder
 }
 
-// MockDeliveryAppMockRecorder is the mock recorder for MockDeliveryApp.
-type MockDeliveryAppMockRecorder struct {
-	mock *MockDeliveryApp
+// MockOrderAppMockRecorder is the mock recorder for MockOrderApp.
+type MockOrderAppMockRecorder struct {
+	mock *MockOrderApp
 }
 
-// NewMockDeliveryApp creates a new mock instance.
-func NewMockDeliveryApp(ctrl *gomock.Controller) *MockDeliveryApp {
-	mock := &MockDeliveryApp{ctrl: ctrl}
-	mock.recorder = &MockDeliveryAppMockRecorder{mock}
+// NewMockOrderApp creates a new mock instance.
+func NewMockOrderApp(ctrl *gomock.Controller) *MockOrderApp {
+	mock := &MockOrderApp{ctrl: ctrl}
+	mock.recorder = &MockOrderAppMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDeliveryApp) EXPECT() *MockDeliveryAppMockRecorder {
+func (m *MockOrderApp) EXPECT() *MockOrderAppMockRecorder {
 	return m.recorder
 }
 
 // ChangeOrderStatus mocks base method.
-func (m *MockDeliveryApp) ChangeOrderStatus(id uint16) (uint16, error) {
+func (m *MockOrderApp) ChangeOrderStatus(id uint16) (uint16, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ChangeOrderStatus", id)
 	ret0, _ := ret[0].(uint16)
@@ -44,39 +44,84 @@ func (m *MockDeliveryApp) ChangeOrderStatus(id uint16) (uint16, error) {
 }
 
 // ChangeOrderStatus indicates an expected call of ChangeOrderStatus.
-func (mr *MockDeliveryAppMockRecorder) ChangeOrderStatus(id interface{}) *gomock.Call {
+func (mr *MockOrderAppMockRecorder) ChangeOrderStatus(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeOrderStatus", reflect.TypeOf((*MockDeliveryApp)(nil).ChangeOrderStatus), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeOrderStatus", reflect.TypeOf((*MockOrderApp)(nil).ChangeOrderStatus), id)
+}
+
+// GetAllOrdersOfCourierService mocks base method.
+func (m *MockOrderApp) GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllOrdersOfCourierService", limit, page, idService)
+	ret0, _ := ret[0].([]dao.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllOrdersOfCourierService indicates an expected call of GetAllOrdersOfCourierService.
+func (mr *MockOrderAppMockRecorder) GetAllOrdersOfCourierService(limit, page, idService interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllOrdersOfCourierService", reflect.TypeOf((*MockOrderApp)(nil).GetAllOrdersOfCourierService), limit, page, idService)
+}
+
+// GetCourierCompletedOrders mocks base method.
+func (m *MockOrderApp) GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.DetailedOrder, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCourierCompletedOrders", limit, page, idCourier)
+	ret0, _ := ret[0].([]dao.DetailedOrder)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCourierCompletedOrders indicates an expected call of GetCourierCompletedOrders.
+func (mr *MockOrderAppMockRecorder) GetCourierCompletedOrders(limit, page, idCourier interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCourierCompletedOrders", reflect.TypeOf((*MockOrderApp)(nil).GetCourierCompletedOrders), limit, page, idCourier)
+}
+
+// GetCourierCompletedOrdersByMonth mocks base method.
+func (m *MockOrderApp) GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCourierCompletedOrdersByMonth", limit, page, idService, Month, Year)
+	ret0, _ := ret[0].([]dao.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCourierCompletedOrdersByMonth indicates an expected call of GetCourierCompletedOrdersByMonth.
+func (mr *MockOrderAppMockRecorder) GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCourierCompletedOrdersByMonth", reflect.TypeOf((*MockOrderApp)(nil).GetCourierCompletedOrdersByMonth), limit, page, idService, Month, Year)
 }
 
 // GetOrder mocks base method.
-func (m *MockDeliveryApp) GetOrder(id int) (db.Order, error) {
+func (m *MockOrderApp) GetOrder(id int) (dao.Order, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrder", id)
-	ret0, _ := ret[0].(db.Order)
+	ret0, _ := ret[0].(dao.Order)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetOrder indicates an expected call of GetOrder.
-func (mr *MockDeliveryAppMockRecorder) GetOrder(id interface{}) *gomock.Call {
+func (mr *MockOrderAppMockRecorder) GetOrder(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrder", reflect.TypeOf((*MockDeliveryApp)(nil).GetOrder), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrder", reflect.TypeOf((*MockOrderApp)(nil).GetOrder), id)
 }
 
 // GetOrders mocks base method.
-func (m *MockDeliveryApp) GetOrders(id int) ([]db.Order, error) {
+func (m *MockOrderApp) GetOrders(id int) ([]dao.Order, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrders", id)
-	ret0, _ := ret[0].([]db.Order)
+	ret0, _ := ret[0].([]dao.Order)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetOrders indicates an expected call of GetOrders.
-func (mr *MockDeliveryAppMockRecorder) GetOrders(id interface{}) *gomock.Call {
+func (mr *MockOrderAppMockRecorder) GetOrders(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrders", reflect.TypeOf((*MockDeliveryApp)(nil).GetOrders), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrders", reflect.TypeOf((*MockOrderApp)(nil).GetOrders), id)
 }
 
 // MockCourierApp is a mock of CourierApp interface.
@@ -103,10 +148,10 @@ func (m *MockCourierApp) EXPECT() *MockCourierAppMockRecorder {
 }
 
 // GetCourier mocks base method.
-func (m *MockCourierApp) GetCourier(id int) (db.SmallInfo, error) {
+func (m *MockCourierApp) GetCourier(id int) (dao.SmallInfo, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCourier", id)
-	ret0, _ := ret[0].(db.SmallInfo)
+	ret0, _ := ret[0].(dao.SmallInfo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -118,10 +163,10 @@ func (mr *MockCourierAppMockRecorder) GetCourier(id interface{}) *gomock.Call {
 }
 
 // GetCouriers mocks base method.
-func (m *MockCourierApp) GetCouriers() ([]db.SmallInfo, error) {
+func (m *MockCourierApp) GetCouriers() ([]dao.SmallInfo, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCouriers")
-	ret0, _ := ret[0].([]db.SmallInfo)
+	ret0, _ := ret[0].([]dao.SmallInfo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -133,10 +178,10 @@ func (mr *MockCourierAppMockRecorder) GetCouriers() *gomock.Call {
 }
 
 // SaveCourier mocks base method.
-func (m *MockCourierApp) SaveCourier(courier *db.Courier) (*db.Courier, error) {
+func (m *MockCourierApp) SaveCourier(courier *dao.Courier) (*dao.Courier, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveCourier", courier)
-	ret0, _ := ret[0].(*db.Courier)
+	ret0, _ := ret[0].(*dao.Courier)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

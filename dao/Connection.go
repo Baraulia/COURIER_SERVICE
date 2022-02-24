@@ -1,4 +1,4 @@
-package db
+package dao
 
 import (
 	"database/sql"
@@ -29,3 +29,20 @@ func NewPostgresDB(dbs PostgresDB) (*sql.DB, error) {
 	}
 	return db, nil
 }
+
+/*
+db, err := database.NewPostgresDB(database.PostgresDB{
+        Host:     os.Getenv("HOST"),
+        Port:     os.Getenv("DB_PORT"),
+        Username: os.Getenv("DB_USER"),
+        Password: os.Getenv("DB_PASSWORD"),
+        DBName:   os.Getenv("DB_DATABASE"),
+        SSLMode:  os.Getenv("DB_SSL_MODE"),
+    })
+    if err != nil {
+        logger.Panicf("failed to initialize db:%s", err.Error())
+    }
+и запуск сервера
+port := os.Getenv("API_SERVER_PORT")
+    logger.Fatal(router.Run(":" + port))
+*/

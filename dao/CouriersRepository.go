@@ -1,4 +1,4 @@
-package db
+package dao
 
 import (
 	"database/sql"
@@ -42,7 +42,7 @@ func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
 
 	if err != nil {
 
-		log.Println("Error of saving courier in db :" + err.Error())
+		log.Println("Error of saving courier in dao :" + err.Error())
 		return err
 	}
 	return nil

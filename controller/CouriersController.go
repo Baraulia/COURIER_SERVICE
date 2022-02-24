@@ -1,7 +1,7 @@
-package Controllers
+package controller
 
 import (
-	"github.com/Baraulia/COURIER_SERVICE/db"
+	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -13,7 +13,7 @@ import (
 // @Tags Couriers
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} db.SmallInfo
+// @Success 200 {object} dao.SmallInfo
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /couriers [get]
@@ -33,12 +33,12 @@ func (h *Handler) GetCouriers(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path int true "Courier ID"
-// @Success 200 {object} db.SmallInfo
+// @Success 200 {object} dao.SmallInfo
 // @Failure 400 {string} string
 // @Failure 500 {string} err
 // @Router /courier/{id} [get]
 func (h *Handler) GetCourier(ctx *gin.Context) {
-	var Courier db.SmallInfo
+	var Courier dao.SmallInfo
 	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
@@ -59,13 +59,13 @@ func (h *Handler) GetCourier(ctx *gin.Context) {
 // @Tags Courier
 // @Accept  json
 // @Produce  json
-// @Param input body db.Courier true "Courier"
-// @Success 200 {object} db.Courier
+// @Param input body dao.Courier true "Courier"
+// @Success 200 {object} dao.Courier
 // @Failure 400 {string} string
 // @Failure 500 {string} err
 // @Router /courier [post]
 func (h *Handler) SaveCourier(ctx *gin.Context) {
-	var Courier *db.Courier
+	var Courier *dao.Courier
 	if err := ctx.ShouldBindJSON(&Courier); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
 		return

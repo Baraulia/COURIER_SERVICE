@@ -1,4 +1,4 @@
-package Controllers
+package controller
 
 import (
 	_ "github.com/Baraulia/COURIER_SERVICE/docs"
@@ -17,37 +17,41 @@ func NewHandler(services *service.Service) *Handler {
 	return &Handler{services: services}
 }
 
-func (h *Handler) InitRoutes() *gin.Engine {
-	r := gin.Default()
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+func (h *Handler) InitRoutesGin() *gin.Engine {
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.Default()
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	r.Use(
+	router.Use(
 		middleware.CorsMiddleware,
 	)
 
-	couriers := r.Group("/couriers")
+	couriers := router.Group("/couriers")
 	{
 		couriers.GET("/", h.GetCouriers)
 
 	}
 
-	courier := r.Group("/courier")
+	courier := router.Group("/courier")
 	{
 		courier.GET("/:id", h.GetCourier)
 		courier.POST("/", h.SaveCourier)
 	}
 
-	orders := r.Group("/orders")
+	orders := router.Group("/orders")
 	{
+		orders.GET("/completed", h.GetCourierCompletedOrders)
+		orders.GET("/", h.GetAllOrdersOfCourierService)
+		orders.GET("/bymonth", h.GetCourierCompletedOrdersByMonth)
 		orders.GET("/:id", h.GetOrders)
 
 	}
 
-	order := r.Group("/order")
+	order := router.Group("/order")
 	{
 		order.GET("/:id", h.GetOrder)
 		order.GET("/status_change", h.ChangeOrderStatus)
 	}
 
-	return r
+	return router
 }
