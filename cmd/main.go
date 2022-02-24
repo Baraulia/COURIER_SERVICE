@@ -40,8 +40,8 @@ func main() {
 
 }
 
-/*
 
+/*
 func main() {
 	log.Println("Start...")
 	database, err := dao.NewPostgresDB(dao.PostgresDB{
@@ -67,6 +67,6 @@ func main() {
 		log.Println("failed to initialize port:", err.Error())
 	}
 
-}
+} */
 
-*/
+

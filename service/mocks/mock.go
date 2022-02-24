@@ -34,6 +34,20 @@ func (m *MockOrderApp) EXPECT() *MockOrderAppMockRecorder {
 	return m.recorder
 }
 
+// AssigningOrderToCourier mocks base method.
+func (m *MockOrderApp) AssigningOrderToCourier(order dao.Order) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AssigningOrderToCourier", order)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AssigningOrderToCourier indicates an expected call of AssigningOrderToCourier.
+func (mr *MockOrderAppMockRecorder) AssigningOrderToCourier(order interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssigningOrderToCourier", reflect.TypeOf((*MockOrderApp)(nil).AssigningOrderToCourier), order)
+}
+
 // ChangeOrderStatus mocks base method.
 func (m *MockOrderApp) ChangeOrderStatus(id uint16) (uint16, error) {
 	m.ctrl.T.Helper()
