@@ -1,0 +1,393 @@
+definitions:
+  controller.listOrders:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dao.DetailedOrder'
+        type: array
+    type: object
+  controller.listShortOrders:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dao.Order'
+        type: array
+    type: object
+  dao.Courier:
+    properties:
+      courier_name:
+        type: string
+      deleted:
+        type: boolean
+      email:
+        type: string
+      id_courier:
+        type: integer
+      number_of_failures:
+        type: integer
+      phone_number:
+        type: string
+      photo:
+        type: string
+      rating:
+        type: integer
+      ready_to_go:
+        type: boolean
+      surname:
+        type: string
+    type: object
+  dao.DetailedOrder:
+    properties:
+      courier_id:
+        type: integer
+      customer_address:
+        type: string
+      delivery_service_id:
+        type: integer
+      delivery_time:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      order_date:
+        type: string
+      phone_number:
+        type: string
+      picked:
+        type: boolean
+      restaurant_address:
+        type: string
+      status:
+        type: string
+    type: object
+  dao.Order:
+    properties:
+      courier_id:
+        type: integer
+      customer_address:
+        type: string
+      delivery_service_id:
+        type: integer
+      delivery_time:
+        type: string
+      id:
+        type: integer
+      order_date:
+        type: string
+      picked:
+        type: boolean
+      restaurant_address:
+        type: string
+      status:
+        type: string
+    type: object
+  dao.SmallInfo:
+    properties:
+      courier_name:
+        type: string
+      id_courier:
+        type: integer
+      phone_number:
+        type: string
+      photo:
+        type: string
+      surname:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Courier Service for Food Delivery Application
+  title: Courier Service
+paths:
+  /courier:
+    post:
+      consumes:
+      - application/json
+      description: post new courier
+      parameters:
+      - description: Courier
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dao.Courier'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dao.Courier'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: postCourier
+      tags:
+      - Courier
+  /courier/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get courier by ID
+      parameters:
+      - description: Courier ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dao.SmallInfo'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: getCourier
+      tags:
+      - Courier
+  /couriers:
+    get:
+      consumes:
+      - application/json
+      description: get all couriers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dao.SmallInfo'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: getCouriers
+      tags:
+      - Couriers
+  /order/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get orders by order ID
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dao.Order'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: getOrder
+      tags:
+      - Order
+  /order/status_change/{id}:
+    put:
+      consumes:
+      - application/json
+      description: put order status by order ID
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dao.Order'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: putOrderStatus
+      tags:
+      - OrderStatusChange
+  /orders:
+    get:
+      description: get list of all orders by courier service id
+      parameters:
+      - description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: iddeliveryservice
+        in: query
+        name: iddeliveryservice
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.listShortOrders'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetAllOrdersOfCourierService
+      tags:
+      - order
+  /orders/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get orders by courier ID
+      parameters:
+      - description: Courier ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dao.Order'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: getOrder
+      tags:
+      - Orders
+  /orders/bymonth:
+    get:
+      description: get list of completed orders by courier id sorted by month
+      parameters:
+      - description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: idcourier
+        in: query
+        name: idcourier
+        required: true
+        type: integer
+      - description: month
+        in: query
+        name: month
+        required: true
+        type: integer
+      - description: year
+        in: query
+        name: year
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.listShortOrders'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetCourierCompletedOrdersByMonth
+      tags:
+      - order
+  /orders/completed:
+    get:
+      description: get list of completed orders by courier id
+      parameters:
+      - description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: idcourier
+        in: query
+        name: idcourier
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.listOrders'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetCourierCompletedOrders
+      tags:
+      - order
+swagger: "2.0"
