@@ -50,7 +50,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	order := router.Group("/order")
 	{
 		order.GET("/:id", h.GetOrder)
-		order.GET("/status_change", h.ChangeOrderStatus)
+		order.PUT("/status_change/:id", h.ChangeOrderStatus)
 	}
 
 	return router
