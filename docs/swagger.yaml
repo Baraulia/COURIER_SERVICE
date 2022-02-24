@@ -306,6 +306,35 @@ paths:
       summary: getOrder
       tags:
       - Orders
+    put:
+      consumes:
+      - application/json
+      description: assign order to courier
+      operationId: UpdateOrder
+      parameters:
+      - description: order_id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: id courier
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dao.Order'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: UpdateOrder
+      tags:
+      - order
   /orders/bymonth:
     get:
       description: get list of completed orders by courier id sorted by month
