@@ -12,7 +12,6 @@ import (
 
 // @title Courier Service
 // @description Courier Service for Food Delivery Application
-
 func main() {
 	log.Println("Start...")
 	database, err := dao.NewPostgresDB(dao.PostgresDB{

@@ -205,3 +205,41 @@ func (mr *MockCourierAppMockRecorder) SaveCourier(courier interface{}) *gomock.C
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveCourier", reflect.TypeOf((*MockCourierApp)(nil).SaveCourier), courier)
 }
+
+// MockDeliveryServiceApp is a mock of DeliveryServiceApp interface.
+type MockDeliveryServiceApp struct {
+	ctrl     *gomock.Controller
+	recorder *MockDeliveryServiceAppMockRecorder
+}
+
+// MockDeliveryServiceAppMockRecorder is the mock recorder for MockDeliveryServiceApp.
+type MockDeliveryServiceAppMockRecorder struct {
+	mock *MockDeliveryServiceApp
+}
+
+// NewMockDeliveryServiceApp creates a new mock instance.
+func NewMockDeliveryServiceApp(ctrl *gomock.Controller) *MockDeliveryServiceApp {
+	mock := &MockDeliveryServiceApp{ctrl: ctrl}
+	mock.recorder = &MockDeliveryServiceAppMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockDeliveryServiceApp) EXPECT() *MockDeliveryServiceAppMockRecorder {
+	return m.recorder
+}
+
+// CreateDeliveryService mocks base method.
+func (m *MockDeliveryServiceApp) CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDeliveryService", DeliveryService)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateDeliveryService indicates an expected call of CreateDeliveryService.
+func (mr *MockDeliveryServiceAppMockRecorder) CreateDeliveryService(DeliveryService interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDeliveryService", reflect.TypeOf((*MockDeliveryServiceApp)(nil).CreateDeliveryService), DeliveryService)
+}

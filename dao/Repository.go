@@ -5,12 +5,14 @@ import "database/sql"
 type Repository struct {
 	OrderRep
 	CourierRep
+	DeliveryServiceRep
 }
 
 func NewRepository(db *sql.DB) *Repository {
 	return &Repository{
 		NewDeliveryPostgres(db),
 		NewCourierPostgres(db),
+		NewDeliveryServicePostgres(db),
 	}
 }
 
@@ -28,4 +30,8 @@ type CourierRep interface {
 	SaveCourierInDB(Courier *Courier) error
 	GetCouriersFromDB() ([]SmallInfo, error)
 	GetCourierFromDB(id int) (SmallInfo, error)
+}
+
+type DeliveryServiceRep interface {
+	SaveDeliveryServiceInDB(service *DeliveryService) (int, error)
 }

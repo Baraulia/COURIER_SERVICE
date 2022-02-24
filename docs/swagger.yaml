@@ -36,6 +36,27 @@ definitions:
       surname:
         type: string
     type: object
+  dao.DeliveryService:
+    properties:
+      deleted:
+        type: boolean
+      description:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      manager_id:
+        type: integer
+      name:
+        type: string
+      phone_number:
+        type: string
+      photo:
+        type: string
+      working_now:
+        type: boolean
+    type: object
   dao.DetailedOrder:
     properties:
       courier_id:
@@ -182,6 +203,38 @@ paths:
       summary: getCouriers
       tags:
       - Couriers
+  /deliveryservice:
+    post:
+      consumes:
+      - application/json
+      description: create a Delivery Service
+      operationId: CreateDeliveryService
+      parameters:
+      - description: Delivery Service
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dao.DeliveryService'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dao.DeliveryService'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: CreateDeliveryService
+      tags:
+      - DeliveryService
   /order/{id}:
     get:
       consumes:

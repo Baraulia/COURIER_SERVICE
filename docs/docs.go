@@ -141,6 +141,54 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "/deliveryservice": {
+            "post": {
+                "description": "create a Delivery Service",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DeliveryService"
+                ],
+                "summary": "CreateDeliveryService",
+                "operationId": "CreateDeliveryService",
+                "parameters": [
+                    {
+                        "description": "Delivery Service",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dao.DeliveryService"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dao.DeliveryService"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/order/status_change/{id}": {
             "put": {
                 "description": "put order status by order ID",
@@ -551,6 +599,38 @@ const docTemplate_swagger = `{
                 },
                 "surname": {
                     "type": "string"
+                }
+            }
+        },
+        "dao.DeliveryService": {
+            "type": "object",
+            "properties": {
+                "deleted": {
+                    "type": "boolean"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "manager_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "photo": {
+                    "type": "string"
+                },
+                "working_now": {
+                    "type": "boolean"
                 }
             }
         },

@@ -54,5 +54,10 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 		order.PUT("/status_change/:id", h.ChangeOrderStatus)
 	}
 
+	deliveryService := router.Group("/deliveryservice")
+	{
+		deliveryService.POST("/", h.CreateDeliveryService)
+	}
+
 	return router
 }
