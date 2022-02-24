@@ -13,6 +13,7 @@ type OrderApp interface {
 	GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.DetailedOrder, error)
 	GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
 	GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error)
+	AssigningOrderToCourier(order dao.Order) error
 }
 
 type CourierApp interface {
