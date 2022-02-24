@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"github.com/Baraulia/COURIER_SERVICE/dao"
+	"github.com/Baraulia/COURIER_SERVICE/model"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 )
@@ -18,9 +19,9 @@ import (
 // @Failure 500 {string} string
 // @Router /couriers [get]
 func (h *Handler) GetCouriers(ctx *gin.Context) {
-	Couriers, err := h.services.GetCouriers()
+	Couriers, err := h.services.CourierApp.GetCouriers()
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
+		ctx.JSON(http.StatusInternalServerError, model.ErrorResponse{Message: err.Error()})
 		return
 	}
 	ctx.JSON(http.StatusOK, Couriers)
@@ -38,14 +39,19 @@ func (h *Handler) GetCouriers(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /courier/{id} [get]
 func (h *Handler) GetCourier(ctx *gin.Context) {
-	var Courier dao.SmallInfo
+	var Courier model.SmallInfo
+	if err := ctx.ShouldBindJSON(&Courier); err != nil {
+		logrus.Warnf("Handler createUser (binding JSON):%s", err)
+		ctx.JSON(http.StatusBadRequest, model.ErrorResponse{Message: "invalid request"})
+		return
+	}
 	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	Courier, err = h.services.GetCourier(id)
+	Courier, err = h.services.CourierApp.GetCourier(uint16(id))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"No such courier": err})
 		return
@@ -65,15 +71,19 @@ func (h *Handler) GetCourier(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /courier [post]
 func (h *Handler) SaveCourier(ctx *gin.Context) {
-	var Courier *dao.Courier
-	if err := ctx.ShouldBindJSON(&Courier); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+	var input *model.Courier
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		logrus.Warnf("Handler createUser (binding JSON):%s", err)
+		ctx.JSON(http.StatusBadRequest, model.ErrorResponse{Message: "invalid request"})
 		return
 	}
-	Courier, err := h.services.SaveCourier(Courier)
+	permId, err := h.services.CourierApp.SaveCourier(input)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err})
+		ctx.JSON(http.StatusInternalServerError, model.ErrorResponse{Message: err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusCreated, Courier)
+	ctx.JSON(http.StatusCreated, map[string]uint16{
+		"id": permId,
+	})
 }
+

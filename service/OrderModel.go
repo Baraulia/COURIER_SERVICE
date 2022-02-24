@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
+	"github.com/Baraulia/COURIER_SERVICE/model"
 	"log"
 )
 
@@ -15,10 +16,10 @@ func NewOrderService(repo dao.Repository) *OrderService {
 	return &OrderService{repo: repo}
 }
 
-func (s *OrderService) GetOrders(id int) ([]dao.Order, error) {
-	get, err := s.repo.GetActiveOrdersFromDB(id)
+func (s *OrderService) GetOrders(id int) ([]model.Order, error) {
+	get, err := s.repo.OrderRep.GetActiveOrdersFromDB(id)
 	if get == nil {
-		return []dao.Order{}, fmt.Errorf("Error in OrderService: %s", err)
+		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
 	if err != nil {
 		return nil, fmt.Errorf("Error with database: %s", err)
@@ -31,79 +32,77 @@ func (s *OrderService) GetOrders(id int) ([]dao.Order, error) {
 	return get, nil
 }
 
-func (s *OrderService) GetOrder(id int) (dao.Order, error) {
-	get, err := s.repo.GetActiveOrderFromDB(id)
-	if (get == dao.Order{}) {
-		return dao.Order{}, fmt.Errorf("Error in OrderService: %s", err)
+func (s *OrderService) GetOrder(id int) (*model.Order, error) {
+	get, err := s.repo.OrderRep.GetActiveOrderFromDB(id)
+	if (get == &model.Order{}) {
+		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
 	if err != nil {
-		return dao.Order{}, fmt.Errorf("Error with database: %s", err)
+		return nil, fmt.Errorf("Error with database: %s", err)
 	}
 	if id == 0 {
 		err := errors.New("no id")
 		log.Println("id cannot be zero")
-		return dao.Order{}, fmt.Errorf("Error in OrderService: %s", err)
+		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
 	return get, nil
 }
 
-func (s *OrderService) ChangeOrderStatus(id uint16) (uint16, error) {
+func (s *OrderService) ChangeOrderStatus(status string, id uint16) (uint16, error) {
 	_, err := s.GetOrder(int(id))
 	if err != nil {
 		return 0, fmt.Errorf("Error in OrderService: %s", err)
 	}
-	orderId, err := s.repo.ChangeOrderStatusInDB(id)
+	orderId, err := s.repo.ChangeOrderStatusInDB(status,id)
 	if err != nil {
 		return 0, fmt.Errorf("Error with database: %s", err)
 	}
 	return orderId, nil
 }
 
-func (s *OrderService) GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.DetailedOrder, error) {
-	var Order = []dao.DetailedOrder{}
+func (s *OrderService) GetCourierCompletedOrders(limit, page, idCourier int) ([]model.DetailedOrder, error) {
+	var Order []model.DetailedOrder
 
 	if limit <= 0 || page <= 0 {
 		err := errors.New("no page or limit")
 		log.Println("no more pages or limit")
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
-	Order, totalCount := s.repo.GetCourierCompletedOrdersWithPage_fromDB(limit, page, idCourier)
+	Order, totalCount := s.repo.OrderRep.GetCourierCompletedOrdersWithPage_fromDB(limit, page, idCourier)
 	LimitOfPages := (totalCount / limit) + 1
 	if LimitOfPages < page {
 		err := errors.New("no page")
 		log.Println("no more pages")
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
-	fmt.Println(Order)
 	return Order, nil
 }
 
-func (s *OrderService) GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error) {
-	var Order = []dao.Order{}
+func (s *OrderService) GetAllOrdersOfCourierService(limit, page, idService int) ([]model.Order, error) {
+	var Order []model.Order
 	if limit <= 0 || page <= 0 {
 		err := errors.New("no page or limit")
 		log.Println("no more pages or limit")
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
-	Order, totalCount := s.repo.GetAllOrdersOfCourierServiceWithPage_fromDB(limit, page, idService)
+	Order, totalCount := s.repo.OrderRep.GetAllOrdersOfCourierServiceWithPage_fromDB(limit, page, idService)
 	LimitOfPages := (totalCount / limit) + 1
 	if LimitOfPages < page {
 		err := errors.New("no page")
 		log.Println("no more pages")
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
-	fmt.Println(Order)
 	return Order, nil
 }
 
-func (s *OrderService) GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error) {
-	var Order = []dao.Order{}
+func (s *OrderService) GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]model.Order, error) {
+	var Order []model.Order
 	if limit <= 0 || page <= 0 {
 		err := errors.New("no page or limit")
 		log.Println("no more pages or limit")
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
-	Order, totalCount := s.repo.GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idService, Month, Year)
+	Order, totalCount := s.repo.OrderRep.GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idService, Month, Year)
 	LimitOfPages := (totalCount / limit) + 1
 	if LimitOfPages < page {
 		err := errors.New("no page")

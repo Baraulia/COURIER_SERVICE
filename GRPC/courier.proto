@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "GRPC/courierProto";
+
+package courier;
+
+service Courier {
+  rpc SetOrderStatus(OrderRequest) returns (OrderResponse) {}
+}
+
+message OrderRequest {
+  int32 orderId = 1;
+  string customerAddress = 2;
+  string restaurantAddress = 3;
+  string status = 4;
+}
+
+message OrderResponse {
+  int32 orderId = 1;
+  string status = 2;
+}

@@ -7,7 +7,7 @@ package mock_service
 import (
 	reflect "reflect"
 
-	dao "github.com/Baraulia/COURIER_SERVICE/dao"
+	model "github.com/Baraulia/COURIER_SERVICE/model"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -35,25 +35,25 @@ func (m *MockOrderApp) EXPECT() *MockOrderAppMockRecorder {
 }
 
 // ChangeOrderStatus mocks base method.
-func (m *MockOrderApp) ChangeOrderStatus(id uint16) (uint16, error) {
+func (m *MockOrderApp) ChangeOrderStatus(status string, id uint16) (uint16, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ChangeOrderStatus", id)
+	ret := m.ctrl.Call(m, "ChangeOrderStatus", status, id)
 	ret0, _ := ret[0].(uint16)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ChangeOrderStatus indicates an expected call of ChangeOrderStatus.
-func (mr *MockOrderAppMockRecorder) ChangeOrderStatus(id interface{}) *gomock.Call {
+func (mr *MockOrderAppMockRecorder) ChangeOrderStatus(status, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeOrderStatus", reflect.TypeOf((*MockOrderApp)(nil).ChangeOrderStatus), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeOrderStatus", reflect.TypeOf((*MockOrderApp)(nil).ChangeOrderStatus), status, id)
 }
 
 // GetAllOrdersOfCourierService mocks base method.
-func (m *MockOrderApp) GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error) {
+func (m *MockOrderApp) GetAllOrdersOfCourierService(limit, page, idService int) ([]model.Order, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllOrdersOfCourierService", limit, page, idService)
-	ret0, _ := ret[0].([]dao.Order)
+	ret0, _ := ret[0].([]model.Order)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -65,10 +65,10 @@ func (mr *MockOrderAppMockRecorder) GetAllOrdersOfCourierService(limit, page, id
 }
 
 // GetCourierCompletedOrders mocks base method.
-func (m *MockOrderApp) GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.DetailedOrder, error) {
+func (m *MockOrderApp) GetCourierCompletedOrders(limit, page, idCourier int) ([]model.DetailedOrder, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCourierCompletedOrders", limit, page, idCourier)
-	ret0, _ := ret[0].([]dao.DetailedOrder)
+	ret0, _ := ret[0].([]model.DetailedOrder)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -80,10 +80,10 @@ func (mr *MockOrderAppMockRecorder) GetCourierCompletedOrders(limit, page, idCou
 }
 
 // GetCourierCompletedOrdersByMonth mocks base method.
-func (m *MockOrderApp) GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error) {
+func (m *MockOrderApp) GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]model.Order, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCourierCompletedOrdersByMonth", limit, page, idService, Month, Year)
-	ret0, _ := ret[0].([]dao.Order)
+	ret0, _ := ret[0].([]model.Order)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -95,10 +95,10 @@ func (mr *MockOrderAppMockRecorder) GetCourierCompletedOrdersByMonth(limit, page
 }
 
 // GetOrder mocks base method.
-func (m *MockOrderApp) GetOrder(id int) (dao.Order, error) {
+func (m *MockOrderApp) GetOrder(id int) (*model.Order, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrder", id)
-	ret0, _ := ret[0].(dao.Order)
+	ret0, _ := ret[0].(*model.Order)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -110,10 +110,10 @@ func (mr *MockOrderAppMockRecorder) GetOrder(id interface{}) *gomock.Call {
 }
 
 // GetOrders mocks base method.
-func (m *MockOrderApp) GetOrders(id int) ([]dao.Order, error) {
+func (m *MockOrderApp) GetOrders(id int) ([]model.Order, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrders", id)
-	ret0, _ := ret[0].([]dao.Order)
+	ret0, _ := ret[0].([]model.Order)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -148,10 +148,10 @@ func (m *MockCourierApp) EXPECT() *MockCourierAppMockRecorder {
 }
 
 // GetCourier mocks base method.
-func (m *MockCourierApp) GetCourier(id int) (dao.SmallInfo, error) {
+func (m *MockCourierApp) GetCourier(id uint16) (model.SmallInfo, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCourier", id)
-	ret0, _ := ret[0].(dao.SmallInfo)
+	ret0, _ := ret[0].(model.SmallInfo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -163,10 +163,10 @@ func (mr *MockCourierAppMockRecorder) GetCourier(id interface{}) *gomock.Call {
 }
 
 // GetCouriers mocks base method.
-func (m *MockCourierApp) GetCouriers() ([]dao.SmallInfo, error) {
+func (m *MockCourierApp) GetCouriers() ([]model.SmallInfo, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCouriers")
-	ret0, _ := ret[0].([]dao.SmallInfo)
+	ret0, _ := ret[0].([]model.SmallInfo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -178,10 +178,10 @@ func (mr *MockCourierAppMockRecorder) GetCouriers() *gomock.Call {
 }
 
 // SaveCourier mocks base method.
-func (m *MockCourierApp) SaveCourier(courier *dao.Courier) (*dao.Courier, error) {
+func (m *MockCourierApp) SaveCourier(courier *model.Courier) (uint16, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveCourier", courier)
-	ret0, _ := ret[0].(*dao.Courier)
+	ret0, _ := ret[0].(uint16)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -3,10 +3,11 @@ package main
 import (
 	"github.com/Baraulia/COURIER_SERVICE/controller"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
+	"github.com/Baraulia/COURIER_SERVICE/server"
 	"github.com/Baraulia/COURIER_SERVICE/service"
 	_ "github.com/lib/pq"
+	"github.com/sirupsen/logrus"
 	"log"
-	"net/http"
 	"os"
 )
 
@@ -23,50 +24,22 @@ func main() {
 		DBName:   os.Getenv("DB_DATABASE"),
 		SSLMode:  os.Getenv("DB_SSL_MODE")})
 	if err != nil {
-		log.Fatal("failed to initialize dao:", err.Error())
+		log.Fatal("failed to initialize db:", err.Error())
 	}
 	repos := dao.NewRepository(database)
 	services := service.NewService(repos)
 	handlers := controller.NewHandler(services)
-	host := os.Getenv("API_SERVER_PORT")
-	s := &http.Server{
-		Addr:    ":" + host,
-		Handler: handlers.InitRoutesGin(),
-	}
-	err = s.ListenAndServe()
-	if err != nil {
-		log.Println("failed to initialize port:", err.Error())
-	}
+	port := os.Getenv("API_SERVER_PORT")
+
+	serv := new(server.Server)
+
+	go func() {
+		err := serv.Run(port, handlers.InitRoutesGin())
+		if err != nil {
+			logrus.Panicf("Error occured while running http server: %s", err.Error())
+		}
+	}()
+
 
 }
 
-/*
-
-func main() {
-	log.Println("Start...")
-	database, err := dao.NewPostgresDB(dao.PostgresDB{
-		"159.223.1.135",
-		"5434",
-		"courierteam1",
-		"qwerty",
-		"courier_db",
-		"disable"})
-	if err != nil {
-		log.Fatal("failed to initialize dao:", err.Error())
-	}
-	repos := dao.NewRepository(database)
-	services := service.NewService(repos)
-	handlers := controller.NewHandler(services)
-	//host:=os.Getenv("API_SERVER_PORT")
-	s := &http.Server{
-		Addr:    ":8080", // ":"+host,
-		Handler: handlers.InitRoutesGin(),
-	}
-	err = s.ListenAndServe()
-	if err != nil {
-		log.Println("failed to initialize port:", err.Error())
-	}
-
-}
-
-*/

@@ -42,7 +42,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	{
 		orders.GET("/completed", h.GetCourierCompletedOrders)
 		orders.GET("/", h.GetAllOrdersOfCourierService)
-		orders.GET("/bymonth", h.GetCourierCompletedOrdersByMonth)
+		orders.GET("/byMonth", h.GetCourierCompletedOrdersByMonth)
 		orders.GET("/:id", h.GetOrders)
 
 	}
@@ -50,7 +50,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	order := router.Group("/order")
 	{
 		order.GET("/:id", h.GetOrder)
-		order.PUT("/status_change/:id", h.ChangeOrderStatus)
+		order.PUT("/statusChange/:id", h.ChangeOrderStatus)
 	}
 
 	return router

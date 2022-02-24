@@ -2,14 +2,14 @@ package controller
 
 import (
 	"fmt"
-	"github.com/Baraulia/COURIER_SERVICE/dao"
+	"github.com/Baraulia/COURIER_SERVICE/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 )
 
 type listOrders struct {
-	Data []dao.DetailedOrder `json:"data"`
+	Data []model.DetailedOrder `json:"data"`
 }
 
 // getOrders by courier ID godoc
@@ -24,14 +24,14 @@ type listOrders struct {
 // @Failure 500 {string} err
 // @Router /orders/{id} [get]
 func (h *Handler) GetOrders(ctx *gin.Context) {
-	var Orders []dao.Order
+	var Orders []model.Order
 	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	Orders, err = h.services.GetOrders(id)
+	Orders, err = h.services.OrderApp.GetOrders(id)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"No such orders": err})
 		return
@@ -51,14 +51,14 @@ func (h *Handler) GetOrders(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /order/{id} [get]
 func (h *Handler) GetOrder(ctx *gin.Context) {
-	var Order dao.Order
+	var Order *model.Order
 	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
 		return
 	}
-	Order, err = h.services.GetOrder(id)
+	Order, err = h.services.OrderApp.GetOrder(id)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"No such order": err})
 		return
@@ -79,12 +79,13 @@ func (h *Handler) GetOrder(ctx *gin.Context) {
 // @Router /order/status_change/{id} [put]
 func (h *Handler) ChangeOrderStatus(ctx *gin.Context) {
 	idQuery := ctx.Param("id")
+	status := ctx.Query("status")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
 		return
 	}
-	orderId, err := h.services.ChangeOrderStatus(uint16(id))
+	orderId, err := h.services.OrderApp.ChangeOrderStatus(status, uint16(id))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"No such order": err})
 		return
@@ -115,13 +116,13 @@ func (h *Handler) GetCourierCompletedOrders(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
 		return
 	}
-	idCourier, er := strconv.Atoi(ctx.Query("idcourier"))
+	courierId, er := strconv.Atoi(ctx.Query("courierId"))
 	if er != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
 		return
 	}
 
-	DetOrders, err := h.services.OrderApp.GetCourierCompletedOrders(limit, page, idCourier)
+	DetOrders, err := h.services.OrderApp.GetCourierCompletedOrders(limit, page, courierId)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
@@ -131,7 +132,7 @@ func (h *Handler) GetCourierCompletedOrders(ctx *gin.Context) {
 }
 
 type listShortOrders struct {
-	Data []dao.Order `json:"data"`
+	Data []model.Order `json:"data"`
 }
 
 // @Summary GetAllOrdersOfCourierService
@@ -156,7 +157,7 @@ func (h *Handler) GetAllOrdersOfCourierService(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
 		return
 	}
-	idService, er := strconv.Atoi(ctx.Query("iddeliveryservice"))
+	idService, er := strconv.Atoi(ctx.Query("idDeliveryService"))
 	if er != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
 		return
@@ -171,19 +172,19 @@ func (h *Handler) GetAllOrdersOfCourierService(ctx *gin.Context) {
 
 }
 
-// @Summary GetCourierCompletedOrdersByMonth
-// @Description get list of completed orders by courier id sorted by month
-// @Tags order
-// @Produce json
-// @Param page query int true "page"
-// @Param limit query int true "limit"
-// @Param idcourier query int true "idcourier"
-// @Param month query int true "month"
-// @Param year query int true "year"
-// @Success 200 {object} listShortOrders
-// @Failure 400 {string} string
-// @Failure 500 {string} string
-// @Router /orders/bymonth [get]
+//@Summary GetCourierCompletedOrdersByMonth
+//@Description get list of completed orders by courier id sorted by month
+//@Tags order
+//@Produce json
+//@Param page query int true "page"
+//@Param limit query int true "limit"
+//@Param idcourier query int true "idcourier"
+//@Param month query int true "month"
+//@Param year query int true "year"
+//@Success 200 {object} listShortOrders
+//@Failure 400 {string} string
+//@Failure 500 {string} string
+//@Router /orders/bymonth [get]
 func (h *Handler) GetCourierCompletedOrdersByMonth(ctx *gin.Context) {
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page == 0 {
@@ -195,7 +196,7 @@ func (h *Handler) GetCourierCompletedOrdersByMonth(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": " limit query param is wrong. Expected an integer greater than 0"})
 		return
 	}
-	idCourier, er := strconv.Atoi(ctx.Query("idcourier"))
+	idCourier, er := strconv.Atoi(ctx.Query("idCourier"))
 	if er != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
 		return

@@ -3,7 +3,7 @@ package tests
 import (
 	"bytes"
 	"github.com/Baraulia/COURIER_SERVICE/controller"
-	"github.com/Baraulia/COURIER_SERVICE/dao"
+	"github.com/Baraulia/COURIER_SERVICE/model"
 	"github.com/Baraulia/COURIER_SERVICE/service"
 	"github.com/Baraulia/COURIER_SERVICE/service/mocks"
 	"github.com/gin-gonic/gin"
@@ -15,9 +15,9 @@ import (
 )
 
 func TestHandler_GetOrders(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockOrderApp, courier dao.Order)
-	var orders []dao.Order
-	ord := dao.Order{
+	type mockBehavior func(s *mock_service.MockOrderApp, courier model.Order)
+	var orders []model.Order
+	ord := model.Order{
 		IdDeliveryService: 1,
 		Id:                1,
 		IdCourier:         1,
@@ -31,7 +31,7 @@ func TestHandler_GetOrders(t *testing.T) {
 	testTable := []struct {
 		name                string
 		inputBody           string
-		inputCourier        dao.Order
+		inputCourier        model.Order
 		mockBehavior        mockBehavior
 		expectedStatusCode  int
 		expectedRequestBody string
@@ -39,7 +39,7 @@ func TestHandler_GetOrders(t *testing.T) {
 		{
 			name:      "OK",
 			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}`,
-			inputCourier: dao.Order{
+			inputCourier: model.Order{
 				IdDeliveryService: 1,
 				Id:                1,
 				IdCourier:         1,
@@ -48,7 +48,7 @@ func TestHandler_GetOrders(t *testing.T) {
 				Status:            "ready to delivery",
 				OrderDate:         "11.11.2022",
 			},
-			mockBehavior: func(s *mock_service.MockOrderApp, courier dao.Order) {
+			mockBehavior: func(s *mock_service.MockOrderApp, courier model.Order) {
 				s.EXPECT().GetOrders(3).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
@@ -84,9 +84,9 @@ func TestHandler_GetOrders(t *testing.T) {
 }
 
 func TestHandler_GetOneOrder(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockOrderApp, courier dao.Order)
+	type mockBehavior func(s *mock_service.MockOrderApp, courier model.Order)
 
-	ord := dao.Order{
+	ord := model.Order{
 		IdDeliveryService: 1,
 		Id:                1,
 		IdCourier:         1,
@@ -99,7 +99,7 @@ func TestHandler_GetOneOrder(t *testing.T) {
 	testTable := []struct {
 		name                string
 		inputBody           string
-		inputCourier        dao.Order
+		inputCourier        model.Order
 		mockBehavior        mockBehavior
 		expectedStatusCode  int
 		expectedRequestBody string
@@ -107,7 +107,7 @@ func TestHandler_GetOneOrder(t *testing.T) {
 		{
 			name:      "OK",
 			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}`,
-			inputCourier: dao.Order{
+			inputCourier: model.Order{
 				IdDeliveryService: 1,
 				Id:                1,
 				IdCourier:         1,
@@ -116,7 +116,7 @@ func TestHandler_GetOneOrder(t *testing.T) {
 				Status:            "ready to delivery",
 				OrderDate:         "11.11.2022",
 			},
-			mockBehavior: func(s *mock_service.MockOrderApp, courier dao.Order) {
+			mockBehavior: func(s *mock_service.MockOrderApp, courier model.Order) {
 				s.EXPECT().GetOrder(1).Return(ord, nil)
 			},
 			expectedStatusCode:  200,

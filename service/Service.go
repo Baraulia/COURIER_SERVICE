@@ -2,23 +2,24 @@ package service
 
 import (
 	"github.com/Baraulia/COURIER_SERVICE/dao"
+	"github.com/Baraulia/COURIER_SERVICE/model"
 )
 
 //go:generate mockgen -source=Service.go -destination=mocks/mock.go
 
 type OrderApp interface {
-	GetOrder(id int) (dao.Order, error)
-	GetOrders(id int) ([]dao.Order, error)
-	ChangeOrderStatus(id uint16) (uint16, error)
-	GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.DetailedOrder, error)
-	GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
-	GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error)
+	GetOrder(id int) (*model.Order, error)
+	GetOrders(id int) ([]model.Order, error)
+	ChangeOrderStatus(status string,id uint16) (uint16, error)
+	GetCourierCompletedOrders(limit, page, idCourier int) ([]model.DetailedOrder, error)
+	GetAllOrdersOfCourierService(limit, page, idService int) ([]model.Order, error)
+	GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]model.Order, error)
 }
 
 type CourierApp interface {
-	GetCouriers() ([]dao.SmallInfo, error)
-	GetCourier(id int) (dao.SmallInfo, error)
-	SaveCourier(courier *dao.Courier) (*dao.Courier, error)
+	GetCouriers() ([]model.SmallInfo, error)
+	GetCourier(id uint16) (model.SmallInfo, error)
+	SaveCourier(courier *model.Courier) (uint16, error)
 }
 
 type Service struct {

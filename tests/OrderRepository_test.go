@@ -1,6 +1,8 @@
-package dao
+package tests
 
 import (
+	"github.com/Baraulia/COURIER_SERVICE/dao"
+	"github.com/Baraulia/COURIER_SERVICE/model"
 	sqlmock "github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
 	"log"
@@ -14,7 +16,7 @@ func TestRepository_GetCourierCompletedOrdersWithPage_fromDB(t *testing.T) {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	r := NewRepository(db)
+	r := dao.NewRepository(db)
 
 	testTable := []struct {
 		name          string
@@ -22,7 +24,7 @@ func TestRepository_GetCourierCompletedOrdersWithPage_fromDB(t *testing.T) {
 		courier_id    int
 		limit         int
 		page          int
-		expectedOrder []DetailedOrder
+		expectedOrder []model.DetailedOrder
 	}{
 		{
 			name: "OK",
@@ -44,7 +46,7 @@ func TestRepository_GetCourierCompletedOrdersWithPage_fromDB(t *testing.T) {
 			courier_id: 1,
 			limit:      1,
 			page:       1,
-			expectedOrder: []DetailedOrder{
+			expectedOrder: []model.DetailedOrder{
 				{
 					IdDeliveryService:  1,
 					IdOrder:            1,
@@ -78,7 +80,7 @@ func TestRepository_GetAllOrdersOfCourierServiceWithPage_fromDB(t *testing.T) {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	r := NewRepository(db)
+	r := dao.NewRepository(db)
 
 	testTable := []struct {
 		name                string
@@ -86,7 +88,7 @@ func TestRepository_GetAllOrdersOfCourierServiceWithPage_fromDB(t *testing.T) {
 		delivery_service_id int
 		limit               int
 		page                int
-		expectedOrder       []Order
+		expectedOrder       []model.Order
 	}{
 		{
 			name: "OK",
@@ -108,7 +110,7 @@ func TestRepository_GetAllOrdersOfCourierServiceWithPage_fromDB(t *testing.T) {
 			delivery_service_id: 1,
 			limit:               1,
 			page:                1,
-			expectedOrder: []Order{
+			expectedOrder: []model.Order{
 				{
 					Id:              1,
 					IdCourier:       1,
@@ -137,7 +139,7 @@ func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T
 		log.Fatal(err)
 	}
 	defer db.Close()
-	r := NewRepository(db)
+	r := dao.NewRepository(db)
 
 	testTable := []struct {
 		name          string
@@ -147,7 +149,7 @@ func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T
 		page          int
 		month         int
 		year          int
-		expectedOrder []Order
+		expectedOrder []model.Order
 	}{
 		{
 			name: "OK",
@@ -171,7 +173,7 @@ func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T
 			page:       1,
 			month:      1,
 			year:       2022,
-			expectedOrder: []Order{
+			expectedOrder: []model.Order{
 				{
 					IdDeliveryService: 1,
 					Id:                1,
