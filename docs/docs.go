@@ -54,12 +54,6 @@ const docTemplate_swagger = `{
                             "type": "string"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -86,7 +80,13 @@ const docTemplate_swagger = `{
                 "id": {
                     "type": "integer"
                 },
+                "manager_id": {
+                    "type": "integer"
+                },
                 "name": {
+                    "type": "string"
+                },
+                "phone_number": {
                     "type": "string"
                 },
                 "photo": {

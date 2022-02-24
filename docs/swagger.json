@@ -44,12 +44,6 @@
                             "type": "string"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -76,7 +70,13 @@
                 "id": {
                     "type": "integer"
                 },
+                "manager_id": {
+                    "type": "integer"
+                },
                 "name": {
+                    "type": "string"
+                },
+                "phone_number": {
                     "type": "string"
                 },
                 "photo": {

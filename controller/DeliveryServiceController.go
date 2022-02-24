@@ -17,7 +17,7 @@ import (
 // @Produce json
 // @Param input body dao.DeliveryService true "Delivery Service"
 // @Success 200 {object} dao.DeliveryService
-// @Failure 400,404 {string} string
+// @Failure 400 {string} map[string]interface{}
 // @Failure 500 {string} string
 // @Router /deliveryservice [post]
 func (h *Handler) CreateDeliveryService(ctx *gin.Context) {
