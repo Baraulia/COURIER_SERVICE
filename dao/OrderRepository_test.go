@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
+	"time"
 )
 
 func TestRepository_GetCourierCompletedOrdersWithPage_fromDB(t *testing.T) {
@@ -28,7 +29,7 @@ func TestRepository_GetCourierCompletedOrdersWithPage_fromDB(t *testing.T) {
 			mock: func(courier_id, limit, page int) {
 				mock.ExpectBegin()
 				rows := sqlmock.NewRows([]string{"order_date", "courier_id", "id", "delivery_service_id", "delivery_time", "status", "customer_address", "restaurant_address", "name", "phone_number"}).
-					AddRow("2022-02-02", 1, 1, 1, "12:00:00", "completed", "address", "address", "name", "1234567")
+					AddRow("2022-02-02", 1, 1, 1, time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC), "completed", "address", "address", "name", "1234567")
 
 				mock.ExpectQuery(`SELECT delivery.order_date, delivery.courier_id,delivery.id,delivery.delivery_service_id,delivery.delivery_time,delivery.status,delivery.customer_address,delivery.restaurant_address,couriers.name,couriers.phone_number FROM delivery JOIN couriers ON`).
 					WillReturnRows(rows)
@@ -48,7 +49,7 @@ func TestRepository_GetCourierCompletedOrdersWithPage_fromDB(t *testing.T) {
 					IdDeliveryService:  1,
 					IdOrder:            1,
 					IdCourier:          1,
-					DeliveryTime:       "12:00:00",
+					DeliveryTime:       time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
 					CustomerAddress:    "address",
 					Status:             "completed",
 					CourierName:        "name",
@@ -92,7 +93,7 @@ func TestRepository_GetAllOrdersOfCourierServiceWithPage_fromDB(t *testing.T) {
 			mock: func(delivery_service_id, limit, page int) {
 				mock.ExpectBegin()
 				rows := sqlmock.NewRows([]string{"courier_id", "id", "delivery_time", "status", "customer_address"}).
-					AddRow(1, 1, "12:00:00", "completed", "address")
+					AddRow(1, 1, time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC), "completed", "address")
 
 				mock.ExpectQuery(`SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE (.+)`).
 					WillReturnRows(rows)
@@ -111,7 +112,7 @@ func TestRepository_GetAllOrdersOfCourierServiceWithPage_fromDB(t *testing.T) {
 				{
 					IdOrder:         1,
 					IdCourier:       1,
-					DeliveryTime:    "12:00:00",
+					DeliveryTime:    time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
 					CustomerAddress: "address",
 					Status:          "completed",
 				},
@@ -153,7 +154,7 @@ func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T
 			mock: func(courier_id, limit, page int) {
 				mock.ExpectBegin()
 				rows := sqlmock.NewRows([]string{"courier_id", "id", "delivery_service_id", "delivery_time", "order_date", "status", "customer_address", "restaurant_address"}).
-					AddRow(1, 1, 1, "12:00:00", "2022-02-02", "completed", "address", "restaurant_address")
+					AddRow(1, 1, 1, time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC), "2022-02-02", "completed", "address", "restaurant_address")
 
 				mock.ExpectQuery(`SELECT courier_id ,id ,delivery_service_id ,delivery_time ,order_date ,status ,customer_address, restaurant_address FROM delivery where (.+)`).
 					WillReturnRows(rows)
@@ -175,7 +176,7 @@ func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T
 					IdDeliveryService: 1,
 					IdOrder:           1,
 					IdCourier:         1,
-					DeliveryTime:      "12:00:00",
+					DeliveryTime:      time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
 					OrderDate:         "2022-02-02",
 					CustomerAddress:   "address",
 					RestaurantAddress: "restaurant_address",

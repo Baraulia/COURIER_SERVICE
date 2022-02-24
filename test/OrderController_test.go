@@ -11,6 +11,7 @@ import (
 	"stlab.itechart-group.com/go/food_delivery/courier_service/service"
 	mocks "stlab.itechart-group.com/go/food_delivery/courier_service/service/mocks"
 	"testing"
+	"time"
 )
 
 func TestHandler_GetCourierCompletedOrders(t *testing.T) {
@@ -20,7 +21,7 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 		IdDeliveryService:  1,
 		IdOrder:            1,
 		IdCourier:          1,
-		DeliveryTime:       "15:00",
+		DeliveryTime:       time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
 		CustomerAddress:    "Some address",
 		Status:             "ready to delivery",
 		OrderDate:          "11.11.2022",
@@ -51,7 +52,7 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 				s.EXPECT().GetCourierCompletedOrders(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","phone_number":""}]}`,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","phone_number":""}]}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -89,7 +90,7 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 		IdDeliveryService: 1,
 		IdOrder:           1,
 		IdCourier:         1,
-		DeliveryTime:      "15:00",
+		DeliveryTime:      time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
 		CustomerAddress:   "Some address",
 		Status:            "ready to delivery",
 		OrderDate:         "11.11.2022",
@@ -108,13 +109,13 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 	}{
 		{
 			name:      "OK",
-			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}}`,
+			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}}`,
 			inputOrder: []dao.Order{
 				{
 					IdDeliveryService: 1,
 					IdOrder:           1,
 					IdCourier:         1,
-					DeliveryTime:      "15:00",
+					DeliveryTime:      time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
 					CustomerAddress:   "Some address",
 					Status:            "ready to delivery",
 					OrderDate:         "11.11.2022",
@@ -126,7 +127,7 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 				s.EXPECT().GetAllOrdersOfCourierService(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}]}`,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}]}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -164,7 +165,7 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 		IdDeliveryService: 1,
 		IdOrder:           1,
 		IdCourier:         1,
-		DeliveryTime:      "15:00",
+		DeliveryTime:      time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
 		CustomerAddress:   "Some address",
 		Status:            "ready to delivery",
 		OrderDate:         "11.11.2022",
@@ -183,13 +184,13 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 	}{
 		{
 			name:      "OK",
-			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}`,
+			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}`,
 			inputOrder: []dao.Order{
 				{
 					IdDeliveryService: 1,
 					IdOrder:           1,
 					IdCourier:         1,
-					DeliveryTime:      "15:00",
+					DeliveryTime:      time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
 					CustomerAddress:   "Some address",
 					Status:            "ready to delivery",
 					OrderDate:         "11.11.2022",
@@ -201,7 +202,7 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 				s.EXPECT().GetCourierCompletedOrdersByMonth(1, 1, 1, 11, 2022).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"15:00","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}]}`,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}]}`,
 		},
 	}
 	for _, testCase := range testTable {

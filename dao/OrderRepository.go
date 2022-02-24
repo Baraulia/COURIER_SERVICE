@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 )
 
 type OrderPostgres struct {
@@ -15,29 +16,29 @@ func NewOrderPostgres(db *sql.DB) *OrderPostgres {
 }
 
 type Order struct {
-	IdDeliveryService int    `json:"delivery_service_id,omitempty"`
-	IdOrder           int    `json:"id"`
-	IdCourier         int    `json:"courier_id,omitempty"`
-	DeliveryTime      string `json:"delivery_time,omitempty"`
-	CustomerAddress   string `json:"customer_address,omitempty"`
-	Status            string `json:"status"`
-	OrderDate         string `json:"order_date"`
-	RestaurantAddress string `json:"restaurant_address"`
-	Picked            bool   `json:"picked"`
+	IdDeliveryService int       `json:"delivery_service_id,omitempty"`
+	IdOrder           int       `json:"id"`
+	IdCourier         int       `json:"courier_id,omitempty"`
+	DeliveryTime      time.Time `json:"delivery_time,omitempty"`
+	CustomerAddress   string    `json:"customer_address,omitempty"`
+	Status            string    `json:"status"`
+	OrderDate         string    `json:"order_date"`
+	RestaurantAddress string    `json:"restaurant_address"`
+	Picked            bool      `json:"picked"`
 }
 
 type DetailedOrder struct {
-	IdDeliveryService  int    `json:"delivery_service_id,omitempty"`
-	IdOrder            int    `json:"id"`
-	IdCourier          int    `json:"courier_id,omitempty"`
-	DeliveryTime       string `json:"delivery_time,omitempty"`
-	CustomerAddress    string `json:"customer_address,omitempty"`
-	Status             string `json:"status"`
-	OrderDate          string `json:"order_date,omitempty"`
-	RestaurantAddress  string `json:"restaurant_address,omitempty"`
-	Picked             bool   `json:"picked"`
-	CourierName        string `json:"name"`
-	CourierPhoneNumber string `json:"phone_number"`
+	IdDeliveryService  int       `json:"delivery_service_id,omitempty"`
+	IdOrder            int       `json:"id"`
+	IdCourier          int       `json:"courier_id,omitempty"`
+	DeliveryTime       time.Time `json:"delivery_time,omitempty"`
+	CustomerAddress    string    `json:"customer_address,omitempty"`
+	Status             string    `json:"status"`
+	OrderDate          string    `json:"order_date,omitempty"`
+	RestaurantAddress  string    `json:"restaurant_address,omitempty"`
+	Picked             bool      `json:"picked"`
+	CourierName        string    `json:"name"`
+	CourierPhoneNumber string    `json:"phone_number"`
 }
 
 func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(limit, page, idCourier int) ([]DetailedOrder, int) {
@@ -55,7 +56,7 @@ func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(limit, page, id
 		var order DetailedOrder
 		err = res.Scan(&order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierPhoneNumber)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		Orders = append(Orders, order)
 	}
