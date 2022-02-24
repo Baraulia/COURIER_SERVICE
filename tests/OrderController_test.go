@@ -150,3 +150,53 @@ func TestHandler_GetOneOrder(t *testing.T) {
 		})
 	}
 }
+
+
+func TestHandler_UpdateOrder(t *testing.T) {
+	type mockBehavior func(s *mock_service.MockOrderApp, order dao.Order)
+	testTable := []struct {
+		name               string
+		inputBody          string
+		inputOrder         dao.Order
+		mockBehavior       mockBehavior
+		expectedStatusCode int
+	}{
+		{
+			name:      "OK",
+			inputBody: `{"courier_id":8}`,
+			inputOrder: dao.Order{
+				Id:        1,
+				IdCourier: 8,
+			},
+			mockBehavior: func(s *mock_service.MockOrderApp, order dao.Order) {
+				s.EXPECT().AssigningOrderToCourier(order).Return(nil)
+			},
+			expectedStatusCode: 204,
+		},
+	}
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
+			c := gomock.NewController(t)
+			defer c.Finish()
+
+			get := mock_service.NewMockOrderApp(c)
+			testCase.mockBehavior(get, testCase.inputOrder)
+
+			services := &service.Service{OrderApp: get}
+			handler := controller.NewHandler(services)
+
+			r := gin.New()
+
+			r.PUT("/orders/:id", handler.UpdateOrder)
+
+			w := httptest.NewRecorder()
+			req := httptest.NewRequest("PUT", "/orders/1", bytes.NewBufferString(testCase.inputBody))
+
+			r.ServeHTTP(w, req)
+
+			assert.Equal(t, testCase.expectedStatusCode, w.Code)
+
+		})
+	}
+
+}
