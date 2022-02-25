@@ -22,14 +22,19 @@ type CourierApp interface {
 	SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 }
 
+type DeliveryServiceApp interface {
+	CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error)
+}
+
 type Service struct {
 	OrderApp
 	CourierApp
+	DeliveryServiceApp
 }
 
 func NewService(rep *dao.Repository) *Service {
 	return &Service{
 		NewOrderService(*rep),
-		NewCourierService(*rep),
+		NewCourierService(*rep), NewDeliveryService(*rep),
 	}
 }
