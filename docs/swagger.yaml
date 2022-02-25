@@ -38,8 +38,6 @@ definitions:
     type: object
   dao.DeliveryService:
     properties:
-      deleted:
-        type: boolean
       description:
         type: string
       email:
@@ -54,8 +52,8 @@ definitions:
         type: string
       photo:
         type: string
-      working_now:
-        type: boolean
+      status:
+        type: string
     type: object
   dao.DetailedOrder:
     properties:

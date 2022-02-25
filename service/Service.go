@@ -36,6 +36,6 @@ func NewService(rep *dao.Repository) *Service {
 	return &Service{
 		NewOrderService(*rep),
 		NewCourierService(*rep),
-		NewDelivServService(*rep),
+		NewDeliviveryService(*rep),
 	}
 }

@@ -6,20 +6,20 @@ import (
 	"log"
 )
 
-type DelServService struct {
+type DeliveryService struct {
 	repo dao.Repository
 }
 
-func NewDelivServService(repo dao.Repository) *DelServService {
-	return &DelServService{
+func NewDeliviveryService(repo dao.Repository) *DeliveryService {
+	return &DeliveryService{
 		repo: repo,
 	}
 }
-func (s *DelServService) CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error) {
+func (s *DeliveryService) CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error) {
 	id, err := s.repo.SaveDeliveryServiceInDB(&DeliveryService)
 	if err != nil {
 		log.Println(err)
-		return 0, fmt.Errorf("Error in OrderService: %s", err)
+		return 0, fmt.Errorf("Error in DeliveryServiceService: %s", err)
 	}
 	return id, nil
 }

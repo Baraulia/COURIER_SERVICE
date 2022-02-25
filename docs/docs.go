@@ -605,9 +605,6 @@ const docTemplate_swagger = `{
         "dao.DeliveryService": {
             "type": "object",
             "properties": {
-                "deleted": {
-                    "type": "boolean"
-                },
                 "description": {
                     "type": "string"
                 },
@@ -629,8 +626,8 @@ const docTemplate_swagger = `{
                 "photo": {
                     "type": "string"
                 },
-                "working_now": {
-                    "type": "boolean"
+                "status": {
+                    "type": "string"
                 }
             }
         },

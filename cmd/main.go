@@ -39,7 +39,6 @@ func main() {
 
 }
 
-
 /*
 func main() {
 	log.Println("Start...")
@@ -67,5 +66,3 @@ func main() {
 	}
 
 } */
-
-

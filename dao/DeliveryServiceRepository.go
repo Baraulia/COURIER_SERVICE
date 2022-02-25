@@ -19,15 +19,14 @@ type DeliveryService struct {
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	Photo       string `json:"photo"`
-	WorkingNow  bool   `json:"working_now"`
 	Description string `json:"description"`
-	Deleted     bool   `json:"deleted"`
 	PhoneNumber string `json:"phone_number"`
 	ManagerId   int    `json:"manager_id"`
+	Status      string `json:"status"`
 }
 
 func (r *DeliveryServicePostgres) SaveDeliveryServiceInDB(service *DeliveryService) (int, error) {
-	row := r.db.QueryRow("INSERT INTO delivery_service (name, email, photo, working_now, description, deleted,phone_number) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id", service.Name, service.Email, service.Photo, service.WorkingNow, service.Description, service.Deleted, service.PhoneNumber)
+	row := r.db.QueryRow("INSERT INTO delivery_service (name, email, photo, description, phone_number, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id", service.Name, service.Email, service.Photo, service.Description, service.PhoneNumber, service.Status)
 	var id int
 	if err := row.Scan(&id); err != nil {
 		log.Println(fmt.Sprintf("Create Delivery : error:%s", err))
