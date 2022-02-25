@@ -10,7 +10,7 @@ type DeliveryService struct {
 	repo dao.Repository
 }
 
-func NewDeliviveryService(repo dao.Repository) *DeliveryService {
+func NewDeliveryService(repo dao.Repository) *DeliveryService {
 	return &DeliveryService{
 		repo: repo,
 	}

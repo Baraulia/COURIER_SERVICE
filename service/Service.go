@@ -35,7 +35,6 @@ type Service struct {
 func NewService(rep *dao.Repository) *Service {
 	return &Service{
 		NewOrderService(*rep),
-		NewCourierService(*rep),
-		NewDeliviveryService(*rep),
+		NewCourierService(*rep), NewDeliveryService(*rep),
 	}
 }
