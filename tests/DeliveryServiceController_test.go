@@ -25,14 +25,14 @@ func TestHandler_CreateDeliveryService(t *testing.T) {
 	}{
 		{
 			name:      "OK",
-			inputBody: `{"name":"test", "email":"test", "photo":"test", "working_now":true, "description": "test", "deleted": false}`,
+			inputBody: `{"name":"test", "email":"test", "photo":"test", "description": "test","phone_number":"1234567", "status": "active"}`,
 			inputService: dao.DeliveryService{
 				Name:        "test",
 				Email:       "test",
 				Photo:       "test",
-				WorkingNow:  true,
 				Description: "test",
-				Deleted:     false,
+				Status:      "active",
+				PhoneNumber: "1234567",
 			},
 			mockBehavior: func(s *mock_service.MockDeliveryServiceApp, service dao.DeliveryService) {
 				s.EXPECT().CreateDeliveryService(service).Return(1, nil)
