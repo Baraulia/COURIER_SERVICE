@@ -79,49 +79,49 @@ func (mr *MockOrderRepMockRecorder) GetActiveOrdersFromDB(id interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActiveOrdersFromDB", reflect.TypeOf((*MockOrderRep)(nil).GetActiveOrdersFromDB), id)
 }
 
-// GetAllOrdersOfCourierServiceWithPage_fromDB mocks base method.
-func (m *MockOrderRep) GetAllOrdersOfCourierServiceWithPage_fromDB(limit, page, idService int) ([]model.Order, int) {
+// GetAllOrdersOfCourierServiceWithPageFromDB mocks base method.
+func (m *MockOrderRep) GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService int) ([]model.Order, int) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllOrdersOfCourierServiceWithPage_fromDB", limit, page, idService)
+	ret := m.ctrl.Call(m, "GetAllOrdersOfCourierServiceWithPageFromDB", limit, page, idService)
 	ret0, _ := ret[0].([]model.Order)
 	ret1, _ := ret[1].(int)
 	return ret0, ret1
 }
 
-// GetAllOrdersOfCourierServiceWithPage_fromDB indicates an expected call of GetAllOrdersOfCourierServiceWithPage_fromDB.
-func (mr *MockOrderRepMockRecorder) GetAllOrdersOfCourierServiceWithPage_fromDB(limit, page, idService interface{}) *gomock.Call {
+// GetAllOrdersOfCourierServiceWithPageFromDB indicates an expected call of GetAllOrdersOfCourierServiceWithPageFromDB.
+func (mr *MockOrderRepMockRecorder) GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllOrdersOfCourierServiceWithPage_fromDB", reflect.TypeOf((*MockOrderRep)(nil).GetAllOrdersOfCourierServiceWithPage_fromDB), limit, page, idService)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllOrdersOfCourierServiceWithPageFromDB", reflect.TypeOf((*MockOrderRep)(nil).GetAllOrdersOfCourierServiceWithPageFromDB), limit, page, idService)
 }
 
-// GetCourierCompletedOrdersByMouthWithPage_fromDB mocks base method.
-func (m *MockOrderRep) GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year int) ([]model.Order, int) {
+// GetCourierCompletedOrdersByMouthWithPageFromDB mocks base method.
+func (m *MockOrderRep) GetCourierCompletedOrdersByMouthWithPageFromDB(limit, page, idCourier, Month, Year int) ([]model.Order, int) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCourierCompletedOrdersByMouthWithPage_fromDB", limit, page, idCourier, Month, Year)
+	ret := m.ctrl.Call(m, "GetCourierCompletedOrdersByMouthWithPageFromDB", limit, page, idCourier, Month, Year)
 	ret0, _ := ret[0].([]model.Order)
 	ret1, _ := ret[1].(int)
 	return ret0, ret1
 }
 
-// GetCourierCompletedOrdersByMouthWithPage_fromDB indicates an expected call of GetCourierCompletedOrdersByMouthWithPage_fromDB.
-func (mr *MockOrderRepMockRecorder) GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year interface{}) *gomock.Call {
+// GetCourierCompletedOrdersByMouthWithPageFromDB indicates an expected call of GetCourierCompletedOrdersByMouthWithPageFromDB.
+func (mr *MockOrderRepMockRecorder) GetCourierCompletedOrdersByMouthWithPageFromDB(limit, page, idCourier, Month, Year interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCourierCompletedOrdersByMouthWithPage_fromDB", reflect.TypeOf((*MockOrderRep)(nil).GetCourierCompletedOrdersByMouthWithPage_fromDB), limit, page, idCourier, Month, Year)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCourierCompletedOrdersByMouthWithPageFromDB", reflect.TypeOf((*MockOrderRep)(nil).GetCourierCompletedOrdersByMouthWithPageFromDB), limit, page, idCourier, Month, Year)
 }
 
-// GetCourierCompletedOrdersWithPage_fromDB mocks base method.
-func (m *MockOrderRep) GetCourierCompletedOrdersWithPage_fromDB(limit, page, idCourier int) ([]model.DetailedOrder, int) {
+// GetCourierCompletedOrdersWithPageFromDB mocks base method.
+func (m *MockOrderRep) GetCourierCompletedOrdersWithPageFromDB(limit, page, idCourier int) ([]model.DetailedOrder, int) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCourierCompletedOrdersWithPage_fromDB", limit, page, idCourier)
+	ret := m.ctrl.Call(m, "GetCourierCompletedOrdersWithPageFromDB", limit, page, idCourier)
 	ret0, _ := ret[0].([]model.DetailedOrder)
 	ret1, _ := ret[1].(int)
 	return ret0, ret1
 }
 
-// GetCourierCompletedOrdersWithPage_fromDB indicates an expected call of GetCourierCompletedOrdersWithPage_fromDB.
-func (mr *MockOrderRepMockRecorder) GetCourierCompletedOrdersWithPage_fromDB(limit, page, idCourier interface{}) *gomock.Call {
+// GetCourierCompletedOrdersWithPageFromDB indicates an expected call of GetCourierCompletedOrdersWithPageFromDB.
+func (mr *MockOrderRepMockRecorder) GetCourierCompletedOrdersWithPageFromDB(limit, page, idCourier interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCourierCompletedOrdersWithPage_fromDB", reflect.TypeOf((*MockOrderRep)(nil).GetCourierCompletedOrdersWithPage_fromDB), limit, page, idCourier)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCourierCompletedOrdersWithPageFromDB", reflect.TypeOf((*MockOrderRep)(nil).GetCourierCompletedOrdersWithPageFromDB), limit, page, idCourier)
 }
 
 // MockCourierRep is a mock of CourierRep interface.
@@ -145,6 +145,21 @@ func NewMockCourierRep(ctrl *gomock.Controller) *MockCourierRep {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockCourierRep) EXPECT() *MockCourierRepMockRecorder {
 	return m.recorder
+}
+
+// DeleteCourier mocks base method.
+func (m *MockCourierRep) DeleteCourier(id int) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteCourier", id)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteCourier indicates an expected call of DeleteCourier.
+func (mr *MockCourierRepMockRecorder) DeleteCourier(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCourier", reflect.TypeOf((*MockCourierRep)(nil).DeleteCourier), id)
 }
 
 // GetCourierFromDB mocks base method.

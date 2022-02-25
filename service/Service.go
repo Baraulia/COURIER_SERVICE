@@ -18,8 +18,9 @@ type OrderApp interface {
 
 type CourierApp interface {
 	GetCouriers() ([]model.SmallInfo, error)
-	GetCourier(id uint16) (model.SmallInfo, error)
+	GetCourier(id uint16) (*model.SmallInfo, error)
 	SaveCourier(courier *model.Courier) (uint16, error)
+	DeleteCourier(id uint16) (uint16, error)
 }
 
 type Service struct {

@@ -19,7 +19,7 @@ func NewCourierService(repo dao.Repository) *CourierService {
 func (s *CourierService) GetCouriers() ([]model.SmallInfo, error) {
 	get, err := s.repo.CourierRep.GetCouriersFromDB()
 	if get == nil {
-		return []model.SmallInfo{}, fmt.Errorf("Error in CourierService: %s", err)
+		return nil, fmt.Errorf("Error in CourierService: %s", err)
 	}
 	if err != nil {
 		return nil, fmt.Errorf("Error with database: %s", err)
@@ -27,19 +27,27 @@ func (s *CourierService) GetCouriers() ([]model.SmallInfo, error) {
 	return get, nil
 }
 
-func (s *CourierService) GetCourier(id uint16) (model.SmallInfo, error) {
+func (s *CourierService) GetCourier(id uint16) (*model.SmallInfo, error) {
 	get, err := s.repo.CourierRep.GetCourierFromDB(id)
-	if (get == nil) {
-		return model.SmallInfo{}, fmt.Errorf("Error in CourierService: %s", err)
+	if get == nil {
+		return nil, fmt.Errorf("Error in CourierService: %s", err)
 	}
 	if id == 0 {
 		err := errors.New("no id")
 		log.Println("id cannot be zero")
-		return model.SmallInfo{}, fmt.Errorf("Error in CourierService: %s", err)
+		return nil, fmt.Errorf("Error in CourierService: %s", err)
 	}
-	return *get, nil
+	return get, nil
 }
 
 func (s *CourierService) SaveCourier(courier *model.Courier) (uint16, error) {
 	return s.repo.CourierRep.SaveCourierInDB(courier)
+}
+
+func (s *CourierService) DeleteCourier(id uint16) (uint16, error) {
+	courierId, err := s.repo.CourierRep.DeleteCourier(id)
+	if err != nil {
+		return 0, err
+	}
+	return courierId, nil
 }

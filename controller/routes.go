@@ -17,7 +17,7 @@ func NewHandler(services *service.Service) *Handler {
 	return &Handler{services: services}
 }
 
-func (h *Handler) InitRoutesGin() *gin.Engine {
+func (h *Handler) InitRoutes() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -36,6 +36,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	{
 		courier.GET("/:id", h.GetCourier)
 		courier.POST("/", h.SaveCourier)
+		courier.DELETE("/:id", h.DeleteCourier)
 	}
 
 	orders := router.Group("/orders")

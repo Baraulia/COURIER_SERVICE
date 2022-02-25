@@ -3,17 +3,17 @@ definitions:
     properties:
       data:
         items:
-          $ref: '#/definitions/dao.DetailedOrder'
+          $ref: '#/definitions/model.DetailedOrder'
         type: array
     type: object
   controller.listShortOrders:
     properties:
       data:
         items:
-          $ref: '#/definitions/dao.Order'
+          $ref: '#/definitions/model.Order'
         type: array
     type: object
-  dao.Courier:
+  model.Courier:
     properties:
       courier_name:
         type: string
@@ -36,7 +36,7 @@ definitions:
       surname:
         type: string
     type: object
-  dao.DetailedOrder:
+  model.DetailedOrder:
     properties:
       courier_id:
         type: integer
@@ -61,7 +61,12 @@ definitions:
       status:
         type: string
     type: object
-  dao.Order:
+  model.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  model.Order:
     properties:
       courier_id:
         type: integer
@@ -82,7 +87,7 @@ definitions:
       status:
         type: string
     type: object
-  dao.SmallInfo:
+  model.SmallInfo:
     properties:
       courier_name:
         type: string
@@ -111,14 +116,14 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/dao.Courier'
+          $ref: '#/definitions/model.Courier'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dao.Courier'
+            $ref: '#/definitions/model.Courier'
         "400":
           description: Bad Request
           schema:
@@ -131,6 +136,34 @@ paths:
       tags:
       - Courier
   /courier/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete courier by ID
+      parameters:
+      - description: Courier ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: deleteCourierByID
+      tags:
+      - Courier
     get:
       consumes:
       - application/json
@@ -147,7 +180,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dao.SmallInfo'
+            $ref: '#/definitions/model.SmallInfo'
         "400":
           description: Bad Request
           schema:
@@ -170,7 +203,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dao.SmallInfo'
+            $ref: '#/definitions/model.SmallInfo'
         "400":
           description: Bad Request
           schema:
@@ -181,7 +214,7 @@ paths:
             type: string
       summary: getCouriers
       tags:
-      - Couriers
+      - Courier
   /order/{id}:
     get:
       consumes:
@@ -199,7 +232,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dao.Order'
+            $ref: '#/definitions/model.Order'
         "400":
           description: Bad Request
           schema:
@@ -211,24 +244,29 @@ paths:
       summary: getOrder
       tags:
       - Order
-  /order/status_change/{id}:
+  /order/statusChange/{id}:
     put:
       consumes:
       - application/json
-      description: put order status by order ID
+      description: change order status by order ID
       parameters:
       - description: ID
         in: path
         name: id
         required: true
         type: integer
+      - description: status
+        in: query
+        name: status
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dao.Order'
+            $ref: '#/definitions/model.Order'
         "400":
           description: Bad Request
           schema:
@@ -237,11 +275,13 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: putOrderStatus
+      summary: changeOrderStatus
       tags:
-      - OrderStatusChange
+      - Order
   /orders:
     get:
+      consumes:
+      - application/json
       description: get list of all orders by courier service id
       parameters:
       - description: page
@@ -254,9 +294,9 @@ paths:
         name: limit
         required: true
         type: integer
-      - description: iddeliveryservice
+      - description: idDeliveryService
         in: query
-        name: iddeliveryservice
+        name: id
         required: true
         type: integer
       produces:
@@ -274,9 +314,9 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: GetAllOrdersOfCourierService
+      summary: getAllOrdersOfCourierService
       tags:
-      - order
+      - Order
   /orders/{id}:
     get:
       consumes:
@@ -294,7 +334,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dao.Order'
+            $ref: '#/definitions/model.Order'
         "400":
           description: Bad Request
           schema:
@@ -306,8 +346,10 @@ paths:
       summary: getOrder
       tags:
       - Orders
-  /orders/bymonth:
+  /orders/byMonth:
     get:
+      consumes:
+      - application/json
       description: get list of completed orders by courier id sorted by month
       parameters:
       - description: page
@@ -320,9 +362,9 @@ paths:
         name: limit
         required: true
         type: integer
-      - description: idcourier
+      - description: idCourier
         in: query
-        name: idcourier
+        name: id
         required: true
         type: integer
       - description: month
@@ -350,11 +392,13 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: GetCourierCompletedOrdersByMonth
+      summary: getCourierCompletedOrdersByMonth
       tags:
       - order
   /orders/completed:
     get:
+      consumes:
+      - application/json
       description: get list of completed orders by courier id
       parameters:
       - description: page
@@ -367,9 +411,9 @@ paths:
         name: limit
         required: true
         type: integer
-      - description: idcourier
+      - description: idCourier
         in: query
-        name: idcourier
+        name: id
         required: true
         type: integer
       produces:
@@ -387,7 +431,7 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: GetCourierCompletedOrders
+      summary: getCourierCompletedOrders
       tags:
-      - order
+      - Order
 swagger: "2.0"

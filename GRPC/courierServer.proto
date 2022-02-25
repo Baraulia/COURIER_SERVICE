@@ -4,8 +4,8 @@ option go_package = "GRPC/courierProto";
 
 package courier;
 
-service Courier {
-  rpc SetOrderStatus(OrderRequest) returns (OrderResponse) {}
+service CourierServer {
+  rpc SendOrderToCourierService(OrderRequest) returns (OrderResponse) {}
 }
 
 message OrderRequest {
@@ -13,9 +13,9 @@ message OrderRequest {
   string customerAddress = 2;
   string restaurantAddress = 3;
   string status = 4;
+  int32 deliveryServiceId = 5;
 }
 
 message OrderResponse {
-  int32 orderId = 1;
-  string status = 2;
+  string message = 1;
 }

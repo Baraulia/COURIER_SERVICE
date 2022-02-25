@@ -49,8 +49,18 @@ func (r *CourierPostgres) GetCourierFromDB(id uint16) (*model.SmallInfo, error) 
 	query := "Select id_courier,name,phone_number,photo, surname from couriers where id_courier = $1"
 	row := r.db.QueryRow(query, id)
 	if err := row.Scan(&cour.Id, &cour.CourierName, &cour.PhoneNumber, &cour.Photo, &cour.Surname); err != nil {
-		logrus.Errorf("GetRoleById: error while scanning for role:%s", err)
-		return nil, fmt.Errorf("GetRoleById: repository error:%w", err)
+		logrus.Errorf("GetCourierById: error while scanning for role:%s", err)
+		return nil, fmt.Errorf("GetCourierById: repository error:%w", err)
 	}
 	return &cour, nil
+}
+
+func (r *CourierPostgres) DeleteCourier(id uint16) (uint16, error) {
+	var courierId uint16
+	row := r.db.QueryRow("DELETE FROM couriers WHERE id_courier=$1 RETURNING id", id)
+	if err := row.Scan(&courierId); err != nil {
+		logrus.Errorf("DeleteCourierByID: error while scanning for courierId:%s", err)
+		return 0, fmt.Errorf("DeleteCourierByID: error while scanning for courierId:%w", err)
+	}
+	return courierId, nil
 }

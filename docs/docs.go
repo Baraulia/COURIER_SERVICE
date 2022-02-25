@@ -36,7 +36,7 @@ const docTemplate_swagger = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dao.Courier"
+                            "$ref": "#/definitions/model.Courier"
                         }
                     }
                 ],
@@ -44,7 +44,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dao.Courier"
+                            "$ref": "#/definitions/model.Courier"
                         }
                     },
                     "400": {
@@ -88,7 +88,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dao.SmallInfo"
+                            "$ref": "#/definitions/model.SmallInfo"
                         }
                     },
                     "400": {
@@ -101,6 +101,48 @@ const docTemplate_swagger = `{
                         "description": "Internal Server Error",
                         "schema": {
                             "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete courier by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Courier"
+                ],
+                "summary": "deleteCourierByID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Courier ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
                         }
                     }
                 }
@@ -116,14 +158,14 @@ const docTemplate_swagger = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Couriers"
+                    "Courier"
                 ],
                 "summary": "getCouriers",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dao.SmallInfo"
+                            "$ref": "#/definitions/model.SmallInfo"
                         }
                     },
                     "400": {
@@ -141,9 +183,9 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "/order/status_change/{id}": {
+        "/order/statusChange/{id}": {
             "put": {
-                "description": "put order status by order ID",
+                "description": "change order status by order ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -151,9 +193,9 @@ const docTemplate_swagger = `{
                     "application/json"
                 ],
                 "tags": [
-                    "OrderStatusChange"
+                    "Order"
                 ],
-                "summary": "putOrderStatus",
+                "summary": "changeOrderStatus",
                 "parameters": [
                     {
                         "type": "integer",
@@ -161,13 +203,20 @@ const docTemplate_swagger = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "status",
+                        "name": "status",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dao.Order"
+                            "$ref": "#/definitions/model.Order"
                         }
                     },
                     "400": {
@@ -211,7 +260,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dao.Order"
+                            "$ref": "#/definitions/model.Order"
                         }
                     },
                     "400": {
@@ -232,13 +281,16 @@ const docTemplate_swagger = `{
         "/orders": {
             "get": {
                 "description": "get list of all orders by courier service id",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "order"
+                    "Order"
                 ],
-                "summary": "GetAllOrdersOfCourierService",
+                "summary": "getAllOrdersOfCourierService",
                 "parameters": [
                     {
                         "type": "integer",
@@ -256,8 +308,8 @@ const docTemplate_swagger = `{
                     },
                     {
                         "type": "integer",
-                        "description": "iddeliveryservice",
-                        "name": "iddeliveryservice",
+                        "description": "idDeliveryService",
+                        "name": "id",
                         "in": "query",
                         "required": true
                     }
@@ -284,16 +336,19 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "/orders/bymonth": {
+        "/orders/byMonth": {
             "get": {
                 "description": "get list of completed orders by courier id sorted by month",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "order"
                 ],
-                "summary": "GetCourierCompletedOrdersByMonth",
+                "summary": "getCourierCompletedOrdersByMonth",
                 "parameters": [
                     {
                         "type": "integer",
@@ -311,8 +366,8 @@ const docTemplate_swagger = `{
                     },
                     {
                         "type": "integer",
-                        "description": "idcourier",
-                        "name": "idcourier",
+                        "description": "idCourier",
+                        "name": "id",
                         "in": "query",
                         "required": true
                     },
@@ -356,13 +411,16 @@ const docTemplate_swagger = `{
         "/orders/completed": {
             "get": {
                 "description": "get list of completed orders by courier id",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "order"
+                    "Order"
                 ],
-                "summary": "GetCourierCompletedOrders",
+                "summary": "getCourierCompletedOrders",
                 "parameters": [
                     {
                         "type": "integer",
@@ -380,8 +438,8 @@ const docTemplate_swagger = `{
                     },
                     {
                         "type": "integer",
-                        "description": "idcourier",
-                        "name": "idcourier",
+                        "description": "idCourier",
+                        "name": "id",
                         "in": "query",
                         "required": true
                     }
@@ -434,7 +492,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dao.Order"
+                            "$ref": "#/definitions/model.Order"
                         }
                     },
                     "400": {
@@ -460,7 +518,7 @@ const docTemplate_swagger = `{
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dao.DetailedOrder"
+                        "$ref": "#/definitions/model.DetailedOrder"
                     }
                 }
             }
@@ -471,12 +529,12 @@ const docTemplate_swagger = `{
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dao.Order"
+                        "$ref": "#/definitions/model.Order"
                     }
                 }
             }
         },
-        "dao.Courier": {
+        "model.Courier": {
             "type": "object",
             "properties": {
                 "courier_name": {
@@ -511,7 +569,7 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "dao.DetailedOrder": {
+        "model.DetailedOrder": {
             "type": "object",
             "properties": {
                 "courier_id": {
@@ -549,7 +607,15 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "dao.Order": {
+        "model.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Order": {
             "type": "object",
             "properties": {
                 "courier_id": {
@@ -581,7 +647,7 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "dao.SmallInfo": {
+        "model.SmallInfo": {
             "type": "object",
             "properties": {
                 "courier_name": {

@@ -26,15 +26,15 @@ func main() {
 	if err != nil {
 		log.Fatal("failed to initialize db:", err.Error())
 	}
-	repos := dao.NewRepository(database)
-	services := service.NewService(repos)
+	repository := dao.NewRepository(database)
+	services := service.NewService(repository)
 	handlers := controller.NewHandler(services)
 	port := os.Getenv("API_SERVER_PORT")
 
 	serv := new(server.Server)
 
 	go func() {
-		err := serv.Run(port, handlers.InitRoutesGin())
+		err := serv.Run(port, handlers.InitRoutes())
 		if err != nil {
 			logrus.Panicf("Error occured while running http server: %s", err.Error())
 		}

@@ -147,11 +147,26 @@ func (m *MockCourierApp) EXPECT() *MockCourierAppMockRecorder {
 	return m.recorder
 }
 
+// DeleteCourier mocks base method.
+func (m *MockCourierApp) DeleteCourier(id int) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteCourier", id)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteCourier indicates an expected call of DeleteCourier.
+func (mr *MockCourierAppMockRecorder) DeleteCourier(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCourier", reflect.TypeOf((*MockCourierApp)(nil).DeleteCourier), id)
+}
+
 // GetCourier mocks base method.
-func (m *MockCourierApp) GetCourier(id uint16) (model.SmallInfo, error) {
+func (m *MockCourierApp) GetCourier(id uint16) (*model.SmallInfo, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCourier", id)
-	ret0, _ := ret[0].(model.SmallInfo)
+	ret0, _ := ret[0].(*model.SmallInfo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
