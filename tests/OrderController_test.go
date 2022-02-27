@@ -151,7 +151,6 @@ func TestHandler_GetOneOrder(t *testing.T) {
 	}
 }
 
-
 func TestHandler_UpdateOrder(t *testing.T) {
 	type mockBehavior func(s *mock_service.MockOrderApp, order dao.Order)
 	testTable := []struct {
@@ -199,4 +198,69 @@ func TestHandler_UpdateOrder(t *testing.T) {
 		})
 	}
 
+}
+
+func TestHandler_GetDetailedOrdersById(t *testing.T) {
+	type mockBehavior func(s *mock_service.MockOrderApp, order dao.DetailedOrder)
+
+	ord := dao.DetailedOrder{
+		IdDeliveryService:  1,
+		IdOrder:            1,
+		IdCourier:          1,
+		DeliveryTime:       time.Date(2022, 02, 19, 13, 34, 53, 93589, time.UTC),
+		CustomerAddress:    "Some address",
+		Status:             "ready to delivery",
+		OrderDate:          "11.11.2022",
+		RestaurantAddress:  "Some address",
+		Picked:             true,
+		CourierName:        "Sam",
+		CourierPhoneNumber: "1234567",
+	}
+
+	testTable := []struct {
+		name                string
+		inputBody           string
+		inputOrder          dao.DetailedOrder
+		mockBehavior        mockBehavior
+		expectedStatusCode  int
+		expectedRequestBody string
+	}{
+		{
+			name:      "OK",
+			inputBody: `{"id":1}`,
+			inputOrder: dao.DetailedOrder{
+				IdOrder: 1,
+			},
+			mockBehavior: func(s *mock_service.MockOrderApp, order dao.DetailedOrder) {
+				s.EXPECT().GetDetailedOrdersById(1).Return(ord, nil)
+			},
+			expectedStatusCode:  200,
+			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"Some address","picked":true,"name":"Sam","phone_number":"1234567"}`,
+		},
+	}
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
+			c := gomock.NewController(t)
+			defer c.Finish()
+
+			get := mock_service.NewMockOrderApp(c)
+			testCase.mockBehavior(get, testCase.inputOrder)
+
+			services := &service.Service{OrderApp: get}
+			handler := controller.NewHandler(services)
+
+			r := gin.New()
+
+			r.GET("/order/detailed/:id", handler.GetDetailedOrdersById)
+
+			w := httptest.NewRecorder()
+			req := httptest.NewRequest("GET", "/order/detailed/1", bytes.NewBufferString(testCase.inputBody))
+
+			r.ServeHTTP(w, req)
+
+			assert.Equal(t, testCase.expectedStatusCode, w.Code)
+			assert.Contains(t, w.Body.String(), testCase.expectedRequestBody)
+
+		})
+	}
 }

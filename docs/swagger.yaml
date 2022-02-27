@@ -262,6 +262,33 @@ paths:
       summary: getOrder
       tags:
       - Order
+  /order/detailed/{id}:
+    get:
+      description: get detailed order by id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dao.DetailedOrder'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetDetailedOrdersById
+      tags:
+      - order
   /order/status_change/{id}:
     put:
       consumes:

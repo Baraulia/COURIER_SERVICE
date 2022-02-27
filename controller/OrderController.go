@@ -220,7 +220,6 @@ func (h *Handler) GetCourierCompletedOrdersByMonth(ctx *gin.Context) {
 
 }
 
-
 // @Summary UpdateOrder
 // @Tags order
 // @Description assign order to courier
@@ -252,4 +251,28 @@ func (h *Handler) UpdateOrder(ctx *gin.Context) {
 		return
 	}
 	ctx.Status(http.StatusNoContent)
+}
+
+// @Summary GetDetailedOrdersById
+// @Description get detailed order by id
+// @Tags order
+// @Produce json
+// @Param id path int true "id"
+// @Success 200 {object} dao.DetailedOrder
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /order/detailed/{id} [get]
+func (h *Handler) GetDetailedOrdersById(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		return
+	}
+
+	DetOrder, err := h.services.OrderApp.GetDetailedOrdersById(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	ctx.JSON(http.StatusOK, DetOrder)
 }
