@@ -36,7 +36,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		courier.GET("/:id", h.GetCourier)
 		courier.POST("/", h.SaveCourier)
-		courier.DELETE("/:id", h.DeleteCourier)
+		//courier.DELETE("/:id", h.DeleteCourier)
 	}
 
 	orders := router.Group("/orders")

@@ -2,6 +2,7 @@ package dao
 
 import (
 	"database/sql"
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPCserver"
 	"github.com/Baraulia/COURIER_SERVICE/model"
 )
 //go:generate mockgen -source=Repository.go -destination=mocks/mock.go
@@ -25,6 +26,7 @@ type OrderRep interface {
 	GetCourierCompletedOrdersWithPageFromDB(limit, page, idCourier int) ([]model.DetailedOrder, int)
 	GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService int) ([]model.Order, int)
 	GetCourierCompletedOrdersByMouthWithPageFromDB(limit, page, idCourier, Month, Year int) ([]model.Order, int)
+	GetOrderStatusByID(id int) (*courierProto.OrderStatusResponse, error)
 }
 
 type CourierRep interface {

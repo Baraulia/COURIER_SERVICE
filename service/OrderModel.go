@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPCserver"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/Baraulia/COURIER_SERVICE/model"
 	"log"
@@ -44,6 +45,14 @@ func (s *OrderService) GetOrder(id int) (*model.Order, error) {
 		err := errors.New("no id")
 		log.Println("id cannot be zero")
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
+	}
+	return get, nil
+}
+
+func (s *OrderService) GetOrderStatusByID(id int) (*courierProto.OrderStatusResponse, error) {
+	get, err := s.repo.OrderRep.GetOrderStatusByID(id)
+	if err != nil {
+		return nil, fmt.Errorf("Error with database: %s", err)
 	}
 	return get, nil
 }

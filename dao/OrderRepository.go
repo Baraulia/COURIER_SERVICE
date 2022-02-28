@@ -3,6 +3,7 @@ package dao
 import (
 	"database/sql"
 	"fmt"
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPCserver"
 	"github.com/Baraulia/COURIER_SERVICE/model"
 	"github.com/sirupsen/logrus"
 )
@@ -46,6 +47,24 @@ func (r *OrderPostgres) GetActiveOrderFromDB(id int) (*model.Order, error) {
 	for get.Next() {
 		var order model.Order
 		err = get.Scan(&order.IdDeliveryService, &order.Id, &order.IdCourier, &order.DeliveryTime, &order.CustomerAddress, &order.Status, &order.OrderDate, &order.RestaurantAddress, &order.Picked)
+		Ord = order
+	}
+	return &Ord, nil
+}
+
+func (r *OrderPostgres) GetOrderStatusByID(id int) (*courierProto.OrderStatusResponse, error) {
+	var Ord courierProto.OrderStatusResponse
+
+	insertValue := `SELECT id, status from delivery where id = $1`
+	get, err := r.db.Query(insertValue, id)
+	if err != nil {
+		logrus.Fatalln("Error with getting order by id :", err)
+		return nil, fmt.Errorf("Error with getting order by id :%w", err)
+	}
+
+	for get.Next() {
+		var order courierProto.OrderStatusResponse
+		err = get.Scan(&order.OrderId, &order.Status)
 		Ord = order
 	}
 	return &Ord, nil

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"github.com/Baraulia/COURIER_SERVICE/GRPCserver/grpcServer"
 	"github.com/Baraulia/COURIER_SERVICE/controller"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/Baraulia/COURIER_SERVICE/server"
@@ -9,6 +11,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 // @title Courier Service
@@ -39,7 +43,16 @@ func main() {
 			logrus.Panicf("Error occured while running http server: %s", err.Error())
 		}
 	}()
+	go func() {
+		grpcServer.NewGRPCServer(services)
+	}()
 
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+	if err := serv.Shutdown(context.Background()); err != nil {
+		logrus.Panicf("Error occured while shutting down http server: %s", err.Error())
+	}
 
 }
 
