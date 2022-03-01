@@ -26,6 +26,8 @@ type CourierApp interface {
 type DeliveryServiceApp interface {
 	CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error)
 	GetDeliveryServiceById(Id int) (dao.DeliveryService, error)
+	GetAllDeliveryServices() ([]dao.DeliveryService, error)
+	UpdateDeliveryService(service dao.DeliveryService) error
 }
 
 type Service struct {
@@ -37,6 +39,7 @@ type Service struct {
 func NewService(rep *dao.Repository) *Service {
 	return &Service{
 		NewOrderService(*rep),
-		NewCourierService(*rep), NewDeliveryService(*rep),
+		NewCourierService(*rep),
+		NewDeliveryService(*rep),
 	}
 }

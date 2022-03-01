@@ -64,3 +64,57 @@ func (h *Handler) GetDeliveryServiceById(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, service)
 }
+
+type listDeliveryServices struct {
+	Data []dao.DeliveryService `json:"data"`
+}
+
+// @Summary GetAllDeliveryServices
+// @Description get list of all delivery service
+// @Tags DeliveryService
+// @Produce json
+// @Success 200 {object} listDeliveryServices
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /deliveryservice [get]
+func (h *Handler) GetAllDeliveryServices(ctx *gin.Context) {
+	services, err := h.services.DeliveryServiceApp.GetAllDeliveryServices()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	ctx.JSON(http.StatusOK, listDeliveryServices{Data: services})
+}
+
+// @Summary UpdateDeliveryService
+// @Tags DeliveryService
+// @Description update delivery service information
+// @ID UpdateDeliveryService
+// @Accept  json
+// @Produce json
+// @Param id path int true "order_id"
+// @Param input body dao.DeliveryService true "delivery service"
+// @Success 204
+// @Failure 400 {string} string
+// @Router /deliveryservice/{id} [put]
+func (h *Handler) UpdateDeliveryService(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		log.Println(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	var service dao.DeliveryService
+	if err := ctx.ShouldBindJSON(&service); err != nil {
+		log.Println(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+		return
+	}
+	service.Id = id
+	if err := h.services.UpdateDeliveryService(service); err != nil {
+		log.Println(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	ctx.Status(http.StatusNoContent)
+}

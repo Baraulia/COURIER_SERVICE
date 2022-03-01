@@ -51,3 +51,71 @@ func (r *DeliveryServicePostgres) GetDeliveryServiceByIdFromDB(Id int) (Delivery
 	}
 	return service, nil
 }
+
+func (r *DeliveryServicePostgres) GetAllDeliveryServicesFromDB() ([]DeliveryService, error) {
+	var services []DeliveryService
+	res, err := r.db.Query("SELECT id, name, email, photo, description, phone_number, manager_id, status FROM delivery_service")
+	if err != nil {
+		log.Println(err)
+		return []DeliveryService{}, err
+	}
+	for res.Next() {
+		var service DeliveryService
+		err = res.Scan(&service.Id, &service.Name, &service.Email, &service.Photo, &service.Description, &service.PhoneNumber, &service.ManagerId, &service.Status)
+		if err != nil {
+			log.Println(err)
+			return []DeliveryService{}, err
+		}
+		services = append(services, service)
+	}
+	return services, nil
+}
+
+func (r *DeliveryServicePostgres) UpdateDeliveryServiceInDB(service DeliveryService) error {
+	var oldService DeliveryService
+	transaction, err := r.db.Begin()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer transaction.Commit()
+	res, err := transaction.Query(fmt.Sprintf("SELECT id, name,email,photo,description,phone_number,manager_id,status FROM delivery_service Where id=%d", service.Id))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	for res.Next() {
+		err = res.Scan(&oldService.Id, &oldService.Name, &oldService.Email, &oldService.Photo, &oldService.Description, &oldService.PhoneNumber, &oldService.ManagerId, &oldService.Status)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
+	}
+	if service.Name == "" {
+		service.Name = oldService.Name
+	}
+	if service.Email == "" {
+		service.Email = oldService.Email
+	}
+	if service.Photo == "" {
+		service.Photo = oldService.Photo
+	}
+	if service.Description == "" {
+		service.Description = oldService.Description
+	}
+	if service.PhoneNumber == "" {
+		service.PhoneNumber = oldService.PhoneNumber
+	}
+	if service.Status == "" {
+		service.Status = oldService.Status
+	}
+
+	s := "UPDATE delivery_service SET name = $1, email = $2, description = $3, phone_number = $4, status = $5 WHERE id = $6"
+	log.Println(s)
+	insert, err := transaction.Query(s, service.Name, service.Email, service.Description, service.PhoneNumber, service.Status, service.Id)
+	defer insert.Close()
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}

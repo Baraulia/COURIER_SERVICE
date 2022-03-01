@@ -59,7 +59,8 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	{
 		deliveryService.POST("/", h.CreateDeliveryService)
 		deliveryService.GET("/:id", h.GetDeliveryServiceById)
+		deliveryService.GET("/", h.GetAllDeliveryServices)
+		deliveryService.PUT("/:id", h.UpdateDeliveryService)
 	}
-
 	return router
 }

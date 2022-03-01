@@ -35,3 +35,21 @@ func (s *DeliveryService) GetDeliveryServiceById(Id int) (dao.DeliveryService, e
 	}
 	return service, nil
 }
+
+func (s *DeliveryService) GetAllDeliveryServices() ([]dao.DeliveryService, error) {
+	var services = []dao.DeliveryService{}
+	services, err := s.repo.GetAllDeliveryServicesFromDB()
+	if err != nil {
+		log.Println(err)
+		return []dao.DeliveryService{}, fmt.Errorf("Error in DeliveryService: %s", err)
+	}
+	return services, nil
+}
+
+func (s *DeliveryService) UpdateDeliveryService(service dao.DeliveryService) error {
+	if err := s.repo.UpdateDeliveryServiceInDB(service); err != nil {
+		log.Println(err)
+		return fmt.Errorf("Error in DeliveryService: %s", err)
+	}
+	return nil
+}
