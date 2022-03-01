@@ -25,6 +25,7 @@ type CourierApp interface {
 
 type DeliveryServiceApp interface {
 	CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error)
+	GetDeliveryServiceById(Id int) (dao.DeliveryService, error)
 }
 
 type Service struct {

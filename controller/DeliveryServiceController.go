@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // @Summary  CreateDeliveryService
@@ -40,3 +41,26 @@ func (h *Handler) CreateDeliveryService(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, map[string]interface{}{"id": idService})
 }
 
+// @Summary GetDeliveryServiceById
+// @Description get delivery service by id
+// @Tags DeliveryService
+// @Produce json
+// @Param id path int true "id"
+// @Success 200 {object} dao.DeliveryService
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /deliveryservice/{id} [get]
+func (h *Handler) GetDeliveryServiceById(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		return
+	}
+
+	service, err := h.services.DeliveryServiceApp.GetDeliveryServiceById(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	ctx.JSON(http.StatusOK, service)
+}

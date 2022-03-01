@@ -35,4 +35,5 @@ type CourierRep interface {
 
 type DeliveryServiceRep interface {
 	SaveDeliveryServiceInDB(service *DeliveryService) (int, error)
+	GetDeliveryServiceByIdFromDB(Id int) (DeliveryService, error)
 }

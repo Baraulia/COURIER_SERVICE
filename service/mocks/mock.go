@@ -258,3 +258,18 @@ func (mr *MockDeliveryServiceAppMockRecorder) CreateDeliveryService(DeliveryServ
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDeliveryService", reflect.TypeOf((*MockDeliveryServiceApp)(nil).CreateDeliveryService), DeliveryService)
 }
+
+// GetDeliveryServiceById mocks base method.
+func (m *MockDeliveryServiceApp) GetDeliveryServiceById(Id int) (dao.DeliveryService, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDeliveryServiceById", Id)
+	ret0, _ := ret[0].(dao.DeliveryService)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDeliveryServiceById indicates an expected call of GetDeliveryServiceById.
+func (mr *MockDeliveryServiceAppMockRecorder) GetDeliveryServiceById(Id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDeliveryServiceById", reflect.TypeOf((*MockDeliveryServiceApp)(nil).GetDeliveryServiceById), Id)
+}
