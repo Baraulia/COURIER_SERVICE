@@ -26,14 +26,14 @@ func (s *DeliveryService) CreateDeliveryService(DeliveryService dao.DeliveryServ
 }
 
 func (s *DeliveryService) GetDeliveryServiceById(Id int) (dao.DeliveryService, error) {
-	var service dao.DeliveryService
+	var service *dao.DeliveryService
 	service, err := s.repo.GetDeliveryServiceByIdFromDB(Id)
 	if err != nil {
 		err := errors.New("no id")
 		log.Println("no more id")
 		return dao.DeliveryService{}, fmt.Errorf("Error in DeliveryService: %s", err)
 	}
-	return service, nil
+	return *service, nil
 }
 
 func (s *DeliveryService) GetAllDeliveryServices() ([]dao.DeliveryService, error) {

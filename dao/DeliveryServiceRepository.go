@@ -35,21 +35,21 @@ func (r *DeliveryServicePostgres) SaveDeliveryServiceInDB(service *DeliveryServi
 	return id, nil
 }
 
-func (r *DeliveryServicePostgres) GetDeliveryServiceByIdFromDB(Id int) (DeliveryService, error) {
+func (r *DeliveryServicePostgres) GetDeliveryServiceByIdFromDB(Id int) (*DeliveryService, error) {
 	var service DeliveryService
 	res, err := r.db.Query(fmt.Sprintf("SELECT id, name,email,photo,description,phone_number,manager_id,status FROM delivery_service Where id=%d", Id))
 	if err != nil {
 		log.Println(err)
-		return DeliveryService{}, err
+		return nil, err
 	}
 	for res.Next() {
 		err = res.Scan(&service.Id, &service.Name, &service.Email, &service.Photo, &service.Description, &service.PhoneNumber, &service.ManagerId, &service.Status)
 		if err != nil {
 			log.Println(err)
-			return DeliveryService{}, err
+			return nil, err
 		}
 	}
-	return service, nil
+	return &service, nil
 }
 
 func (r *DeliveryServicePostgres) GetAllDeliveryServicesFromDB() ([]DeliveryService, error) {
@@ -57,14 +57,14 @@ func (r *DeliveryServicePostgres) GetAllDeliveryServicesFromDB() ([]DeliveryServ
 	res, err := r.db.Query("SELECT id, name, email, photo, description, phone_number, manager_id, status FROM delivery_service")
 	if err != nil {
 		log.Println(err)
-		return []DeliveryService{}, err
+		return nil, err
 	}
 	for res.Next() {
 		var service DeliveryService
 		err = res.Scan(&service.Id, &service.Name, &service.Email, &service.Photo, &service.Description, &service.PhoneNumber, &service.ManagerId, &service.Status)
 		if err != nil {
 			log.Println(err)
-			return []DeliveryService{}, err
+			return nil, err
 		}
 		services = append(services, service)
 	}
@@ -75,7 +75,7 @@ func (r *DeliveryServicePostgres) UpdateDeliveryServiceInDB(service DeliveryServ
 	var oldService DeliveryService
 	transaction, err := r.db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer transaction.Commit()
 	res, err := transaction.Query(fmt.Sprintf("SELECT id, name,email,photo,description,phone_number,manager_id,status FROM delivery_service Where id=%d", service.Id))
