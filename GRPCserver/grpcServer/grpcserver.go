@@ -21,7 +21,7 @@ func NewGRPCServer(service *service.Service) {
 	s := grpc.NewServer()
 	str := &GRPCServer{service: service}
 	courierProto.RegisterCourierServerServer(s, str)
-	lis, err := net.Listen("tcp", ":8081")
+	lis, err := net.Listen("tcp", ":8091")
 	if err != nil {
 		logrus.Fatalf("NewGRPCServer, Listen:%s", err)
 	}
