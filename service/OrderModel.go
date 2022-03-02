@@ -49,13 +49,6 @@ func (s *OrderService) GetOrder(id int) (*model.Order, error) {
 	return get, nil
 }
 
-func (s *OrderService) GetOrderStatusByID(id int) (*courierProto.OrderStatusResponse, error) {
-	get, err := s.repo.OrderRep.GetOrderStatusByID(id)
-	if err != nil {
-		return nil, fmt.Errorf("Error with database: %s", err)
-	}
-	return get, nil
-}
 
 func (s *OrderService) ChangeOrderStatus(status string, id uint16) (uint16, error) {
 	_, err := s.GetOrder(int(id))
@@ -125,4 +118,12 @@ func (s *OrderService) GetCourierCompletedOrdersByMonth(limit, page, idService, 
 	}
 
 	return Order, nil
+}
+
+func (s *OrderService) CreateOrder(order *courierProto.OrderCourierServer) error {
+	return s.repo.OrderRep.CreateOrder(order)
+}
+
+func (s *OrderService) GetServices() (*courierProto.ServiceResponse, error) {
+	return s.repo.OrderRep.GetServices()
 }

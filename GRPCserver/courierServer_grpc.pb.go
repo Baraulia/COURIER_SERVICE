@@ -7,6 +7,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,7 +19,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CourierServerClient interface {
-	SendOrderToCourierService(ctx context.Context, in *OrderFields, opts ...grpc.CallOption) (*OrderStatusResponse, error)
+	CreateOrder(ctx context.Context, in *OrderCourierServer, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetDeliveryService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ServiceResponse, error)
 }
 
 type courierServerClient struct {
@@ -29,9 +31,18 @@ func NewCourierServerClient(cc grpc.ClientConnInterface) CourierServerClient {
 	return &courierServerClient{cc}
 }
 
-func (c *courierServerClient) SendOrderToCourierService(ctx context.Context, in *OrderFields, opts ...grpc.CallOption) (*OrderStatusResponse, error) {
-	out := new(OrderStatusResponse)
-	err := c.cc.Invoke(ctx, "/courier.CourierServer/SendOrderToCourierService", in, out, opts...)
+func (c *courierServerClient) CreateOrder(ctx context.Context, in *OrderCourierServer, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/courier.CourierServer/CreateOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *courierServerClient) GetDeliveryService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ServiceResponse, error) {
+	out := new(ServiceResponse)
+	err := c.cc.Invoke(ctx, "/courier.CourierServer/GetDeliveryService", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +53,8 @@ func (c *courierServerClient) SendOrderToCourierService(ctx context.Context, in 
 // All implementations must embed UnimplementedCourierServerServer
 // for forward compatibility
 type CourierServerServer interface {
-	SendOrderToCourierService(context.Context, *OrderFields) (*OrderStatusResponse, error)
+	CreateOrder(context.Context, *OrderCourierServer) (*emptypb.Empty, error)
+	GetDeliveryService(context.Context, *emptypb.Empty) (*ServiceResponse, error)
 	mustEmbedUnimplementedCourierServerServer()
 }
 
@@ -50,8 +62,11 @@ type CourierServerServer interface {
 type UnimplementedCourierServerServer struct {
 }
 
-func (UnimplementedCourierServerServer) SendOrderToCourierService(context.Context, *OrderFields) (*OrderStatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendOrderToCourierService not implemented")
+func (UnimplementedCourierServerServer) CreateOrder(context.Context, *OrderCourierServer) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
+}
+func (UnimplementedCourierServerServer) GetDeliveryService(context.Context, *emptypb.Empty) (*ServiceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDeliveryService not implemented")
 }
 func (UnimplementedCourierServerServer) mustEmbedUnimplementedCourierServerServer() {}
 
@@ -66,20 +81,38 @@ func RegisterCourierServerServer(s grpc.ServiceRegistrar, srv CourierServerServe
 	s.RegisterService(&CourierServer_ServiceDesc, srv)
 }
 
-func _CourierServer_SendOrderToCourierService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OrderFields)
+func _CourierServer_CreateOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderCourierServer)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CourierServerServer).SendOrderToCourierService(ctx, in)
+		return srv.(CourierServerServer).CreateOrder(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/courier.CourierServer/SendOrderToCourierService",
+		FullMethod: "/courier.CourierServer/CreateOrder",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CourierServerServer).SendOrderToCourierService(ctx, req.(*OrderFields))
+		return srv.(CourierServerServer).CreateOrder(ctx, req.(*OrderCourierServer))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CourierServer_GetDeliveryService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CourierServerServer).GetDeliveryService(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/courier.CourierServer/GetDeliveryService",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CourierServerServer).GetDeliveryService(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -92,8 +125,12 @@ var CourierServer_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*CourierServerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SendOrderToCourierService",
-			Handler:    _CourierServer_SendOrderToCourierService_Handler,
+			MethodName: "CreateOrder",
+			Handler:    _CourierServer_CreateOrder_Handler,
+		},
+		{
+			MethodName: "GetDeliveryService",
+			Handler:    _CourierServer_GetDeliveryService_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

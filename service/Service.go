@@ -15,7 +15,8 @@ type OrderApp interface {
 	GetCourierCompletedOrders(limit, page, idCourier int) ([]model.DetailedOrder, error)
 	GetAllOrdersOfCourierService(limit, page, idService int) ([]model.Order, error)
 	GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]model.Order, error)
-	GetOrderStatusByID(id int) (*courierProto.OrderStatusResponse, error)
+	CreateOrder(order *courierProto.OrderCourierServer) error
+	GetServices() (*courierProto.ServiceResponse, error)
 }
 
 type CourierApp interface {

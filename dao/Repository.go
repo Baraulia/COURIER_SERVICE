@@ -26,7 +26,8 @@ type OrderRep interface {
 	GetCourierCompletedOrdersWithPageFromDB(limit, page, idCourier int) ([]model.DetailedOrder, int)
 	GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService int) ([]model.Order, int)
 	GetCourierCompletedOrdersByMouthWithPageFromDB(limit, page, idCourier, Month, Year int) ([]model.Order, int)
-	GetOrderStatusByID(id int) (*courierProto.OrderStatusResponse, error)
+	CreateOrder(order *courierProto.OrderCourierServer) error
+	GetServices() (*courierProto.ServiceResponse, error)
 }
 
 type CourierRep interface {

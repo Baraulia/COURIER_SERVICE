@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"net"
 )
 
@@ -31,12 +32,15 @@ func NewGRPCServer(service *service.Service) {
 
 }
 
-func (g *GRPCServer) SendOrderToCourierService(ctx context.Context, order *courierProto.OrderFields) (*courierProto.OrderStatusResponse, error) {
-	res, err := g.service.OrderApp.GetOrderStatusByID(int(order.OrderId))
-	if err != nil {
-		logrus.Errorf("GetStatusById:%s", err)
-		return nil, fmt.Errorf("GetStatusById:%w", err)
-	}
+func (g *GRPCServer) CreateOrder(ctx context.Context, order *courierProto.OrderCourierServer) (*emptypb.Empty, error) {
+	return nil, g.service.OrderApp.CreateOrder(order)
+}
 
+func (g *GRPCServer) GetDeliveryService(ctx context.Context, in *emptypb.Empty) (*courierProto.ServiceResponse, error) {
+	res, err := g.service.OrderApp.GetServices()
+	if err != nil {
+		logrus.Errorf("GetService:%s", err)
+		return nil, fmt.Errorf("GetService:%w", err)
+	}
 	return res, nil
 }
