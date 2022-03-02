@@ -7,6 +7,7 @@ package mock_dao
 import (
 	reflect "reflect"
 
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPCserver"
 	model "github.com/Baraulia/COURIER_SERVICE/model"
 	gomock "github.com/golang/mock/gomock"
 )
@@ -47,6 +48,20 @@ func (m *MockOrderRep) ChangeOrderStatusInDB(status string, id uint16) (uint16, 
 func (mr *MockOrderRepMockRecorder) ChangeOrderStatusInDB(status, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeOrderStatusInDB", reflect.TypeOf((*MockOrderRep)(nil).ChangeOrderStatusInDB), status, id)
+}
+
+// CreateOrder mocks base method.
+func (m *MockOrderRep) CreateOrder(order *courierProto.OrderCourierServer) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateOrder", order)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateOrder indicates an expected call of CreateOrder.
+func (mr *MockOrderRepMockRecorder) CreateOrder(order interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrder", reflect.TypeOf((*MockOrderRep)(nil).CreateOrder), order)
 }
 
 // GetActiveOrderFromDB mocks base method.
@@ -124,6 +139,21 @@ func (mr *MockOrderRepMockRecorder) GetCourierCompletedOrdersWithPageFromDB(limi
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCourierCompletedOrdersWithPageFromDB", reflect.TypeOf((*MockOrderRep)(nil).GetCourierCompletedOrdersWithPageFromDB), limit, page, idCourier)
 }
 
+// GetServices mocks base method.
+func (m *MockOrderRep) GetServices() (*courierProto.ServiceResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetServices")
+	ret0, _ := ret[0].(*courierProto.ServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetServices indicates an expected call of GetServices.
+func (mr *MockOrderRepMockRecorder) GetServices() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServices", reflect.TypeOf((*MockOrderRep)(nil).GetServices))
+}
+
 // MockCourierRep is a mock of CourierRep interface.
 type MockCourierRep struct {
 	ctrl     *gomock.Controller
@@ -148,10 +178,10 @@ func (m *MockCourierRep) EXPECT() *MockCourierRepMockRecorder {
 }
 
 // DeleteCourier mocks base method.
-func (m *MockCourierRep) DeleteCourier(id int) (int, error) {
+func (m *MockCourierRep) DeleteCourier(id uint16) (uint16, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteCourier", id)
-	ret0, _ := ret[0].(int)
+	ret0, _ := ret[0].(uint16)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

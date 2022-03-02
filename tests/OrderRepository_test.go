@@ -66,7 +66,7 @@ func TestRepository_GetCourierCompletedOrdersWithPage_fromDB(t *testing.T) {
 	for _, tt := range testTable {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock(tt.courier_id, tt.limit, tt.page)
-			got, _ := r.GetCourierCompletedOrdersWithPage_fromDB(tt.courier_id, tt.limit, tt.page)
+			got, _ := r.GetCourierCompletedOrdersWithPageFromDB(tt.courier_id, tt.limit, tt.page)
 
 			assert.Equal(t, tt.expectedOrder, got)
 			assert.NoError(t, mock.ExpectationsWereMet())
@@ -125,7 +125,7 @@ func TestRepository_GetAllOrdersOfCourierServiceWithPage_fromDB(t *testing.T) {
 	for _, tt := range testTable {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock(tt.delivery_service_id, tt.limit, tt.page)
-			got, _ := r.GetAllOrdersOfCourierServiceWithPage_fromDB(tt.delivery_service_id, tt.limit, tt.page)
+			got, _ := r.GetAllOrdersOfCourierServiceWithPageFromDB(tt.delivery_service_id, tt.limit, tt.page)
 
 			assert.Equal(t, tt.expectedOrder, got)
 			assert.NoError(t, mock.ExpectationsWereMet())
@@ -191,7 +191,7 @@ func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T
 	for _, tt := range testTable {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock(tt.courier_id, tt.limit, tt.page)
-			got, _ := r.GetCourierCompletedOrdersByMouthWithPage_fromDB(tt.courier_id, tt.limit, tt.page, tt.month, tt.year)
+			got, _ := r.GetCourierCompletedOrdersByMouthWithPageFromDB(tt.courier_id, tt.limit, tt.page, tt.month, tt.year)
 
 			assert.Equal(t, tt.expectedOrder, got)
 			assert.NoError(t, mock.ExpectationsWereMet())

@@ -7,6 +7,7 @@ package mock_service
 import (
 	reflect "reflect"
 
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPCserver"
 	model "github.com/Baraulia/COURIER_SERVICE/model"
 	gomock "github.com/golang/mock/gomock"
 )
@@ -47,6 +48,20 @@ func (m *MockOrderApp) ChangeOrderStatus(status string, id uint16) (uint16, erro
 func (mr *MockOrderAppMockRecorder) ChangeOrderStatus(status, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeOrderStatus", reflect.TypeOf((*MockOrderApp)(nil).ChangeOrderStatus), status, id)
+}
+
+// CreateOrder mocks base method.
+func (m *MockOrderApp) CreateOrder(order *courierProto.OrderCourierServer) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateOrder", order)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateOrder indicates an expected call of CreateOrder.
+func (mr *MockOrderAppMockRecorder) CreateOrder(order interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrder", reflect.TypeOf((*MockOrderApp)(nil).CreateOrder), order)
 }
 
 // GetAllOrdersOfCourierService mocks base method.
@@ -124,6 +139,21 @@ func (mr *MockOrderAppMockRecorder) GetOrders(id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrders", reflect.TypeOf((*MockOrderApp)(nil).GetOrders), id)
 }
 
+// GetServices mocks base method.
+func (m *MockOrderApp) GetServices() (*courierProto.ServiceResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetServices")
+	ret0, _ := ret[0].(*courierProto.ServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetServices indicates an expected call of GetServices.
+func (mr *MockOrderAppMockRecorder) GetServices() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServices", reflect.TypeOf((*MockOrderApp)(nil).GetServices))
+}
+
 // MockCourierApp is a mock of CourierApp interface.
 type MockCourierApp struct {
 	ctrl     *gomock.Controller
@@ -148,10 +178,10 @@ func (m *MockCourierApp) EXPECT() *MockCourierAppMockRecorder {
 }
 
 // DeleteCourier mocks base method.
-func (m *MockCourierApp) DeleteCourier(id int) (int, error) {
+func (m *MockCourierApp) DeleteCourier(id uint16) (uint16, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteCourier", id)
-	ret0, _ := ret[0].(int)
+	ret0, _ := ret[0].(uint16)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
