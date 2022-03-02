@@ -35,7 +35,7 @@ func (h *Handler) CreateDeliveryService(ctx *gin.Context) {
 	}
 	idService, err := h.services.CreateDeliveryService(service)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
 	}
 	ctx.JSON(http.StatusOK, map[string]interface{}{"id": idService})
@@ -59,7 +59,7 @@ func (h *Handler) GetDeliveryServiceById(ctx *gin.Context) {
 
 	service, err := h.services.DeliveryServiceApp.GetDeliveryServiceById(id)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
 	}
 	ctx.JSON(http.StatusOK, service)
@@ -80,7 +80,7 @@ type listDeliveryServices struct {
 func (h *Handler) GetAllDeliveryServices(ctx *gin.Context) {
 	services, err := h.services.DeliveryServiceApp.GetAllDeliveryServices()
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
 	}
 	ctx.JSON(http.StatusOK, listDeliveryServices{Data: services})
@@ -113,7 +113,7 @@ func (h *Handler) UpdateDeliveryService(ctx *gin.Context) {
 	service.Id = id
 	if err := h.services.UpdateDeliveryService(service); err != nil {
 		log.Println(err)
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
 	}
 	ctx.Status(http.StatusNoContent)
