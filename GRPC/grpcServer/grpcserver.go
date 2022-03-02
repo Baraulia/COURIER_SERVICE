@@ -5,10 +5,10 @@ import (
 	"fmt"
 	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
 	"github.com/Baraulia/COURIER_SERVICE/service"
-	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"log"
 	"net"
 )
 
@@ -23,11 +23,11 @@ func NewGRPCServer(service *service.Service) {
 	courierProto.RegisterCourierServerServer(s, str)
 	lis, err := net.Listen("tcp", ":8091")
 	if err != nil {
-		logrus.Fatalf("NewGRPCServer, Listen:%s", err)
+		log.Fatalf("NewGRPCServer, Listen:%s", err)
 	}
 	reflection.Register(s)
 	if err = s.Serve(lis); err != nil {
-		logrus.Fatalf("NewGRPCServer, Serve:%s", err)
+		log.Fatalf("NewGRPCServer, Serve:%s", err)
 	}
 
 }
@@ -39,7 +39,7 @@ func (g *GRPCServer) CreateOrder(ctx context.Context, order *courierProto.OrderC
 func (g *GRPCServer) GetDeliveryService(ctx context.Context, in *emptypb.Empty) (*courierProto.ServiceResponse, error) {
 	res, err := g.service.OrderApp.GetServices()
 	if err != nil {
-		logrus.Errorf("GetService:%s", err)
+		log.Fatalf("GetService:%s", err)
 		return nil, fmt.Errorf("GetService:%w", err)
 	}
 	return res, nil

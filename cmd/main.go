@@ -8,7 +8,6 @@ import (
 	"github.com/Baraulia/COURIER_SERVICE/server"
 	"github.com/Baraulia/COURIER_SERVICE/service"
 	_ "github.com/lib/pq"
-	"github.com/sirupsen/logrus"
 	"log"
 	"os"
 	"os/signal"
@@ -40,7 +39,7 @@ func main() {
 	go func() {
 		err := serv.Run(port, handlers.InitRoutesGin())
 		if err != nil {
-			logrus.Panicf("Error occured while running http server: %s", err.Error())
+			log.Fatalf("Error occured while running http server: %s", err.Error())
 		}
 	}()
 	go func() {
@@ -51,7 +50,7 @@ func main() {
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
 	if err := serv.Shutdown(context.Background()); err != nil {
-		logrus.Panicf("Error occured while shutting down http server: %s", err.Error())
+		log.Fatalf("Error occured while shutting down http server: %s", err.Error())
 	}
 
 }
