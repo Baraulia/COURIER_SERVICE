@@ -201,16 +201,16 @@ func TestHandler_UpdateOrder(t *testing.T) {
 }
 
 func TestHandler_GetDetailedOrdersById(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockOrderApp, order dao.DetailedOrder)
+	type mockBehavior func(s *mock_service.MockOrderApp, order *dao.DetailedOrder)
 
-	ord := dao.DetailedOrder{
+	ord := &dao.DetailedOrder{
 		IdDeliveryService:  1,
 		IdOrder:            1,
 		IdCourier:          1,
 		DeliveryTime:       time.Date(2022, 02, 19, 13, 34, 53, 93589, time.UTC),
 		CustomerAddress:    "Some address",
 		Status:             "ready to delivery",
-		OrderDate:          "11.11.2022",
+		OrderDate:          "2022-11-11",
 		RestaurantAddress:  "Some address",
 		Picked:             true,
 		CourierName:        "Sam",
@@ -231,11 +231,11 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 			inputOrder: dao.DetailedOrder{
 				IdOrder: 1,
 			},
-			mockBehavior: func(s *mock_service.MockOrderApp, order dao.DetailedOrder) {
-				s.EXPECT().GetDetailedOrdersById(1).Return(ord, nil)
+			mockBehavior: func(s *mock_service.MockOrderApp, order *dao.DetailedOrder) {
+				s.EXPECT().GetDetailedOrderById(1).Return(ord, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"Some address","picked":true,"name":"Sam","phone_number":"1234567"}`,
+			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","picked":true,"name":"Sam","phone_number":"1234567"}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -244,14 +244,14 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 			defer c.Finish()
 
 			get := mock_service.NewMockOrderApp(c)
-			testCase.mockBehavior(get, testCase.inputOrder)
+			testCase.mockBehavior(get, &testCase.inputOrder)
 
 			services := &service.Service{OrderApp: get}
 			handler := controller.NewHandler(services)
 
 			r := gin.New()
 
-			r.GET("/order/detailed/:id", handler.GetDetailedOrdersById)
+			r.GET("/order/detailed/:id", handler.GetDetailedOrderById)
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("GET", "/order/detailed/1", bytes.NewBufferString(testCase.inputBody))

@@ -216,22 +216,25 @@ func (r *OrderPostgres) AssigningOrderToCourierInDB(order Order) error {
 	return nil
 }
 
-func (r *OrderPostgres) GetDetailedOrdersByIdFromDB(Id int) (DetailedOrder, error) {
+func (r *OrderPostgres) GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, error) {
 	var order DetailedOrder
 	transaction, err := r.db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil, err
 	}
 	defer transaction.Commit()
-	res, err := transaction.Query(fmt.Sprintf("SELECT d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_address,co.name,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.id=%d", Id))
+	res, err := transaction.Query(fmt.Sprintf("SELECT d.id, d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_address,co.name,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.id=%d", Id))
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil, err
 	}
 	for res.Next() {
-		err = res.Scan(&order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierPhoneNumber)
+		err = res.Scan(&order.IdOrder, &order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierPhoneNumber)
 		if err != nil {
-			panic(err)
+			log.Println(err)
+			return nil, err
 		}
 	}
-	return order, nil
+	return &order, nil
 }

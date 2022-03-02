@@ -116,8 +116,6 @@ definitions:
     type: object
 info:
   contact: {}
-  description: Courier Service for Food Delivery Application
-  title: Courier Service
 paths:
   /courier:
     post:
@@ -286,7 +284,7 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: GetDetailedOrdersById
+      summary: GetDetailedOrderById
       tags:
       - order
   /order/status_change/{id}:

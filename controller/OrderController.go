@@ -253,7 +253,7 @@ func (h *Handler) UpdateOrder(ctx *gin.Context) {
 	ctx.Status(http.StatusNoContent)
 }
 
-// @Summary GetDetailedOrdersById
+// @Summary GetDetailedOrderById
 // @Description get detailed order by id
 // @Tags order
 // @Produce json
@@ -262,14 +262,14 @@ func (h *Handler) UpdateOrder(ctx *gin.Context) {
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /order/detailed/{id} [get]
-func (h *Handler) GetDetailedOrdersById(ctx *gin.Context) {
+func (h *Handler) GetDetailedOrderById(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
+	if err != nil || id <= 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
 		return
 	}
 
-	DetOrder, err := h.services.OrderApp.GetDetailedOrdersById(id)
+	DetOrder, err := h.services.OrderApp.GetDetailedOrderById(id)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return

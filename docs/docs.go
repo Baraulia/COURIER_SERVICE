@@ -198,7 +198,7 @@ const docTemplate_swagger = `{
                 "tags": [
                     "order"
                 ],
-                "summary": "GetDetailedOrdersById",
+                "summary": "GetDetailedOrderById",
                 "parameters": [
                     {
                         "type": "integer",
@@ -771,8 +771,8 @@ var SwaggerInfo_swagger = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Courier Service",
-	Description:      "Courier Service for Food Delivery Application",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate_swagger,
 }

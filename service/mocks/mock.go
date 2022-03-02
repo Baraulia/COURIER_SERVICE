@@ -108,19 +108,19 @@ func (mr *MockOrderAppMockRecorder) GetCourierCompletedOrdersByMonth(limit, page
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCourierCompletedOrdersByMonth", reflect.TypeOf((*MockOrderApp)(nil).GetCourierCompletedOrdersByMonth), limit, page, idService, Month, Year)
 }
 
-// GetDetailedOrdersById mocks base method.
-func (m *MockOrderApp) GetDetailedOrdersById(Id int) (dao.DetailedOrder, error) {
+// GetDetailedOrderById mocks base method.
+func (m *MockOrderApp) GetDetailedOrderById(Id int) (*dao.DetailedOrder, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDetailedOrdersById", Id)
-	ret0, _ := ret[0].(dao.DetailedOrder)
+	ret := m.ctrl.Call(m, "GetDetailedOrderById", Id)
+	ret0, _ := ret[0].(*dao.DetailedOrder)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetDetailedOrdersById indicates an expected call of GetDetailedOrdersById.
-func (mr *MockOrderAppMockRecorder) GetDetailedOrdersById(Id interface{}) *gomock.Call {
+// GetDetailedOrderById indicates an expected call of GetDetailedOrderById.
+func (mr *MockOrderAppMockRecorder) GetDetailedOrderById(Id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDetailedOrdersById", reflect.TypeOf((*MockOrderApp)(nil).GetDetailedOrdersById), Id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDetailedOrderById", reflect.TypeOf((*MockOrderApp)(nil).GetDetailedOrderById), Id)
 }
 
 // GetOrder mocks base method.

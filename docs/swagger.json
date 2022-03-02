@@ -1,8 +1,6 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Courier Service for Food Delivery Application",
-        "title": "Courier Service",
         "contact": {}
     },
     "paths": {
@@ -188,7 +186,7 @@
                 "tags": [
                     "order"
                 ],
-                "summary": "GetDetailedOrdersById",
+                "summary": "GetDetailedOrderById",
                 "parameters": [
                     {
                         "type": "integer",
