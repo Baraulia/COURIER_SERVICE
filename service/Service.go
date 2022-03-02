@@ -1,6 +1,7 @@
 package service
 
 import (
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 )
 
@@ -14,6 +15,8 @@ type OrderApp interface {
 	GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
 	GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error)
 	AssigningOrderToCourier(order dao.Order) error
+	CreateOrder(order *courierProto.OrderCourierServer) error
+	GetServices() (*courierProto.ServiceResponse, error)
 }
 
 type CourierApp interface {

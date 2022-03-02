@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"log"
 )
@@ -125,4 +126,12 @@ func (s *OrderService) AssigningOrderToCourier(order dao.Order) error {
 		return fmt.Errorf("Error in OrderService: %s", err)
 	}
 	return nil
+}
+
+func (s *OrderService) CreateOrder(order *courierProto.OrderCourierServer) error {
+	return s.repo.OrderRep.CreateOrder(order)
+}
+
+func (s *OrderService) GetServices() (*courierProto.ServiceResponse, error) {
+	return s.repo.OrderRep.GetServices()
 }
