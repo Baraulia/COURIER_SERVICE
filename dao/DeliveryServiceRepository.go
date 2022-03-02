@@ -26,7 +26,10 @@ type DeliveryService struct {
 }
 
 func (r *DeliveryServicePostgres) SaveDeliveryServiceInDB(service *DeliveryService) (int, error) {
-	row := r.db.QueryRow("INSERT INTO delivery_service (name, email, photo, description, phone_number,manager_id, status) VALUES ($1, $2, $3, $4, $5,$6, $7) RETURNING id", service.Name, service.Email, service.Photo, service.Description, service.PhoneNumber, service.ManagerId, service.Status)
+	row := r.db.QueryRow(`INSERT INTO delivery_service (name, email, photo, description,
+                              phone_number,manager_id, status) VALUES ($1, $2, $3, $4, $5,$6, $7) RETURNING id`,
+		service.Name, service.Email, service.Photo, service.Description,
+		service.PhoneNumber, service.ManagerId, service.Status)
 	var id int
 	if err := row.Scan(&id); err != nil {
 		log.Println(fmt.Sprintf("Create Delivery : error:%s", err))
@@ -43,7 +46,8 @@ func (r *DeliveryServicePostgres) GetDeliveryServiceByIdFromDB(Id int) (*Deliver
 		return nil, err
 	}
 	for res.Next() {
-		err = res.Scan(&service.Id, &service.Name, &service.Email, &service.Photo, &service.Description, &service.PhoneNumber, &service.ManagerId, &service.Status)
+		err = res.Scan(&service.Id, &service.Name, &service.Email, &service.Photo, &service.Description,
+			&service.PhoneNumber, &service.ManagerId, &service.Status)
 		if err != nil {
 			log.Println(err)
 			return nil, err
@@ -54,14 +58,16 @@ func (r *DeliveryServicePostgres) GetDeliveryServiceByIdFromDB(Id int) (*Deliver
 
 func (r *DeliveryServicePostgres) GetAllDeliveryServicesFromDB() ([]DeliveryService, error) {
 	var services []DeliveryService
-	res, err := r.db.Query("SELECT id, name, email, photo, description, phone_number, manager_id, status FROM delivery_service")
+	res, err := r.db.Query(`SELECT id, name, email, photo, description, phone_number, manager_id, status
+                                  FROM delivery_service`)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 	for res.Next() {
 		var service DeliveryService
-		err = res.Scan(&service.Id, &service.Name, &service.Email, &service.Photo, &service.Description, &service.PhoneNumber, &service.ManagerId, &service.Status)
+		err = res.Scan(&service.Id, &service.Name, &service.Email, &service.Photo, &service.Description,
+			&service.PhoneNumber, &service.ManagerId, &service.Status)
 		if err != nil {
 			log.Println(err)
 			return nil, err
@@ -78,13 +84,16 @@ func (r *DeliveryServicePostgres) UpdateDeliveryServiceInDB(service DeliveryServ
 		log.Println(err)
 	}
 	defer transaction.Commit()
-	res, err := transaction.Query(fmt.Sprintf("SELECT id, name,email,photo,description,phone_number,manager_id,status FROM delivery_service Where id=%d", service.Id))
+	res, err := transaction.Query(`SELECT id, name,email,photo,description,phone_number,manager_id,status 
+                                  FROM delivery_service Where id=$1`, service.Id)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 	for res.Next() {
-		err = res.Scan(&oldService.Id, &oldService.Name, &oldService.Email, &oldService.Photo, &oldService.Description, &oldService.PhoneNumber, &oldService.ManagerId, &oldService.Status)
+		err = res.Scan(&oldService.Id, &oldService.Name, &oldService.Email,
+			&oldService.Photo, &oldService.Description, &oldService.PhoneNumber,
+			&oldService.ManagerId, &oldService.Status)
 		if err != nil {
 			log.Println(err)
 			return err
@@ -109,9 +118,11 @@ func (r *DeliveryServicePostgres) UpdateDeliveryServiceInDB(service DeliveryServ
 		service.Status = oldService.Status
 	}
 
-	s := "UPDATE delivery_service SET name = $1, email = $2, description = $3, phone_number = $4, status = $5 WHERE id = $6"
+	s := `UPDATE delivery_service SET name = $1, email = $2, description = $3, 
+                            phone_number = $4, status = $5 WHERE id = $6`
 	log.Println(s)
-	insert, err := transaction.Query(s, service.Name, service.Email, service.Description, service.PhoneNumber, service.Status, service.Id)
+	insert, err := transaction.Query(s, service.Name, service.Email, service.Description,
+		service.PhoneNumber, service.Status, service.Id)
 	defer insert.Close()
 	if err != nil {
 		log.Println(err)

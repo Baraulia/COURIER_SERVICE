@@ -135,9 +135,9 @@ func TestHandler_GetAllDeliveryServices(t *testing.T) {
 }
 
 func TestHandler_GetDeliveryServiceById(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockDeliveryServiceApp, service dao.DeliveryService)
+	type mockBehavior func(s *mock_service.MockDeliveryServiceApp, service *dao.DeliveryService)
 
-	serv := dao.DeliveryService{
+	serv := &dao.DeliveryService{
 		Id:          1,
 		Name:        "name",
 		Email:       "email",
@@ -162,7 +162,7 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 			inputService: dao.DeliveryService{
 				Id: 1,
 			},
-			mockBehavior: func(s *mock_service.MockDeliveryServiceApp, service dao.DeliveryService) {
+			mockBehavior: func(s *mock_service.MockDeliveryServiceApp, service *dao.DeliveryService) {
 				s.EXPECT().GetDeliveryServiceById(1).Return(serv, nil)
 			},
 			expectedStatusCode:  200,
@@ -174,7 +174,7 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 			c := gomock.NewController(t)
 			defer c.Finish()
 			newMock := mock_service.NewMockDeliveryServiceApp(c)
-			tt.mockBehavior(newMock, tt.inputService)
+			tt.mockBehavior(newMock, &tt.inputService)
 
 			services := &service.Service{DeliveryServiceApp: newMock}
 			handler := controller.NewHandler(services)
@@ -191,4 +191,52 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 
 		})
 	}
+}
+func TestHandler_UpdateDeliveryService(t *testing.T) {
+	type mockBehavior func(s *mock_service.MockDeliveryServiceApp, serv dao.DeliveryService)
+	testTable := []struct {
+		name               string
+		inputBody          string
+		inputService       dao.DeliveryService
+		id                 int
+		mockBehavior       mockBehavior
+		expectedStatusCode int
+	}{
+		{
+			name:      "OK",
+			inputBody: `{"name":"name","email":"email"}`,
+			inputService: dao.DeliveryService{
+				Id:    1,
+				Name:  "name",
+				Email: "email",
+			},
+			id: 1,
+			mockBehavior: func(s *mock_service.MockDeliveryServiceApp, serv dao.DeliveryService) {
+				s.EXPECT().UpdateDeliveryService(serv).Return(nil)
+			},
+			expectedStatusCode: 204,
+		},
+	}
+
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
+			c := gomock.NewController(t)
+			defer c.Finish()
+			get := mock_service.NewMockDeliveryServiceApp(c)
+			testCase.mockBehavior(get, testCase.inputService)
+			services := &service.Service{DeliveryServiceApp: get}
+			handler := controller.NewHandler(services)
+
+			r := gin.New()
+			r.PUT("/deliveryservice/:id", handler.UpdateDeliveryService)
+
+			w := httptest.NewRecorder()
+			req := httptest.NewRequest("PUT", "/deliveryservice/1", bytes.NewBufferString(testCase.inputBody))
+
+			r.ServeHTTP(w, req)
+
+			assert.Equal(t, testCase.expectedStatusCode, w.Code)
+		})
+	}
+
 }

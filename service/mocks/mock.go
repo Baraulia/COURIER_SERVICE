@@ -275,10 +275,10 @@ func (mr *MockDeliveryServiceAppMockRecorder) GetAllDeliveryServices() *gomock.C
 }
 
 // GetDeliveryServiceById mocks base method.
-func (m *MockDeliveryServiceApp) GetDeliveryServiceById(Id int) (dao.DeliveryService, error) {
+func (m *MockDeliveryServiceApp) GetDeliveryServiceById(Id int) (*dao.DeliveryService, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDeliveryServiceById", Id)
-	ret0, _ := ret[0].(dao.DeliveryService)
+	ret0, _ := ret[0].(*dao.DeliveryService)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
