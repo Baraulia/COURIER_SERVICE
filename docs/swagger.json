@@ -1,6 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
+        "description": "Courier Service for Food Delivery Application",
+        "title": "Courier Service",
         "contact": {}
     },
     "paths": {
