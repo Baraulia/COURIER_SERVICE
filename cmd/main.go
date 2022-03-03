@@ -38,31 +38,3 @@ func main() {
 	}
 
 }
-
-/*
-func main() {
-	log.Println("Start...")
-	database, err := dao.NewPostgresDB(dao.PostgresDB{
-		"159.223.1.135",
-		"5434",
-		"courierteam1",
-		"qwerty",
-		"courier_db",
-		"disable"})
-	if err != nil {
-		log.Fatal("failed to initialize dao:", err.Error())
-	}
-	repos := dao.NewRepository(database)
-	services := service.NewService(repos)
-	handlers := controller.NewHandler(services)
-	//host:=os.Getenv("API_SERVER_PORT")
-	s := &http.Server{
-		Addr:    ":8080", // ":"+host,
-		Handler: handlers.InitRoutesGin(),
-	}
-	err = s.ListenAndServe()
-	if err != nil {
-		log.Println("failed to initialize port:", err.Error())
-	}
-
-} */

@@ -26,38 +26,10 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 		middleware.CorsMiddleware,
 	)
 
-	couriers := router.Group("/couriers")
-	{
-		couriers.GET("/", h.GetCouriers)
-
-	}
-
-	courier := router.Group("/courier")
-	{
-		courier.GET("/:id", h.GetCourier)
-		courier.POST("/", h.SaveCourier)
-	}
-
-	orders := router.Group("/orders")
-	{
-		orders.GET("/completed", h.GetCourierCompletedOrders)
-		orders.GET("/", h.GetAllOrdersOfCourierService)
-		orders.GET("/bymonth", h.GetCourierCompletedOrdersByMonth)
-		orders.GET("/:id", h.GetOrders)
-		orders.PUT("/:id", h.UpdateOrder)
-
-	}
-
 	order := router.Group("/order")
 	{
 		order.GET("/:id", h.GetOrder)
 		order.PUT("/status_change/:id", h.ChangeOrderStatus)
-		order.GET("/detailed/:id", h.GetDetailedOrderById)
-	}
-
-	deliveryService := router.Group("/deliveryservice")
-	{
-		deliveryService.POST("/", h.CreateDeliveryService)
 	}
 
 	return router
