@@ -203,7 +203,6 @@ func (r *OrderPostgres) GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, p
 	return Orders, len(Ordersss)
 }
 
-
 func (r *OrderPostgres) AssigningOrderToCourierInDB(order Order) error {
 	log.Println("connected to db")
 	s := "UPDATE delivery SET courier_id = $1 WHERE id = $2"
@@ -215,4 +214,27 @@ func (r *OrderPostgres) AssigningOrderToCourierInDB(order Order) error {
 		return err
 	}
 	return nil
+}
+
+func (r *OrderPostgres) GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, error) {
+	var order DetailedOrder
+	transaction, err := r.db.Begin()
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	defer transaction.Commit()
+	res, err := transaction.Query(fmt.Sprintf("SELECT d.id, d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_address,co.name,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.id=%d", Id))
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	for res.Next() {
+		err = res.Scan(&order.IdOrder, &order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierPhoneNumber)
+		if err != nil {
+			log.Println(err)
+			return nil, err
+		}
+	}
+	return &order, nil
 }

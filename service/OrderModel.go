@@ -126,3 +126,18 @@ func (s *OrderService) AssigningOrderToCourier(order dao.Order) error {
 	}
 	return nil
 }
+
+func (s *OrderService) GetDetailedOrderById(Id int) (*dao.DetailedOrder, error) {
+	var Order *dao.DetailedOrder
+	Order, err := s.repo.GetDetailedOrderByIdFromDB(Id)
+	if err != nil {
+		log.Println(err)
+		return nil, fmt.Errorf("Error in OrderService: %s", err)
+	}
+	if Order.IdOrder == 0 {
+		err = errors.New("not found")
+		log.Println(err)
+		return nil, fmt.Errorf("Error in OrderService: %s", err)
+	}
+	return Order, nil
+}

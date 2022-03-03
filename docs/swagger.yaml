@@ -116,8 +116,6 @@ definitions:
     type: object
 info:
   contact: {}
-  description: Courier Service for Food Delivery Application
-  title: Courier Service
 paths:
   /courier:
     post:
@@ -262,6 +260,33 @@ paths:
       summary: getOrder
       tags:
       - Order
+  /order/detailed/{id}:
+    get:
+      description: get detailed order by id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dao.DetailedOrder'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetDetailedOrderById
+      tags:
+      - order
   /order/status_change/{id}:
     put:
       consumes:
