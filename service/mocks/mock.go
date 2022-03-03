@@ -258,3 +258,47 @@ func (mr *MockDeliveryServiceAppMockRecorder) CreateDeliveryService(DeliveryServ
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDeliveryService", reflect.TypeOf((*MockDeliveryServiceApp)(nil).CreateDeliveryService), DeliveryService)
 }
+
+// GetAllDeliveryServices mocks base method.
+func (m *MockDeliveryServiceApp) GetAllDeliveryServices() ([]dao.DeliveryService, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllDeliveryServices")
+	ret0, _ := ret[0].([]dao.DeliveryService)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllDeliveryServices indicates an expected call of GetAllDeliveryServices.
+func (mr *MockDeliveryServiceAppMockRecorder) GetAllDeliveryServices() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllDeliveryServices", reflect.TypeOf((*MockDeliveryServiceApp)(nil).GetAllDeliveryServices))
+}
+
+// GetDeliveryServiceById mocks base method.
+func (m *MockDeliveryServiceApp) GetDeliveryServiceById(Id int) (*dao.DeliveryService, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDeliveryServiceById", Id)
+	ret0, _ := ret[0].(*dao.DeliveryService)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDeliveryServiceById indicates an expected call of GetDeliveryServiceById.
+func (mr *MockDeliveryServiceAppMockRecorder) GetDeliveryServiceById(Id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDeliveryServiceById", reflect.TypeOf((*MockDeliveryServiceApp)(nil).GetDeliveryServiceById), Id)
+}
+
+// UpdateDeliveryService mocks base method.
+func (m *MockDeliveryServiceApp) UpdateDeliveryService(service dao.DeliveryService) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateDeliveryService", service)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateDeliveryService indicates an expected call of UpdateDeliveryService.
+func (mr *MockDeliveryServiceAppMockRecorder) UpdateDeliveryService(service interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDeliveryService", reflect.TypeOf((*MockDeliveryServiceApp)(nil).UpdateDeliveryService), service)
+}

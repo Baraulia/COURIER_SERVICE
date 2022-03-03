@@ -142,6 +142,36 @@ const docTemplate_swagger = `{
             }
         },
         "/deliveryservice": {
+            "get": {
+                "description": "get list of all delivery service",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DeliveryService"
+                ],
+                "summary": "GetAllDeliveryServices",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.listDeliveryServices"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "create a Delivery Service",
                 "consumes": [
@@ -182,6 +212,90 @@ const docTemplate_swagger = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/deliveryservice/{id}": {
+            "get": {
+                "description": "get delivery service by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DeliveryService"
+                ],
+                "summary": "GetDeliveryServiceById",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dao.DeliveryService"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update delivery service information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DeliveryService"
+                ],
+                "summary": "UpdateDeliveryService",
+                "operationId": "UpdateDeliveryService",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "order_id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "delivery service",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dao.DeliveryService"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "type": "string"
                         }
@@ -586,6 +700,17 @@ const docTemplate_swagger = `{
         }
     },
     "definitions": {
+        "controller.listDeliveryServices": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.DeliveryService"
+                    }
+                }
+            }
+        },
         "controller.listOrders": {
             "type": "object",
             "properties": {
