@@ -219,6 +219,48 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "/deliveryservice/logo": {
+            "post": {
+                "description": "set logo to DO Spaces and it's way to DB",
+                "consumes": [
+                    "image/jpeg"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DeliveryService"
+                ],
+                "summary": "SaveLogoController",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id delivery service",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "logo image",
+                        "name": "logo",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/deliveryservice/{id}": {
             "get": {
                 "description": "get delivery service by id",
@@ -896,8 +938,8 @@ var SwaggerInfo_swagger = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Courier Service",
-	Description:      "Courier Service for Food Delivery Application",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate_swagger,
 }

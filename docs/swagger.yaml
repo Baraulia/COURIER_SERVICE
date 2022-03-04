@@ -123,8 +123,6 @@ definitions:
     type: object
 info:
   contact: {}
-  description: Courier Service for Food Delivery Application
-  title: Courier Service
 paths:
   /courier:
     post:
@@ -314,6 +312,34 @@ paths:
           schema:
             type: string
       summary: UpdateDeliveryService
+      tags:
+      - DeliveryService
+  /deliveryservice/logo:
+    post:
+      consumes:
+      - image/jpeg
+      description: set logo to DO Spaces and it's way to DB
+      parameters:
+      - description: id delivery service
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: logo image
+        in: formData
+        name: logo
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: SaveLogoController
       tags:
       - DeliveryService
   /order/{id}:

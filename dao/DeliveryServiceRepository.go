@@ -119,10 +119,10 @@ func (r *DeliveryServicePostgres) UpdateDeliveryServiceInDB(service DeliveryServ
 	}
 
 	s := `UPDATE delivery_service SET name = $1, email = $2, description = $3, 
-                            phone_number = $4, status = $5 WHERE id = $6`
+                            phone_number = $4, status = $5,photo = $6 WHERE id = $7`
 	log.Println(s)
 	insert, err := transaction.Query(s, service.Name, service.Email, service.Description,
-		service.PhoneNumber, service.Status, service.Id)
+		service.PhoneNumber, service.Status, service.Photo, service.Id)
 	defer insert.Close()
 	if err != nil {
 		log.Println(err)
