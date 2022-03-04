@@ -28,6 +28,7 @@ type DeliveryServiceApp interface {
 	GetDeliveryServiceById(Id int) (*dao.DeliveryService, error)
 	GetAllDeliveryServices() ([]dao.DeliveryService, error)
 	UpdateDeliveryService(service dao.DeliveryService) error
+	SaveLogoFile(cover []byte, id int) error
 }
 
 type Service struct {

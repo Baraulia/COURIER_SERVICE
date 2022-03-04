@@ -61,6 +61,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 		deliveryService.GET("/:id", h.GetDeliveryServiceById)
 		deliveryService.GET("/", h.GetAllDeliveryServices)
 		deliveryService.PUT("/:id", h.UpdateDeliveryService)
+		deliveryService.POST("/logo", h.SaveLogoController)
 	}
 	return router
 }

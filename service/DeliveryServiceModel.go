@@ -1,10 +1,13 @@
 package service
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
+	"github.com/minio/minio-go"
 	"log"
+	"strconv"
 )
 
 type DeliveryService struct {
@@ -55,5 +58,49 @@ func (s *DeliveryService) UpdateDeliveryService(service dao.DeliveryService) err
 		log.Println(err)
 		return fmt.Errorf("Error in DeliveryService: %s", err)
 	}
+	return nil
+}
+
+func (s *DeliveryService) SaveLogoFile(cover []byte, id int) error {
+	accessKey := "Z4AK5OV4JRTOPORJRW2V"
+	secKey := "uELoOpfK1rA/LGjDFPK6w0GZQ+fDumGtIMt16RK6Sfg"
+	endpoint := "fra1.digitaloceanspaces.com"
+	ssl := true
+
+	// Initiate a client using DigitalOcean Spaces.
+	client, err := minio.New(endpoint, accessKey, secKey, ssl)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	// List all Spaces.
+	spaces, err := client.ListBuckets()
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	for _, space := range spaces {
+		log.Println(space.Name)
+	}
+
+	_, err1 := client.PutObject("storage-like-s3", fmt.Sprintf("%s", strconv.Itoa(id)), bytes.NewReader(cover), int64(len(cover)), minio.PutObjectOptions{ContentType: "image/jpeg"})
+	if err1 != nil {
+		log.Println(err1)
+		return err1
+	}
+
+	var service dao.DeliveryService
+	service.Id = id
+	service.Photo = "https://storage-like-s3.fra1.digitaloceanspaces.com/" + strconv.Itoa(id)
+
+	log.Println("https://storage-like-s3.fra1.digitaloceanspaces.com/" + strconv.Itoa(id))
+
+	if err := s.repo.UpdateDeliveryServiceInDB(service); err != nil {
+		log.Println(err)
+		return fmt.Errorf("Error in DeliveryService: %s", err)
+	}
+
+	log.Println("Downloaded cover")
 	return nil
 }
