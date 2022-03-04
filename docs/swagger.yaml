@@ -1,4 +1,11 @@
 definitions:
+  controller.listDeliveryServices:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dao.DeliveryService'
+        type: array
+    type: object
   controller.listOrders:
     properties:
       data:
@@ -116,6 +123,8 @@ definitions:
     type: object
 info:
   contact: {}
+  description: Courier Service for Food Delivery Application
+  title: Courier Service
 paths:
   /courier:
     post:
@@ -200,6 +209,26 @@ paths:
       tags:
       - Couriers
   /deliveryservice:
+    get:
+      description: get list of all delivery service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.listDeliveryServices'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetAllDeliveryServices
+      tags:
+      - DeliveryService
     post:
       consumes:
       - application/json
@@ -229,6 +258,62 @@ paths:
           schema:
             type: string
       summary: CreateDeliveryService
+      tags:
+      - DeliveryService
+  /deliveryservice/{id}:
+    get:
+      description: get delivery service by id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dao.DeliveryService'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetDeliveryServiceById
+      tags:
+      - DeliveryService
+    put:
+      consumes:
+      - application/json
+      description: update delivery service information
+      operationId: UpdateDeliveryService
+      parameters:
+      - description: order_id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: delivery service
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dao.DeliveryService'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: UpdateDeliveryService
       tags:
       - DeliveryService
   /order/{id}:
