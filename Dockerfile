@@ -13,7 +13,7 @@ WORKDIR /root/
 COPY --from=0 /github.com/Baraulia/COURIER_SERVICE/.bin/service .
 COPY --from=0 /github.com/Baraulia/COURIER_SERVICE/configs configs/
 
-EXPOSE 81
+EXPOSE 81 8091
 
 CMD ["./service"]
 
