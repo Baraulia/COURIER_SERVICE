@@ -154,10 +154,10 @@ func (mr *MockOrderAppMockRecorder) GetOrders(id interface{}) *gomock.Call {
 }
 
 // GetServices mocks base method.
-func (m *MockOrderApp) GetServices() (*courierProto.ServiceResponse, error) {
+func (m *MockOrderApp) GetServices() (*courierProto.ServicesResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetServices")
-	ret0, _ := ret[0].(*courierProto.ServiceResponse)
+	ret0, _ := ret[0].(*courierProto.ServicesResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

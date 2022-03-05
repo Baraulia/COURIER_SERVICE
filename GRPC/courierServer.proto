@@ -9,7 +9,7 @@ package courier;
 
 service CourierServer {
   rpc CreateOrder(OrderCourierServer) returns (google.protobuf.Empty) {}
-  rpc GetDeliveryService(google.protobuf.Empty) returns (ServiceResponse) {}
+  rpc GetDeliveryServicesList(google.protobuf.Empty) returns (ServicesResponse) {}
 }
 
 message OrderCourierServer{
@@ -24,12 +24,12 @@ message OrderCourierServer{
   int64 PaymentType = 9;
 }
 
-message ServiceResponse {
+message ServicesResponse {
   repeated DeliveryService services = 1;
 }
 
 message DeliveryService {
-  int64 ServiceId = 1;
+  int64  Id = 1;
   string ServiceName = 2;
   string ServiceEmail = 3;
   string ServicePhoto = 4;

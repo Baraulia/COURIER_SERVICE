@@ -36,11 +36,11 @@ func (g *GRPCServer) CreateOrder(ctx context.Context, order *courierProto.OrderC
 	return nil, g.service.OrderApp.CreateOrder(order)
 }
 
-func (g *GRPCServer) GetDeliveryService(ctx context.Context, in *emptypb.Empty) (*courierProto.ServiceResponse, error) {
+func (g *GRPCServer) GetDeliveryServicesList(ctx context.Context, in *emptypb.Empty) (*courierProto.ServicesResponse, error) {
 	res, err := g.service.OrderApp.GetServices()
 	if err != nil {
-		log.Fatalf("GetService:%s", err)
-		return nil, fmt.Errorf("GetService:%w", err)
+		log.Fatalf("GetServices:%s", err)
+		return nil, fmt.Errorf("GetServices:%w", err)
 	}
 	return res, nil
 }

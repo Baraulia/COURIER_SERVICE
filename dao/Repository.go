@@ -28,7 +28,7 @@ type OrderRep interface {
 	GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year int) ([]Order, int)
 	AssigningOrderToCourierInDB(order Order) error
 	CreateOrder(order *courierProto.OrderCourierServer) error
-	GetServices() (*courierProto.ServiceResponse, error)
+	GetServices() (*courierProto.ServicesResponse, error)
 }
 
 type CourierRep interface {

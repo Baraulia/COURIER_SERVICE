@@ -16,7 +16,7 @@ type OrderApp interface {
 	GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error)
 	AssigningOrderToCourier(order dao.Order) error
 	CreateOrder(order *courierProto.OrderCourierServer) error
-	GetServices() (*courierProto.ServiceResponse, error)
+	GetServices() (*courierProto.ServicesResponse, error)
 }
 
 type CourierApp interface {

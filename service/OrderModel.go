@@ -132,6 +132,6 @@ func (s *OrderService) CreateOrder(order *courierProto.OrderCourierServer) error
 	return s.repo.OrderRep.CreateOrder(order)
 }
 
-func (s *OrderService) GetServices() (*courierProto.ServiceResponse, error) {
+func (s *OrderService) GetServices() (*courierProto.ServicesResponse, error) {
 	return s.repo.OrderRep.GetServices()
 }

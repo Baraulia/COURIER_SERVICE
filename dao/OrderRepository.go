@@ -227,8 +227,8 @@ func (r *OrderPostgres) CreateOrder(order *courierProto.OrderCourierServer) erro
 	return nil
 }
 
-func (r *OrderPostgres) GetServices() (*courierProto.ServiceResponse, error) {
-	var Services *courierProto.ServiceResponse
+func (r *OrderPostgres) GetServices() (*courierProto.ServicesResponse, error) {
+	var Services *courierProto.ServicesResponse
 	insertValue := `SELECT id, name, email, photo, description, phone_number, manager_id, status FROM delivery_service`
 	get, err := r.db.Query(insertValue)
 	if err != nil {
@@ -238,7 +238,7 @@ func (r *OrderPostgres) GetServices() (*courierProto.ServiceResponse, error) {
 
 	for get.Next() {
 		var service *courierProto.DeliveryService
-		err = get.Scan(&service.ServiceId, &service.ServiceName, &service.ServiceEmail, &service.ServicePhoto, &service.ServiceDescription, &service.ServicePhone, &service.ServiceManagerId, &service.ServiceStatus);if err != nil {
+		err = get.Scan(&service.Id, &service.ServiceName, &service.ServiceEmail, &service.ServicePhoto, &service.ServiceDescription, &service.ServicePhone, &service.ServiceManagerId, &service.ServiceStatus);if err != nil {
 			log.Fatalln("Error while scanning values :", err)
 		}
 		Services.Services = append(Services.Services, service)

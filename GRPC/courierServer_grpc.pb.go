@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CourierServerClient interface {
 	CreateOrder(ctx context.Context, in *OrderCourierServer, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetDeliveryService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ServiceResponse, error)
+	GetDeliveryServicesList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ServicesResponse, error)
 }
 
 type courierServerClient struct {
@@ -40,9 +40,9 @@ func (c *courierServerClient) CreateOrder(ctx context.Context, in *OrderCourierS
 	return out, nil
 }
 
-func (c *courierServerClient) GetDeliveryService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ServiceResponse, error) {
-	out := new(ServiceResponse)
-	err := c.cc.Invoke(ctx, "/courier.CourierServer/GetDeliveryService", in, out, opts...)
+func (c *courierServerClient) GetDeliveryServicesList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ServicesResponse, error) {
+	out := new(ServicesResponse)
+	err := c.cc.Invoke(ctx, "/courier.CourierServer/GetDeliveryServicesList", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (c *courierServerClient) GetDeliveryService(ctx context.Context, in *emptyp
 // for forward compatibility
 type CourierServerServer interface {
 	CreateOrder(context.Context, *OrderCourierServer) (*emptypb.Empty, error)
-	GetDeliveryService(context.Context, *emptypb.Empty) (*ServiceResponse, error)
+	GetDeliveryServicesList(context.Context, *emptypb.Empty) (*ServicesResponse, error)
 	mustEmbedUnimplementedCourierServerServer()
 }
 
@@ -65,8 +65,8 @@ type UnimplementedCourierServerServer struct {
 func (UnimplementedCourierServerServer) CreateOrder(context.Context, *OrderCourierServer) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
 }
-func (UnimplementedCourierServerServer) GetDeliveryService(context.Context, *emptypb.Empty) (*ServiceResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetDeliveryService not implemented")
+func (UnimplementedCourierServerServer) GetDeliveryServicesList(context.Context, *emptypb.Empty) (*ServicesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDeliveryServicesList not implemented")
 }
 func (UnimplementedCourierServerServer) mustEmbedUnimplementedCourierServerServer() {}
 
@@ -99,20 +99,20 @@ func _CourierServer_CreateOrder_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CourierServer_GetDeliveryService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CourierServer_GetDeliveryServicesList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CourierServerServer).GetDeliveryService(ctx, in)
+		return srv.(CourierServerServer).GetDeliveryServicesList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/courier.CourierServer/GetDeliveryService",
+		FullMethod: "/courier.CourierServer/GetDeliveryServicesList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CourierServerServer).GetDeliveryService(ctx, req.(*emptypb.Empty))
+		return srv.(CourierServerServer).GetDeliveryServicesList(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -129,8 +129,8 @@ var CourierServer_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CourierServer_CreateOrder_Handler,
 		},
 		{
-			MethodName: "GetDeliveryService",
-			Handler:    _CourierServer_GetDeliveryService_Handler,
+			MethodName: "GetDeliveryServicesList",
+			Handler:    _CourierServer_GetDeliveryServicesList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
