@@ -3,6 +3,7 @@ package dao
 import (
 	"database/sql"
 	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type Repository struct {
@@ -28,8 +29,8 @@ type OrderRep interface {
 	GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year int) ([]Order, int)
 	AssigningOrderToCourierInDB(order Order) error
 	GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, error)
-	CreateOrder(order *courierProto.OrderCourierServer) error
-	GetServices() (*courierProto.ServicesResponse, error)
+	CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error)
+	GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error)
 }
 
 type CourierRep interface {

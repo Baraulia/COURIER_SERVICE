@@ -10,6 +10,7 @@ import (
 	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
 	dao "github.com/Baraulia/COURIER_SERVICE/dao"
 	gomock "github.com/golang/mock/gomock"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // MockOrderApp is a mock of OrderApp interface.
@@ -65,11 +66,12 @@ func (mr *MockOrderAppMockRecorder) ChangeOrderStatus(id interface{}) *gomock.Ca
 }
 
 // CreateOrder mocks base method.
-func (m *MockOrderApp) CreateOrder(order *courierProto.OrderCourierServer) error {
+func (m *MockOrderApp) CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrder", order)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreateOrder indicates an expected call of CreateOrder.
@@ -169,18 +171,18 @@ func (mr *MockOrderAppMockRecorder) GetOrders(id interface{}) *gomock.Call {
 }
 
 // GetServices mocks base method.
-func (m *MockOrderApp) GetServices() (*courierProto.ServicesResponse, error) {
+func (m *MockOrderApp) GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetServices")
+	ret := m.ctrl.Call(m, "GetServices", in)
 	ret0, _ := ret[0].(*courierProto.ServicesResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetServices indicates an expected call of GetServices.
-func (mr *MockOrderAppMockRecorder) GetServices() *gomock.Call {
+func (mr *MockOrderAppMockRecorder) GetServices(in interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServices", reflect.TypeOf((*MockOrderApp)(nil).GetServices))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServices", reflect.TypeOf((*MockOrderApp)(nil).GetServices), in)
 }
 
 // MockCourierApp is a mock of CourierApp interface.
