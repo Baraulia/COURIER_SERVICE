@@ -3,6 +3,7 @@ package dao
 import (
 	"database/sql"
 	"fmt"
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
 	"log"
 	"time"
 )
@@ -237,4 +238,32 @@ func (r *OrderPostgres) GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, erro
 		}
 	}
 	return &order, nil
+}
+
+func (r *OrderPostgres) CreateOrder(order *courierProto.OrderCourierServer) error {
+	_, err := r.db.Exec("INSERT INTO delivery (delivery_service_id, customer_address, restraunt_address, delivery_time, restaurant_name) VALUES ($1, $2, $3, $4, $5)", order.CourierServiceID, order.ClientAddress, order.RestaurantAddress, order.DeliveryTime, order.RestaurantName)
+	if err != nil {
+		log.Fatalf("CreateOrder:%s", err)
+		return fmt.Errorf("CreateOrder:%w", err)
+	}
+	return nil
+}
+
+func (r *OrderPostgres) GetServices() (*courierProto.ServicesResponse, error) {
+	var Services *courierProto.ServicesResponse
+	insertValue := `SELECT id, name, email, photo, description, phone_number, manager_id, status FROM delivery_service`
+	get, err := r.db.Query(insertValue)
+	if err != nil {
+		log.Fatalln("Error of getting list of services :", err)
+		return nil, fmt.Errorf("Error of getting list of services :%w", err)
+	}
+
+	for get.Next() {
+		var service *courierProto.DeliveryService
+		err = get.Scan(&service.Id, &service.ServiceName, &service.ServiceEmail, &service.ServicePhoto, &service.ServiceDescription, &service.ServicePhone, &service.ServiceManagerId, &service.ServiceStatus);if err != nil {
+			log.Fatalln("Error while scanning values :", err)
+		}
+		Services.Services = append(Services.Services, service)
+	}
+	return Services, nil
 }

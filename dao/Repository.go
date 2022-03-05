@@ -1,6 +1,9 @@
 package dao
 
-import "database/sql"
+import (
+	"database/sql"
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
+)
 
 type Repository struct {
 	OrderRep
@@ -25,6 +28,8 @@ type OrderRep interface {
 	GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year int) ([]Order, int)
 	AssigningOrderToCourierInDB(order Order) error
 	GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, error)
+	CreateOrder(order *courierProto.OrderCourierServer) error
+	GetServices() (*courierProto.ServicesResponse, error)
 }
 
 type CourierRep interface {
