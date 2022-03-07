@@ -84,7 +84,8 @@ func (s *DeliveryService) SaveLogoFile(cover []byte, id int) error {
 		log.Println(space.Name)
 	}
 
-	_, err1 := client.PutObject("storage-like-s3", fmt.Sprintf("%s", strconv.Itoa(id)), bytes.NewReader(cover), int64(len(cover)), minio.PutObjectOptions{ContentType: "image/jpeg"})
+	_, err1 := client.PutObject("storage-like-s3", fmt.Sprintf("%s", strconv.Itoa(id)),
+		bytes.NewReader(cover), int64(len(cover)), minio.PutObjectOptions{ContentType: "image/jpeg"})
 	if err1 != nil {
 		log.Println(err1)
 		return err1

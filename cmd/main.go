@@ -10,7 +10,6 @@ import (
 	"os"
 )
 
-
 // @title Courier Service
 // @description Courier Service for Food Delivery Application
 func main() {
@@ -39,7 +38,9 @@ func main() {
 	}
 
 }
+
 /*
+
 func main() {
 	log.Println("Start...")
 	database, err := dao.NewPostgresDB(dao.PostgresDB{
