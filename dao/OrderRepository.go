@@ -251,7 +251,7 @@ func (r *OrderPostgres) CreateOrder(order *courierProto.OrderCourierServer) (*em
 }
 
 func (r *OrderPostgres) GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error) {
-	var Services *courierProto.ServicesResponse
+	var Services courierProto.ServicesResponse
 
 	transaction, err := r.db.Begin()
 	if err != nil {
@@ -265,13 +265,13 @@ func (r *OrderPostgres) GetServices(in *emptypb.Empty) (*courierProto.ServicesRe
 		return nil, err
 	}
 	for res.Next() {
-		var service *courierProto.DeliveryService
+		var service courierProto.DeliveryService
 		err = res.Scan(&service.Id, &service.ServiceName, &service.ServiceEmail, &service.ServicePhoto, &service.ServiceDescription, &service.ServicePhone, &service.ServiceManagerId, &service.ServiceStatus)
 		if err != nil {
 			log.Println(err)
 			return nil, err
 		}
-		Services.Services = append(Services.Services, service)
+		Services.Services = append(Services.Services, &service)
 	}
-	return Services, nil
+	return &Services, nil
 }
