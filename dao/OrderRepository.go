@@ -242,7 +242,9 @@ func (r *OrderPostgres) GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, erro
 }
 
 func (r *OrderPostgres) CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error) {
-	_, err := r.db.Exec("INSERT INTO delivery (delivery_service_id, customer_address, restaurant_address, restaurant_name) VALUES ($1, $2, $3, $4)", order.CourierServiceID, order.ClientAddress, order.RestaurantAddress, order.RestaurantName)
+	timestamp1 := time.Now()
+	timestamp2 := time.Now().Add(45 * time.Minute)
+	_, err := r.db.Exec("INSERT INTO delivery (delivery_service_id, customer_address, order_date, restaurant_address, delivery_time, restaurant_name) VALUES ($1, $2, $3, $4, $5, $6)", order.CourierServiceID, order.ClientAddress, timestamp1, order.RestaurantAddress, timestamp2, order.RestaurantName)
 	if err != nil {
 		log.Fatalf("CreateOrder:%s", err)
 		return &emptypb.Empty{}, fmt.Errorf("CreateOrder:%w", err)
