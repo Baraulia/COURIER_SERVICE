@@ -208,6 +208,21 @@ func (m *MockCourierApp) EXPECT() *MockCourierAppMockRecorder {
 	return m.recorder
 }
 
+// ChangeCourierStatus mocks base method.
+func (m *MockCourierApp) ChangeCourierStatus(id uint16) (uint16, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ChangeCourierStatus", id)
+	ret0, _ := ret[0].(uint16)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ChangeCourierStatus indicates an expected call of ChangeCourierStatus.
+func (mr *MockCourierAppMockRecorder) ChangeCourierStatus(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeCourierStatus", reflect.TypeOf((*MockCourierApp)(nil).ChangeCourierStatus), id)
+}
+
 // GetCourier mocks base method.
 func (m *MockCourierApp) GetCourier(id int) (dao.SmallInfo, error) {
 	m.ctrl.T.Helper()
