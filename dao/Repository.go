@@ -37,6 +37,7 @@ type CourierRep interface {
 	SaveCourierInDB(Courier *Courier) error
 	GetCouriersFromDB() ([]SmallInfo, error)
 	GetCourierFromDB(id int) (SmallInfo, error)
+	ChangeCourierStatusInDB(id uint16) (uint16, error)
 }
 
 type DeliveryServiceRep interface {

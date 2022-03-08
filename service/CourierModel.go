@@ -47,3 +47,11 @@ func (s *CourierService) SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 	}
 	return courier, nil
 }
+
+func (s *CourierService) ChangeCourierStatus(id uint16) (uint16, error) {
+	courierId, err := s.repo.CourierRep.ChangeCourierStatusInDB(id)
+	if err != nil {
+		return 0, fmt.Errorf("Error with database: %s", err)
+	}
+	return courierId, nil
+}
