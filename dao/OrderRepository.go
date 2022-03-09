@@ -238,3 +238,42 @@ func (r *OrderPostgres) GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, erro
 	}
 	return &order, nil
 }
+
+func (r *OrderPostgres) GetAllCompletedOrdersOfCourierServiceFromDB(limit, page, idService int) ([]Order, int) {
+	var Orders []Order
+	transaction, err := r.db.Begin()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer transaction.Commit()
+	res, err := transaction.Query("SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status='completed' and delivery_service_id=$1 LIMIT $2 OFFSET $3",
+		idService, limit, limit*(page-1))
+	if err != nil {
+		panic(err)
+	}
+	for res.Next() {
+		var order Order
+		err = res.Scan(&order.IdCourier, &order.Id, &order.DeliveryTime, &order.Status, &order.CustomerAddress)
+		if err != nil {
+			panic(err)
+		}
+
+		Orders = append(Orders, order)
+	}
+
+	var Ordersss []Order
+	resl, err := transaction.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE status='completed' and delivery_service_id=%d ", idService))
+	if err != nil {
+		panic(err)
+	}
+	for resl.Next() {
+		var order Order
+		err = resl.Scan(&order.IdCourier)
+		if err != nil {
+			panic(err)
+		}
+
+		Ordersss = append(Ordersss, order)
+	}
+	return Orders, len(Ordersss)
+}

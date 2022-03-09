@@ -25,6 +25,7 @@ type OrderRep interface {
 	GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year int) ([]Order, int)
 	AssigningOrderToCourierInDB(order Order) error
 	GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, error)
+	GetAllCompletedOrdersOfCourierServiceFromDB(limit, page, idService int) ([]Order, int)
 }
 
 type CourierRep interface {
