@@ -123,8 +123,6 @@ definitions:
     type: object
 info:
   contact: {}
-  description: Courier Service for Food Delivery Application
-  title: Courier Service
 paths:
   /courier:
     post:
@@ -344,7 +342,7 @@ paths:
             type: string
       summary: getOrder
       tags:
-      - Order
+      - order
   /order/detailed/{id}:
     get:
       description: get detailed order by id
@@ -400,7 +398,7 @@ paths:
             type: string
       summary: putOrderStatus
       tags:
-      - OrderStatusChange
+      - order
   /orders:
     get:
       description: get list of all orders by courier service id
@@ -466,7 +464,7 @@ paths:
             type: string
       summary: getOrder
       tags:
-      - Orders
+      - order
     put:
       consumes:
       - application/json
@@ -578,6 +576,43 @@ paths:
           schema:
             type: string
       summary: GetCourierCompletedOrders
+      tags:
+      - order
+  /orders/service/completed:
+    get:
+      description: get list of completed orders by courier service id
+      parameters:
+      - description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: iddeliveryservice
+        in: query
+        name: iddeliveryservice
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.listShortOrders'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetAllCompletedOrdersOfCourierService
       tags:
       - order
 swagger: "2.0"
