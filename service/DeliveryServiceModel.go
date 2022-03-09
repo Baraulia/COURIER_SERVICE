@@ -7,7 +7,6 @@ import (
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/minio/minio-go"
 	"log"
-	"os"
 	"strconv"
 )
 
@@ -63,26 +62,10 @@ func (s *DeliveryService) UpdateDeliveryService(service dao.DeliveryService) err
 }
 
 func (s *DeliveryService) SaveLogoFile(cover []byte, id int) error {
-	ACCESS_KEY := os.Getenv("ACCESS_KEY")
-	SECRET_KEY := os.Getenv("SECRET_KEY")
-	endpoint := "fra1.digitaloceanspaces.com"
-	ssl := true
-
-	// Initiate a client using DigitalOcean Spaces.
-	client, err := minio.New(endpoint, ACCESS_KEY, SECRET_KEY, ssl)
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-
-	// List all Spaces.
-	spaces, err := client.ListBuckets()
+	client, err := InitClientDO()
 	if err != nil {
 		log.Println(err)
 		return err
-	}
-	for _, space := range spaces {
-		log.Println(space.Name)
 	}
 
 	_, err1 := client.PutObject("storage-like-s3", fmt.Sprintf("logo_img/%s", strconv.Itoa(id)),
@@ -96,13 +79,11 @@ func (s *DeliveryService) SaveLogoFile(cover []byte, id int) error {
 	service.Id = id
 	service.Photo = "https://storage-like-s3.fra1.digitaloceanspaces.com/logo_img/" + strconv.Itoa(id)
 
-	log.Println("https://storage-like-s3.fra1.digitaloceanspaces.com/logo_img/" + strconv.Itoa(id))
-
 	if err := s.repo.UpdateDeliveryServiceInDB(service); err != nil {
 		log.Println(err)
 		return fmt.Errorf("Error in DeliveryService: %s", err)
 	}
 
-	log.Println("Downloaded cover")
+	log.Println("Uploaded logo with link https://storage-like-s3.fra1.digitaloceanspaces.com/logo_img/" + strconv.Itoa(id))
 	return nil
 }

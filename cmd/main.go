@@ -40,7 +40,6 @@ func main() {
 }
 
 /*
-
 func main() {
 	log.Println("Start...")
 	database, err := dao.NewPostgresDB(dao.PostgresDB{
