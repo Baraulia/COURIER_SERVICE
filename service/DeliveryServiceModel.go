@@ -7,6 +7,7 @@ import (
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/minio/minio-go"
 	"log"
+	"os"
 	"strconv"
 )
 
@@ -62,13 +63,13 @@ func (s *DeliveryService) UpdateDeliveryService(service dao.DeliveryService) err
 }
 
 func (s *DeliveryService) SaveLogoFile(cover []byte, id int) error {
-	accessKey := "Z4AK5OV4JRTOPORJRW2V"
-	secKey := "uELoOpfK1rA/LGjDFPK6w0GZQ+fDumGtIMt16RK6Sfg"
+	ACCESS_KEY := os.Getenv("ACCESS_KEY")
+	SECRET_KEY := os.Getenv("SECRET_KEY")
 	endpoint := "fra1.digitaloceanspaces.com"
 	ssl := true
 
 	// Initiate a client using DigitalOcean Spaces.
-	client, err := minio.New(endpoint, accessKey, secKey, ssl)
+	client, err := minio.New(endpoint, ACCESS_KEY, SECRET_KEY, ssl)
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -85,7 +86,7 @@ func (s *DeliveryService) SaveLogoFile(cover []byte, id int) error {
 	}
 
 	_, err1 := client.PutObject("storage-like-s3", fmt.Sprintf("%s", strconv.Itoa(id)),
-		bytes.NewReader(cover), int64(len(cover)), minio.PutObjectOptions{ContentType: "image/jpeg"})
+		bytes.NewReader(cover), int64(len(cover)), minio.PutObjectOptions{ContentType: "image/jpeg", UserMetadata: map[string]string{"x-amz-acl": "public-read"}})
 	if err1 != nil {
 		log.Println(err1)
 		return err1
