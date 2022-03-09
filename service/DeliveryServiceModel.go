@@ -85,7 +85,7 @@ func (s *DeliveryService) SaveLogoFile(cover []byte, id int) error {
 		log.Println(space.Name)
 	}
 
-	_, err1 := client.PutObject("storage-like-s3", fmt.Sprintf("%s", strconv.Itoa(id)),
+	_, err1 := client.PutObject("storage-like-s3", fmt.Sprintf("logo_img/%s", strconv.Itoa(id)),
 		bytes.NewReader(cover), int64(len(cover)), minio.PutObjectOptions{ContentType: "image/jpeg", UserMetadata: map[string]string{"x-amz-acl": "public-read"}})
 	if err1 != nil {
 		log.Println(err1)
@@ -94,9 +94,9 @@ func (s *DeliveryService) SaveLogoFile(cover []byte, id int) error {
 
 	var service dao.DeliveryService
 	service.Id = id
-	service.Photo = "https://storage-like-s3.fra1.digitaloceanspaces.com/" + strconv.Itoa(id)
+	service.Photo = "https://storage-like-s3.fra1.digitaloceanspaces.com/logo_img/" + strconv.Itoa(id)
 
-	log.Println("https://storage-like-s3.fra1.digitaloceanspaces.com/" + strconv.Itoa(id))
+	log.Println("https://storage-like-s3.fra1.digitaloceanspaces.com/logo_img/" + strconv.Itoa(id))
 
 	if err := s.repo.UpdateDeliveryServiceInDB(service); err != nil {
 		log.Println(err)
