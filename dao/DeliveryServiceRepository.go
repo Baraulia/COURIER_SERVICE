@@ -59,7 +59,7 @@ func (r *DeliveryServicePostgres) GetDeliveryServiceByIdFromDB(Id int) (*Deliver
 func (r *DeliveryServicePostgres) GetAllDeliveryServicesFromDB() ([]DeliveryService, error) {
 	var services []DeliveryService
 	res, err := r.db.Query(`SELECT id, name, email, photo, description, phone_number, manager_id, status
-                                  FROM delivery_service`)
+                                  FROM delivery_service ORDER BY id`)
 	if err != nil {
 		log.Println(err)
 		return nil, err

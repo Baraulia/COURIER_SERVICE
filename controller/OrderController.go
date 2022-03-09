@@ -16,7 +16,7 @@ type listOrders struct {
 // getOrders by courier ID godoc
 // @Summary getOrder
 // @Description get orders by courier ID
-// @Tags Orders
+// @Tags order
 // @Accept  json
 // @Produce  json
 // @Param id path int true "Courier ID"
@@ -43,7 +43,7 @@ func (h *Handler) GetOrders(ctx *gin.Context) {
 // getOrder by order ID godoc
 // @Summary getOrder
 // @Description get orders by order ID
-// @Tags Order
+// @Tags order
 // @Accept  json
 // @Produce  json
 // @Param id path int true "ID"
@@ -70,7 +70,7 @@ func (h *Handler) GetOrder(ctx *gin.Context) {
 // putOrderStatus by order ID godoc
 // @Summary putOrderStatus
 // @Description put order status by order ID
-// @Tags OrderStatusChange
+// @Tags order
 // @Accept  json
 // @Produce  json
 // @Param id path int true "ID"
