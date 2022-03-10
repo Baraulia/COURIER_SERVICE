@@ -16,6 +16,7 @@ type OrderApp interface {
 	AssigningOrderToCourier(order dao.Order) error
 	GetDetailedOrderById(Id int) (*dao.DetailedOrder, error)
 	GetAllCompletedOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
+	GetAllCompletedOrdersOfCourierServiceByDate(limit, page, idService int) ([]dao.Order, error)
 }
 
 type CourierApp interface {

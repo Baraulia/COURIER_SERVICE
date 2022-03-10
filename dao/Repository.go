@@ -26,6 +26,7 @@ type OrderRep interface {
 	AssigningOrderToCourierInDB(order Order) error
 	GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, error)
 	GetAllCompletedOrdersOfCourierServiceFromDB(limit, page, idService int) ([]Order, int)
+	GetAllCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService int) ([]Order, int)
 }
 
 type CourierRep interface {

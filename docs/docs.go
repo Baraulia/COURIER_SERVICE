@@ -624,6 +624,13 @@ const docTemplate_swagger = `{
                 "parameters": [
                     {
                         "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
                         "description": "page",
                         "name": "page",
                         "in": "query",
@@ -631,8 +638,56 @@ const docTemplate_swagger = `{
                     },
                     {
                         "type": "integer",
+                        "description": "iddeliveryservice",
+                        "name": "iddeliveryservice",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.listShortOrders"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/service/completed/bydate": {
+            "get": {
+                "description": "get list of completed orders by courier service id sorted bu date",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "GetAllCompletedOrdersOfCourierServiceByDate",
+                "parameters": [
+                    {
+                        "type": "integer",
                         "description": "limit",
                         "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
                         "in": "query",
                         "required": true
                     },

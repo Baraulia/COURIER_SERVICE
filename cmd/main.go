@@ -7,9 +7,9 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"net/http"
+	"os"
 )
 
-/*
 // @title Courier Service
 // @description Courier Service for Food Delivery Application
 func main() {
@@ -38,8 +38,8 @@ func main() {
 	}
 
 }
-*/
 
+/*
 func main() {
 	log.Println("Start...")
 	database, err := dao.NewPostgresDB(dao.PostgresDB{
@@ -65,4 +65,4 @@ func main() {
 		log.Println("failed to initialize port:", err.Error())
 	}
 
-}
+}  */
