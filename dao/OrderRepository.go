@@ -255,22 +255,16 @@ func (r *OrderPostgres) CreateOrder(order *courierProto.OrderCourierServer) (*em
 func (r *OrderPostgres) GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error) {
 	var Services courierProto.ServicesResponse
 
-	transaction, err := r.db.Begin()
+	res, err := r.db.Query("SELECT id, name, email, photo, description, phone_number, manager_id, status FROM delivery_service")
 	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	defer transaction.Commit()
-	res, err := transaction.Query("SELECT id, name, email, photo, description, phone_number, manager_id, status FROM delivery_service")
-	if err != nil {
-		log.Println(err)
+		log.Println("Error with getting list of orders: " + err.Error())
 		return nil, err
 	}
 	for res.Next() {
 		var service courierProto.DeliveryService
-		err = res.Scan(&service.Id, &service.ServiceName, &service.ServiceEmail, &service.ServicePhoto, &service.ServiceDescription, &service.ServicePhone, &service.ServiceManagerId, &service.ServiceStatus)
+		err = res.Scan(&service.Id, &service.Name, &service.Email, &service.Photo, &service.Description, &service.Phone, &service.ManagerId, &service.Status)
 		if err != nil {
-			log.Println(err)
+			log.Println(err.Error())
 			return nil, err
 		}
 		Services.Services = append(Services.Services, &service)

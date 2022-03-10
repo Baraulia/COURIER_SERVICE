@@ -13,15 +13,15 @@ service CourierServer {
 }
 
 message OrderCourierServer{
-  int64 OrderID = 1;
-  int64 CourierServiceID = 2;
+  int64  OrderID = 1;
+  int64  CourierServiceID = 2;
   string RestaurantAddress = 3;
   string RestaurantName = 4;
   string ClientAddress = 5;
   string ClientFullName = 6;
   string ClientPhoneNumber = 7;
   google.protobuf.Timestamp DeliveryTime = 8;
-  int64 PaymentType = 9;
+  int64  PaymentType = 9;
 }
 
 message ServicesResponse {
@@ -30,11 +30,11 @@ message ServicesResponse {
 
 message DeliveryService {
   int64  Id = 1;
-  string ServiceName = 2;
-  string ServiceEmail = 3;
-  string ServicePhoto = 4;
-  string ServiceDescription = 5;
-  string ServicePhone = 6;
-  int64 ServiceManagerId = 7;
-  string ServiceStatus = 8;
+  string Name = 2;
+  string Email = 3;
+  string Photo = 4;
+  string Description = 5;
+  string Phone = 6;
+  int64  ManagerId = 7;
+  string Status = 8;
 }
