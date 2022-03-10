@@ -85,5 +85,6 @@ jobs:
             -e DB_SSL_MODE -e API_SERVER_PORT -d \
             --restart always \
             --publish 8081:8080 \
+            --publish 8091:8091 \
             --name $(echo $CONTAINER_NAME) \
             $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)

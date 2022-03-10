@@ -1,7 +1,9 @@
 package service
 
 import (
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 //go:generate mockgen -source=Service.go -destination=mocks/mock.go
@@ -15,12 +17,15 @@ type OrderApp interface {
 	GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error)
 	AssigningOrderToCourier(order dao.Order) error
 	GetDetailedOrderById(Id int) (*dao.DetailedOrder, error)
+	CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error)
+	GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error)
 }
 
 type CourierApp interface {
 	GetCouriers() ([]dao.SmallInfo, error)
 	GetCourier(id int) (dao.SmallInfo, error)
 	SaveCourier(courier *dao.Courier) (*dao.Courier, error)
+	UpdateCourier(id uint16) (uint16, error)
 }
 
 type DeliveryServiceApp interface {

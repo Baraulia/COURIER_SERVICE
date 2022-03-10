@@ -3,6 +3,8 @@ package dao
 import (
 	"database/sql"
 	"fmt"
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"time"
 )
@@ -237,4 +239,35 @@ func (r *OrderPostgres) GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, erro
 		}
 	}
 	return &order, nil
+}
+
+func (r *OrderPostgres) CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error) {
+	timestamp1 := time.Now()
+	timestamp2 := time.Now().Add(45 * time.Minute)
+	_, err := r.db.Exec("INSERT INTO delivery (delivery_service_id, customer_address, order_date, restaurant_address, delivery_time, restaurant_name) VALUES ($1, $2, $3, $4, $5, $6)", order.CourierServiceID, order.ClientAddress, timestamp1, order.RestaurantAddress, timestamp2, order.RestaurantName)
+	if err != nil {
+		log.Fatalf("CreateOrder:%s", err)
+		return &emptypb.Empty{}, fmt.Errorf("CreateOrder:%w", err)
+	}
+	return &emptypb.Empty{}, nil
+}
+
+func (r *OrderPostgres) GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error) {
+	var Services courierProto.ServicesResponse
+
+	res, err := r.db.Query("SELECT id, name, email, photo, description, phone_number, manager_id, status FROM delivery_service")
+	if err != nil {
+		log.Println("Error with getting list of orders: " + err.Error())
+		return nil, err
+	}
+	for res.Next() {
+		var service courierProto.DeliveryService
+		err = res.Scan(&service.Id, &service.Name, &service.Email, &service.Photo, &service.Description, &service.Phone, &service.ManagerId, &service.Status)
+		if err != nil {
+			log.Println(err.Error())
+			return nil, err
+		}
+		Services.Services = append(Services.Services, &service)
+	}
+	return &Services, nil
 }

@@ -7,8 +7,10 @@ package mock_service
 import (
 	reflect "reflect"
 
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
 	dao "github.com/Baraulia/COURIER_SERVICE/dao"
 	gomock "github.com/golang/mock/gomock"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // MockOrderApp is a mock of OrderApp interface.
@@ -61,6 +63,21 @@ func (m *MockOrderApp) ChangeOrderStatus(id uint16) (uint16, error) {
 func (mr *MockOrderAppMockRecorder) ChangeOrderStatus(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeOrderStatus", reflect.TypeOf((*MockOrderApp)(nil).ChangeOrderStatus), id)
+}
+
+// CreateOrder mocks base method.
+func (m *MockOrderApp) CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateOrder", order)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateOrder indicates an expected call of CreateOrder.
+func (mr *MockOrderAppMockRecorder) CreateOrder(order interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrder", reflect.TypeOf((*MockOrderApp)(nil).CreateOrder), order)
 }
 
 // GetAllOrdersOfCourierService mocks base method.
@@ -153,6 +170,21 @@ func (mr *MockOrderAppMockRecorder) GetOrders(id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrders", reflect.TypeOf((*MockOrderApp)(nil).GetOrders), id)
 }
 
+// GetServices mocks base method.
+func (m *MockOrderApp) GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetServices", in)
+	ret0, _ := ret[0].(*courierProto.ServicesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetServices indicates an expected call of GetServices.
+func (mr *MockOrderAppMockRecorder) GetServices(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServices", reflect.TypeOf((*MockOrderApp)(nil).GetServices), in)
+}
+
 // MockCourierApp is a mock of CourierApp interface.
 type MockCourierApp struct {
 	ctrl     *gomock.Controller
@@ -219,6 +251,21 @@ func (m *MockCourierApp) SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 func (mr *MockCourierAppMockRecorder) SaveCourier(courier interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveCourier", reflect.TypeOf((*MockCourierApp)(nil).SaveCourier), courier)
+}
+
+// UpdateCourier mocks base method.
+func (m *MockCourierApp) UpdateCourier(id uint16) (uint16, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateCourier", id)
+	ret0, _ := ret[0].(uint16)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateCourier indicates an expected call of UpdateCourier.
+func (mr *MockCourierAppMockRecorder) UpdateCourier(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCourier", reflect.TypeOf((*MockCourierApp)(nil).UpdateCourier), id)
 }
 
 // MockDeliveryServiceApp is a mock of DeliveryServiceApp interface.

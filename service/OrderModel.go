@@ -3,7 +3,9 @@ package service
 import (
 	"errors"
 	"fmt"
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 )
 
@@ -140,4 +142,12 @@ func (s *OrderService) GetDetailedOrderById(Id int) (*dao.DetailedOrder, error) 
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
 	return Order, nil
+}
+
+func (s *OrderService) CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error) {
+	return s.repo.OrderRep.CreateOrder(order)
+}
+
+func (s *OrderService) GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error) {
+	return s.repo.OrderRep.GetServices(in)
 }

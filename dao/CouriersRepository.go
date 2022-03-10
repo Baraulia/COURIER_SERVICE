@@ -2,6 +2,7 @@ package dao
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 )
 
@@ -87,4 +88,15 @@ func (r *CourierPostgres) GetCourierFromDB(id int) (SmallInfo, error) {
 		cour = courier
 	}
 	return cour, nil
+}
+
+func (r *CourierPostgres) UpdateCourierInDB(id uint16) (uint16, error) {
+
+	UpdateValue := `UPDATE couriers SET deleted = $1 WHERE id_courier = $2`
+	_, err := r.db.Exec(UpdateValue, "true", id)
+	if err != nil {
+		log.Println("Error with getting courier by id: " + err.Error())
+		return 0, fmt.Errorf("updateCourier: error while scanning:%w", err)
+	}
+	return id, nil
 }

@@ -77,3 +77,30 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusCreated, Courier)
 }
+
+// ChangeCourierStatus by courier ID godoc
+// @Summary changeCourierStatus
+// @Description put courier status by courier ID
+// @Tags Courier
+// @Accept  json
+// @Produce  json
+// @Param id path int true "ID"
+// @Success 200 {object} int
+// @Failure 400 {string} string
+// @Failure 500 {string} err
+// @Router /courier/{id} [put]
+func (h *Handler) UpdateCourier(ctx *gin.Context) {
+	idQuery := ctx.Param("id")
+	id, err := strconv.Atoi(idQuery)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
+		return
+	}
+	courierId, err := h.services.CourierApp.UpdateCourier(uint16(id))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"No such courier": err})
+		return
+	}
+	ctx.JSON(http.StatusOK, map[string]interface{}{
+		"Courier id": courierId})
+}
