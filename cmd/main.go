@@ -19,19 +19,19 @@ import (
 func main() {
 	log.Println("Start...")
 	database, err := dao.NewPostgresDB(dao.PostgresDB{
-		Host:     "159.223.1.135",
-		Port:     "5434",
-		User:     "courierteam1",
-		Password: "qwerty",
-		DBName:   "courier_db",
-		SSLMode:  "disable"})
+		Host:     os.Getenv("HOST"),
+		Port:     os.Getenv("DB_PORT"),
+		User:     os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
+		DBName:   os.Getenv("DB_DATABASE"),
+		SSLMode:  os.Getenv("DB_SSL_MODE")})
 	if err != nil {
 		log.Fatal("failed to initialize dao:", err.Error())
 	}
 	repository := dao.NewRepository(database)
 	services := service.NewService(repository)
 	handlers := controller.NewHandler(services)
-	port := "8081"
+	port := os.Getenv("API_SERVER_PORT")
 
 	serv := new(server.Server)
 
