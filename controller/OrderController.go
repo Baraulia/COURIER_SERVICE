@@ -276,3 +276,77 @@ func (h *Handler) GetDetailedOrderById(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, DetOrder)
 }
+
+// @Summary GetAllCompletedOrdersOfCourierService
+// @Description get list of completed orders by courier service id
+// @Tags order
+// @Produce json
+// @Param limit query int true "limit"
+// @Param page query int true "page"
+// @Param iddeliveryservice query int true "iddeliveryservice"
+// @Success 200 {object} listShortOrders
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /orders/service/completed [get]
+func (h *Handler) GetAllCompletedOrdersOfCourierService(ctx *gin.Context) {
+	page, er := strconv.Atoi(ctx.Query("page"))
+	if er != nil || page <= 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
+		return
+	}
+	limit, er1 := strconv.Atoi(ctx.Query("limit"))
+	if er1 != nil || limit <= 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
+		return
+	}
+	idService, er := strconv.Atoi(ctx.Query("iddeliveryservice"))
+	if er != nil || idService <= 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		return
+	}
+
+	Orders, err := h.services.OrderApp.GetAllCompletedOrdersOfCourierService(limit, page, idService)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	ctx.JSON(http.StatusOK, listShortOrders{Data: Orders})
+
+}
+
+// @Summary GetAllCompletedOrdersOfCourierServiceByDate
+// @Description get list of completed orders by courier service id sorted bu date
+// @Tags order
+// @Produce json
+// @Param limit query int true "limit"
+// @Param page query int true "page"
+// @Param iddeliveryservice query int true "iddeliveryservice"
+// @Success 200 {object} listShortOrders
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /orders/service/completed/bydate [get]
+func (h *Handler) GetAllCompletedOrdersOfCourierServiceByDate(ctx *gin.Context) {
+	page, er := strconv.Atoi(ctx.Query("page"))
+	if er != nil || page <= 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
+		return
+	}
+	limit, er1 := strconv.Atoi(ctx.Query("limit"))
+	if er1 != nil || limit <= 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
+		return
+	}
+	idService, er := strconv.Atoi(ctx.Query("iddeliveryservice"))
+	if er != nil || idService <= 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		return
+	}
+
+	Orders, err := h.services.OrderApp.GetAllCompletedOrdersOfCourierServiceByDate(limit, page, idService)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	ctx.JSON(http.StatusOK, listShortOrders{Data: Orders})
+
+}

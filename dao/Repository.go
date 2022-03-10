@@ -31,6 +31,8 @@ type OrderRep interface {
 	GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, error)
 	CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error)
 	GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error)
+	GetAllCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService int) ([]Order, int)
+	GetAllCompletedOrdersOfCourierServiceFromDB(limit, page, idService int) ([]Order, int)
 }
 
 type CourierRep interface {
