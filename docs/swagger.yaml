@@ -185,6 +185,34 @@ paths:
       summary: getCourier
       tags:
       - Courier
+    put:
+      consumes:
+      - application/json
+      description: put courier status by courier ID
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: changeCourierStatus
+      tags:
+      - Courier
   /couriers:
     get:
       consumes:
@@ -314,6 +342,34 @@ paths:
           schema:
             type: string
       summary: UpdateDeliveryService
+      tags:
+      - DeliveryService
+  /deliveryservice/logo:
+    post:
+      consumes:
+      - image/jpeg
+      description: set logo to DO Spaces and it's way to DB
+      parameters:
+      - description: id delivery service
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: logo image
+        in: formData
+        name: logo
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: SaveLogoController
       tags:
       - DeliveryService
   /order/{id}:

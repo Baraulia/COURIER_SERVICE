@@ -336,6 +336,20 @@ func (mr *MockDeliveryServiceAppMockRecorder) GetDeliveryServiceById(Id interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDeliveryServiceById", reflect.TypeOf((*MockDeliveryServiceApp)(nil).GetDeliveryServiceById), Id)
 }
 
+// SaveLogoFile mocks base method.
+func (m *MockDeliveryServiceApp) SaveLogoFile(cover []byte, id int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SaveLogoFile", cover, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SaveLogoFile indicates an expected call of SaveLogoFile.
+func (mr *MockDeliveryServiceAppMockRecorder) SaveLogoFile(cover, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveLogoFile", reflect.TypeOf((*MockDeliveryServiceApp)(nil).SaveLogoFile), cover, id)
+}
+
 // UpdateDeliveryService mocks base method.
 func (m *MockDeliveryServiceApp) UpdateDeliveryService(service dao.DeliveryService) error {
 	m.ctrl.T.Helper()
