@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -112,6 +113,38 @@ func (h *Handler) UpdateDeliveryService(ctx *gin.Context) {
 	}
 	service.Id = id
 	if err := h.services.UpdateDeliveryService(service); err != nil {
+		log.Println(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	ctx.Status(http.StatusNoContent)
+}
+
+// @Summary SaveLogoController
+// @Description set logo to DO Spaces and it's way to DB
+// @Tags DeliveryService
+// @Accept  image/jpeg
+// @Produce   json
+// @Param id query int true "id delivery service"
+// @Param logo  formData  file  true  "logo image"
+// @Success 204
+// @Failure 400 {string} string
+// @Router /deliveryservice/logo [post]
+func (h *Handler) SaveLogoController(ctx *gin.Context) {
+	id, er := strconv.Atoi(ctx.Query("id"))
+	if er != nil || id <= 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		return
+	}
+	if ctx.Request.Body == nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "empty"})
+	}
+	defer ctx.Request.Body.Close()
+	cover, err := ioutil.ReadAll(ctx.Request.Body)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+	}
+	if err := h.services.SaveLogoFile(cover, id); err != nil {
 		log.Println(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
