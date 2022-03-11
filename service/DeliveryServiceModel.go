@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
+	"github.com/minio/minio-go"
 	"log"
 	"strconv"
 )
