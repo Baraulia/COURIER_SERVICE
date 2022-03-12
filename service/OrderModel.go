@@ -153,11 +153,6 @@ func (s *OrderService) GetServices(in *emptypb.Empty) (*courierProto.ServicesRes
 }
 func (s *OrderService) GetAllCompletedOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error) {
 	var Order = []dao.Order{}
-	if limit <= 0 || page <= 0 {
-		err := errors.New("no page or limit")
-		log.Println("no more pages or limit")
-		return nil, fmt.Errorf("Error in OrderService: %s", err)
-	}
 	Order, totalCount := s.repo.GetAllCompletedOrdersOfCourierServiceFromDB(limit, page, idService)
 	LimitOfPages := (totalCount / limit) + 1
 	if LimitOfPages < page {
@@ -170,11 +165,6 @@ func (s *OrderService) GetAllCompletedOrdersOfCourierService(limit, page, idServ
 
 func (s *OrderService) GetAllCompletedOrdersOfCourierServiceByDate(limit, page, idService int) ([]dao.Order, error) {
 	var Order = []dao.Order{}
-	if limit <= 0 || page <= 0 {
-		err := errors.New("no page or limit")
-		log.Println("no more pages or limit")
-		return nil, fmt.Errorf("Error in OrderService: %s", err)
-	}
 	Order, totalCount := s.repo.GetAllCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService)
 	LimitOfPages := (totalCount / limit) + 1
 	if LimitOfPages < page {
@@ -187,11 +177,6 @@ func (s *OrderService) GetAllCompletedOrdersOfCourierServiceByDate(limit, page, 
 
 func (s *OrderService) GetAllCompletedOrdersOfCourierServiceByCourierId(limit, page, idService int) ([]dao.Order, error) {
 	var Order = []dao.Order{}
-	if limit <= 0 || page <= 0 {
-		err := errors.New("no page or limit")
-		log.Println("no more pages or limit")
-		return nil, fmt.Errorf("Error in OrderService: %s", err)
-	}
 	Order, totalCount := s.repo.GetAllCompletedOrdersOfCourierServiceByCourierIdFromDB(limit, page, idService)
 	LimitOfPages := (totalCount / limit) + 1
 	if LimitOfPages < page {

@@ -295,7 +295,7 @@ func (r *OrderPostgres) GetAllCompletedOrdersOfCourierServiceFromDB(limit, page,
 		Orders = append(Orders, order)
 	}
 
-	var Ordersss []Order
+	var SizeOrders []Order
 	resl, err := transaction.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE status='completed' and delivery_service_id=%d ", idService))
 	if err != nil {
 		panic(err)
@@ -307,9 +307,9 @@ func (r *OrderPostgres) GetAllCompletedOrdersOfCourierServiceFromDB(limit, page,
 			panic(err)
 		}
 
-		Ordersss = append(Ordersss, order)
+		SizeOrders = append(SizeOrders, order)
 	}
-	return Orders, len(Ordersss)
+	return Orders, len(SizeOrders)
 }
 
 func (r *OrderPostgres) GetAllCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService int) ([]Order, int) {
@@ -335,7 +335,7 @@ func (r *OrderPostgres) GetAllCompletedOrdersOfCourierServiceByDateFromDB(limit,
 		Orders = append(Orders, order)
 	}
 
-	var Ordersss []Order
+	var SizeOrders []Order
 	resl, err := transaction.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE status='completed' and delivery_service_id=%d ", idService))
 	if err != nil {
 		panic(err)
@@ -347,9 +347,9 @@ func (r *OrderPostgres) GetAllCompletedOrdersOfCourierServiceByDateFromDB(limit,
 			panic(err)
 		}
 
-		Ordersss = append(Ordersss, order)
+		SizeOrders = append(SizeOrders, order)
 	}
-	return Orders, len(Ordersss)
+	return Orders, len(SizeOrders)
 }
 
 func (r *OrderPostgres) GetAllCompletedOrdersOfCourierServiceByCourierIdFromDB(limit, page, idService int) ([]Order, int) {
@@ -375,7 +375,7 @@ func (r *OrderPostgres) GetAllCompletedOrdersOfCourierServiceByCourierIdFromDB(l
 		Orders = append(Orders, order)
 	}
 
-	var Ordersss []Order
+	var SizeOrders []Order
 	resl, err := transaction.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE status='completed' and delivery_service_id=%d ", idService))
 	if err != nil {
 		panic(err)
@@ -387,7 +387,7 @@ func (r *OrderPostgres) GetAllCompletedOrdersOfCourierServiceByCourierIdFromDB(l
 			panic(err)
 		}
 
-		Ordersss = append(Ordersss, order)
+		SizeOrders = append(SizeOrders, order)
 	}
-	return Orders, len(Ordersss)
+	return Orders, len(SizeOrders)
 }
