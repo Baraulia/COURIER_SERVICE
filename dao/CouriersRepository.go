@@ -15,16 +15,17 @@ func NewCourierPostgres(db *sql.DB) *CourierPostgres {
 }
 
 type Courier struct {
-	Id               uint16 `json:"id_courier"`
-	CourierName      string `json:"courier_name"`
-	ReadyToGo        bool   `json:"ready_to_go"`
-	PhoneNumber      string `json:"phone_number"`
-	Email            string `json:"email"`
-	Rating           uint16 `json:"rating"`
-	Photo            string `json:"photo"`
-	Surname          string `json:"surname"`
-	NumberOfFailures uint16 `json:"number_of_failures"`
-	Deleted          bool   `json:"deleted"`
+	Id                uint16 `json:"id_courier"`
+	CourierName       string `json:"courier_name"`
+	ReadyToGo         bool   `json:"ready_to_go"`
+	PhoneNumber       string `json:"phone_number"`
+	Email             string `json:"email"`
+	Rating            uint16 `json:"rating"`
+	Photo             string `json:"photo"`
+	Surname           string `json:"surname"`
+	NumberOfFailures  uint16 `json:"number_of_failures"`
+	Deleted           bool   `json:"deleted"`
+	DeliveryServiceId uint16 `json:"delivery_service_id"`
 }
 
 type SmallInfo struct {
@@ -37,9 +38,9 @@ type SmallInfo struct {
 
 func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
 
-	insertValue := `INSERT INTO "couriers" ("name","ready to go","phone_number","email","photo","surname") VALUES ($1,$2,$3,$4,$5,$6)`
+	insertValue := `INSERT INTO "couriers" ("name","ready to go","phone_number","email","photo","surname", "delivery_service_id") VALUES ($1,$2,$3,$4,$5,$6,$7)`
 
-	_, err := r.db.Exec(insertValue, courier.CourierName, courier.ReadyToGo, courier.PhoneNumber, courier.Email, courier.Photo, courier.Surname)
+	_, err := r.db.Exec(insertValue, courier.CourierName, courier.ReadyToGo, courier.PhoneNumber, courier.Email, courier.Photo, courier.Surname, courier.DeliveryServiceId)
 
 	if err != nil {
 
