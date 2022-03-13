@@ -265,13 +265,13 @@ func (h *Handler) UpdateOrder(ctx *gin.Context) {
 func (h *Handler) GetDetailedOrderById(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil || id <= 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "expect an integer greater than 0"})
 		return
 	}
 
 	DetOrder, err := h.services.OrderApp.GetDetailedOrderById(id)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
 	}
 	ctx.JSON(http.StatusOK, DetOrder)
@@ -291,23 +291,23 @@ func (h *Handler) GetDetailedOrderById(ctx *gin.Context) {
 func (h *Handler) GetAllCompletedOrdersOfCourierService(ctx *gin.Context) {
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page <= 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
 		return
 	}
 	limit, er1 := strconv.Atoi(ctx.Query("limit"))
 	if er1 != nil || limit <= 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
 		return
 	}
 	idService, er := strconv.Atoi(ctx.Query("iddeliveryservice"))
 	if er != nil || idService <= 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "expect an integer greater than 0"})
 		return
 	}
 
 	Orders, err := h.services.OrderApp.GetAllCompletedOrdersOfCourierService(limit, page, idService)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
 	}
 	ctx.JSON(http.StatusOK, listShortOrders{Data: Orders})
@@ -328,23 +328,23 @@ func (h *Handler) GetAllCompletedOrdersOfCourierService(ctx *gin.Context) {
 func (h *Handler) GetAllCompletedOrdersOfCourierServiceByDate(ctx *gin.Context) {
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page <= 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
 		return
 	}
 	limit, er1 := strconv.Atoi(ctx.Query("limit"))
 	if er1 != nil || limit <= 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
 		return
 	}
 	idService, er := strconv.Atoi(ctx.Query("iddeliveryservice"))
 	if er != nil || idService <= 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "expect an integer greater than 0"})
 		return
 	}
 
 	Orders, err := h.services.OrderApp.GetAllCompletedOrdersOfCourierServiceByDate(limit, page, idService)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
 	}
 	ctx.JSON(http.StatusOK, listShortOrders{Data: Orders})
@@ -365,23 +365,23 @@ func (h *Handler) GetAllCompletedOrdersOfCourierServiceByDate(ctx *gin.Context) 
 func (h *Handler) GetAllCompletedOrdersOfCourierServiceByCourierId(ctx *gin.Context) {
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page <= 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
 		return
 	}
 	limit, er1 := strconv.Atoi(ctx.Query("limit"))
 	if er1 != nil || limit <= 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
 		return
 	}
 	idService, er := strconv.Atoi(ctx.Query("iddeliveryservice"))
 	if er != nil || idService <= 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "expect an integer greater than 0"})
 		return
 	}
 
 	Orders, err := h.services.OrderApp.GetAllCompletedOrdersOfCourierServiceByCourierId(limit, page, idService)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
 	}
 	ctx.JSON(http.StatusOK, listShortOrders{Data: Orders})
