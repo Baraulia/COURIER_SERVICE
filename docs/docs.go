@@ -726,116 +726,12 @@ const docTemplate_swagger = `{
                         "name": "iddeliveryservice",
                         "in": "query",
                         "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controller.listShortOrders"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/orders/service/completed/bycourierid": {
-            "get": {
-                "description": "get list of completed orders by courier service id sorted bu courier id",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "order"
-                ],
-                "summary": "GetAllCompletedOrdersOfCourierServiceByCourierId",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "limit",
-                        "name": "limit",
-                        "in": "query",
-                        "required": true
                     },
                     {
-                        "type": "integer",
-                        "description": "page",
-                        "name": "page",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "iddeliveryservice",
-                        "name": "iddeliveryservice",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controller.listShortOrders"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/orders/service/completed/bydate": {
-            "get": {
-                "description": "get list of completed orders by courier service id sorted bu date",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "order"
-                ],
-                "summary": "GetAllCompletedOrdersOfCourierServiceByDate",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "limit",
-                        "name": "limit",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "page",
-                        "name": "page",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "iddeliveryservice",
-                        "name": "iddeliveryservice",
-                        "in": "query",
-                        "required": true
+                        "type": "string",
+                        "description": "sort",
+                        "name": "sort",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -991,6 +887,9 @@ const docTemplate_swagger = `{
                 "deleted": {
                     "type": "boolean"
                 },
+                "delivery_service_id": {
+                    "type": "integer"
+                },
                 "email": {
                     "type": "string"
                 },
@@ -1145,8 +1044,8 @@ var SwaggerInfo_swagger = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Courier Service",
-	Description:      "Courier Service for Food Delivery Application",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate_swagger,
 }

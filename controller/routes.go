@@ -46,9 +46,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 		orders.GET("/bymonth", h.GetCourierCompletedOrdersByMonth)
 		orders.GET("/:id", h.GetOrders)
 		orders.PUT("/:id", h.UpdateOrder)
-		orders.GET("/service/completed", h.GetAllCompletedOrdersOfCourierService)
-		orders.GET("/service/completed/bydate", h.GetAllCompletedOrdersOfCourierServiceByDate)
-		orders.GET("/service/completed/bycourierid", h.GetAllCompletedOrdersOfCourierServiceByCourierId)
+		orders.GET("/service/completed", h.GetCompletedOrdersOfCourierService)
 
 	}
 

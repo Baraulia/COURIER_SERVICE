@@ -26,6 +26,8 @@ definitions:
         type: string
       deleted:
         type: boolean
+      delivery_service_id:
+        type: integer
       email:
         type: string
       id_courier:
@@ -123,8 +125,6 @@ definitions:
     type: object
 info:
   contact: {}
-  description: Courier Service for Food Delivery Application
-  title: Courier Service
 paths:
   /courier:
     post:
@@ -655,6 +655,10 @@ paths:
         name: iddeliveryservice
         required: true
         type: integer
+      - description: sort
+        in: query
+        name: sort
+        type: string
       produces:
       - application/json
       responses:
@@ -671,81 +675,6 @@ paths:
           schema:
             type: string
       summary: GetAllCompletedOrdersOfCourierService
-      tags:
-      - order
-  /orders/service/completed/bycourierid:
-    get:
-      description: get list of completed orders by courier service id sorted bu courier
-        id
-      parameters:
-      - description: limit
-        in: query
-        name: limit
-        required: true
-        type: integer
-      - description: page
-        in: query
-        name: page
-        required: true
-        type: integer
-      - description: iddeliveryservice
-        in: query
-        name: iddeliveryservice
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controller.listShortOrders'
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: GetAllCompletedOrdersOfCourierServiceByCourierId
-      tags:
-      - order
-  /orders/service/completed/bydate:
-    get:
-      description: get list of completed orders by courier service id sorted bu date
-      parameters:
-      - description: limit
-        in: query
-        name: limit
-        required: true
-        type: integer
-      - description: page
-        in: query
-        name: page
-        required: true
-        type: integer
-      - description: iddeliveryservice
-        in: query
-        name: iddeliveryservice
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controller.listShortOrders'
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: GetAllCompletedOrdersOfCourierServiceByDate
       tags:
       - order
 swagger: "2.0"

@@ -151,9 +151,9 @@ func (s *OrderService) CreateOrder(order *courierProto.OrderCourierServer) (*emp
 func (s *OrderService) GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error) {
 	return s.repo.OrderRep.GetServices(in)
 }
-func (s *OrderService) GetAllCompletedOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error) {
+func (s *OrderService) GetCompletedOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error) {
 	var Order = []dao.Order{}
-	Order, totalCount := s.repo.GetAllCompletedOrdersOfCourierServiceFromDB(limit, page, idService)
+	Order, totalCount := s.repo.GetCompletedOrdersOfCourierServiceFromDB(limit, page, idService)
 	LimitOfPages := (totalCount / limit) + 1
 	if LimitOfPages < page {
 		err := errors.New("no page")
@@ -163,9 +163,9 @@ func (s *OrderService) GetAllCompletedOrdersOfCourierService(limit, page, idServ
 	return Order, nil
 }
 
-func (s *OrderService) GetAllCompletedOrdersOfCourierServiceByDate(limit, page, idService int) ([]dao.Order, error) {
+func (s *OrderService) GetCompletedOrdersOfCourierServiceByDate(limit, page, idService int) ([]dao.Order, error) {
 	var Order = []dao.Order{}
-	Order, totalCount := s.repo.GetAllCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService)
+	Order, totalCount := s.repo.GetCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService)
 	LimitOfPages := (totalCount / limit) + 1
 	if LimitOfPages < page {
 		err := errors.New("no page")
@@ -175,9 +175,9 @@ func (s *OrderService) GetAllCompletedOrdersOfCourierServiceByDate(limit, page, 
 	return Order, nil
 }
 
-func (s *OrderService) GetAllCompletedOrdersOfCourierServiceByCourierId(limit, page, idService int) ([]dao.Order, error) {
+func (s *OrderService) GetCompletedOrdersOfCourierServiceByCourierId(limit, page, idService int) ([]dao.Order, error) {
 	var Order = []dao.Order{}
-	Order, totalCount := s.repo.GetAllCompletedOrdersOfCourierServiceByCourierIdFromDB(limit, page, idService)
+	Order, totalCount := s.repo.GetCompletedOrdersOfCourierServiceByCourierIdFromDB(limit, page, idService)
 	LimitOfPages := (totalCount / limit) + 1
 	if LimitOfPages < page {
 		err := errors.New("no page")

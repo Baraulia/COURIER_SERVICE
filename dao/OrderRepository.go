@@ -272,122 +272,113 @@ func (r *OrderPostgres) GetServices(in *emptypb.Empty) (*courierProto.ServicesRe
 	return &Services, nil
 }
 
-func (r *OrderPostgres) GetAllCompletedOrdersOfCourierServiceFromDB(limit, page, idService int) ([]Order, int) {
+func (r *OrderPostgres) GetCompletedOrdersOfCourierServiceFromDB(limit, page, idService int) ([]Order, int) {
 	var Orders []Order
 	transaction, err := r.db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer transaction.Commit()
 
-	res, err := transaction.Query("SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status='completed' and delivery_service_id=$1 LIMIT $2 OFFSET $3",
+	res, err := transaction.Query("SELECT order_date,courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status='completed' and delivery_service_id=$1 LIMIT $2 OFFSET $3",
 		idService, limit, limit*(page-1))
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 	for res.Next() {
 		var order Order
-		err = res.Scan(&order.IdCourier, &order.Id, &order.DeliveryTime, &order.Status, &order.CustomerAddress)
+		err = res.Scan(&order.OrderDate, &order.IdCourier, &order.Id, &order.DeliveryTime, &order.Status, &order.CustomerAddress)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 
 		Orders = append(Orders, order)
 	}
 
-	var SizeOrders []Order
-	resl, err := transaction.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE status='completed' and delivery_service_id=%d ", idService))
+	resl, err := transaction.Query("SELECT count(*) FROM delivery WHERE status='completed' and delivery_service_id=$1", idService)
 	if err != nil {
 		panic(err)
 	}
+	var length int
 	for resl.Next() {
-		var order Order
-		err = resl.Scan(&order.IdCourier)
-		if err != nil {
-			panic(err)
-		}
 
-		SizeOrders = append(SizeOrders, order)
+		err = resl.Scan(&length)
+		if err != nil {
+			log.Println(err)
+		}
 	}
-	return Orders, len(SizeOrders)
+	return Orders, length
 }
 
-func (r *OrderPostgres) GetAllCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService int) ([]Order, int) {
+func (r *OrderPostgres) GetCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService int) ([]Order, int) {
 	var Orders []Order
 	transaction, err := r.db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer transaction.Commit()
 
 	res, err := transaction.Query("SELECT delivery_service_id, order_date, courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status='completed' and delivery_service_id=$1 ORDER BY order_date LIMIT $2 OFFSET $3",
 		idService, limit, limit*(page-1))
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 	for res.Next() {
 		var order Order
 		err = res.Scan(&order.IdDeliveryService, &order.OrderDate, &order.IdCourier, &order.Id, &order.DeliveryTime, &order.Status, &order.CustomerAddress)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 
 		Orders = append(Orders, order)
 	}
 
-	var SizeOrders []Order
-	resl, err := transaction.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE status='completed' and delivery_service_id=%d ", idService))
+	resl, err := transaction.Query("SELECT count(*) FROM delivery WHERE status='completed' and delivery_service_id=$1", idService)
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
+	var length int
 	for resl.Next() {
-		var order Order
-		err = resl.Scan(&order.IdCourier)
+		err = resl.Scan(&length)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
-
-		SizeOrders = append(SizeOrders, order)
 	}
-	return Orders, len(SizeOrders)
+	return Orders, length
 }
 
-func (r *OrderPostgres) GetAllCompletedOrdersOfCourierServiceByCourierIdFromDB(limit, page, idService int) ([]Order, int) {
+func (r *OrderPostgres) GetCompletedOrdersOfCourierServiceByCourierIdFromDB(limit, page, idService int) ([]Order, int) {
 	var Orders []Order
 	transaction, err := r.db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer transaction.Commit()
 
 	res, err := transaction.Query("SELECT delivery_service_id, order_date, courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status='completed' and delivery_service_id=$1 ORDER BY courier_id LIMIT $2 OFFSET $3",
 		idService, limit, limit*(page-1))
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 	for res.Next() {
 		var order Order
 		err = res.Scan(&order.IdDeliveryService, &order.OrderDate, &order.IdCourier, &order.Id, &order.DeliveryTime, &order.Status, &order.CustomerAddress)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 
 		Orders = append(Orders, order)
 	}
-
-	var SizeOrders []Order
-	resl, err := transaction.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE status='completed' and delivery_service_id=%d ", idService))
+	reslen, err := transaction.Query("SELECT count(*) FROM delivery WHERE status='completed' and delivery_service_id=$1", idService)
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
-	for resl.Next() {
-		var order Order
-		err = resl.Scan(&order.IdCourier)
+	var length int
+	for reslen.Next() {
+		err = reslen.Scan(&length)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
-
-		SizeOrders = append(SizeOrders, order)
 	}
-	return Orders, len(SizeOrders)
+	return Orders, length
 }

@@ -19,9 +19,9 @@ type OrderApp interface {
 	GetDetailedOrderById(Id int) (*dao.DetailedOrder, error)
 	CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error)
 	GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error)
-	GetAllCompletedOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
-	GetAllCompletedOrdersOfCourierServiceByDate(limit, page, idService int) ([]dao.Order, error)
-	GetAllCompletedOrdersOfCourierServiceByCourierId(limit, page, idService int) ([]dao.Order, error)
+	GetCompletedOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
+	GetCompletedOrdersOfCourierServiceByDate(limit, page, idService int) ([]dao.Order, error)
+	GetCompletedOrdersOfCourierServiceByCourierId(limit, page, idService int) ([]dao.Order, error)
 }
 
 type CourierApp interface {

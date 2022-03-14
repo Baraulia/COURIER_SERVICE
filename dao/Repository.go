@@ -31,9 +31,9 @@ type OrderRep interface {
 	GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, error)
 	CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error)
 	GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error)
-	GetAllCompletedOrdersOfCourierServiceFromDB(limit, page, idService int) ([]Order, int)
-	GetAllCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService int) ([]Order, int)
-	GetAllCompletedOrdersOfCourierServiceByCourierIdFromDB(limit, page, idService int) ([]Order, int)
+	GetCompletedOrdersOfCourierServiceFromDB(limit, page, idService int) ([]Order, int)
+	GetCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService int) ([]Order, int)
+	GetCompletedOrdersOfCourierServiceByCourierIdFromDB(limit, page, idService int) ([]Order, int)
 }
 
 type CourierRep interface {
