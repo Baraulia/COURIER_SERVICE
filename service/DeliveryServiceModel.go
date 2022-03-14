@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/minio/minio-go"
 	"log"
@@ -12,11 +13,13 @@ import (
 
 type DeliveryService struct {
 	repo dao.Repository
+	grpcCli *grpcClient.GRPCClient
 }
 
-func NewDeliveryService(repo dao.Repository) *DeliveryService {
+func NewDeliveryService(repo dao.Repository, grpcCli *grpcClient.GRPCClient) *DeliveryService {
 	return &DeliveryService{
 		repo: repo,
+		grpcCli: grpcCli,
 	}
 }
 func (s *DeliveryService) CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error) {

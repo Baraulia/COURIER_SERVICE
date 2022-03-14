@@ -2,6 +2,7 @@ package service
 
 import (
 	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
+	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -42,10 +43,10 @@ type Service struct {
 	DeliveryServiceApp
 }
 
-func NewService(rep *dao.Repository) *Service {
+func NewService(rep *dao.Repository, grpcCli *grpcClient.GRPCClient) *Service {
 	return &Service{
-		NewOrderService(*rep),
-		NewCourierService(*rep),
-		NewDeliveryService(*rep),
+		NewOrderService(*rep, grpcCli),
+		NewCourierService(*rep, grpcCli),
+		NewDeliveryService(*rep, grpcCli),
 	}
 }

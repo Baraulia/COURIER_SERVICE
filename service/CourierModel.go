@@ -3,16 +3,21 @@ package service
 import (
 	"errors"
 	"fmt"
+	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"log"
 )
 
 type CourierService struct {
 	repo dao.Repository
+	grpcCli *grpcClient.GRPCClient
 }
 
-func NewCourierService(repo dao.Repository) *CourierService {
-	return &CourierService{repo: repo}
+func NewCourierService(repo dao.Repository, grpcCli *grpcClient.GRPCClient) *CourierService {
+	return &CourierService{
+		repo: repo,
+		grpcCli: grpcCli,
+	}
 }
 
 func (s *CourierService) GetCouriers() ([]dao.SmallInfo, error) {

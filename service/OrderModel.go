@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
+	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
@@ -11,10 +12,14 @@ import (
 
 type OrderService struct {
 	repo dao.Repository
+	grpcCli *grpcClient.GRPCClient
 }
 
-func NewOrderService(repo dao.Repository) *OrderService {
-	return &OrderService{repo: repo}
+func NewOrderService(repo dao.Repository, grpcCli *grpcClient.GRPCClient) *OrderService {
+	return &OrderService{
+		repo: repo,
+		grpcCli: grpcCli,
+	}
 }
 
 func (s *OrderService) GetOrders(id int) ([]dao.Order, error) {
