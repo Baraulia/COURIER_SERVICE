@@ -1,8 +1,10 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
 	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"log"
@@ -59,4 +61,17 @@ func (s *CourierService) UpdateCourier(id uint16) (uint16, error) {
 		return 0, fmt.Errorf("Error with database: %s", err)
 	}
 	return courierId, nil
+}
+
+func (s *CourierService) CheckRights(token string, requiredRole string) (bool, error) {
+	User, err := s.grpcCli.GetUserWithRights(context.Background(), &courierProto.AccessToken{
+		AccessToken: token,
+	})
+	if err != nil {
+		return false, err
+	}
+	if User.Role != requiredRole {
+		return false, errors.New("no required rights")
+	}
+	return true, nil
 }

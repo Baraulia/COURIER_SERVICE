@@ -208,6 +208,21 @@ func (m *MockCourierApp) EXPECT() *MockCourierAppMockRecorder {
 	return m.recorder
 }
 
+// CheckRights mocks base method.
+func (m *MockCourierApp) CheckRights(token, requiredRole string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckRights", token, requiredRole)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CheckRights indicates an expected call of CheckRights.
+func (mr *MockCourierAppMockRecorder) CheckRights(token, requiredRole interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckRights", reflect.TypeOf((*MockCourierApp)(nil).CheckRights), token, requiredRole)
+}
+
 // GetCourier mocks base method.
 func (m *MockCourierApp) GetCourier(id int) (dao.SmallInfo, error) {
 	m.ctrl.T.Helper()

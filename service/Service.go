@@ -27,6 +27,7 @@ type CourierApp interface {
 	GetCourier(id int) (dao.SmallInfo, error)
 	SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 	UpdateCourier(id uint16) (uint16, error)
+	CheckRights(token string, requiredRole string) (bool, error)
 }
 
 type DeliveryServiceApp interface {
