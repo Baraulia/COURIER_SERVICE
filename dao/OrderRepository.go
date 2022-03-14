@@ -297,7 +297,7 @@ func (r *OrderPostgres) GetCompletedOrdersOfCourierServiceFromDB(limit, page, id
 
 	resl, err := transaction.Query("SELECT count(*) FROM delivery WHERE status='completed' and delivery_service_id=$1", idService)
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 	var length int
 	for resl.Next() {
