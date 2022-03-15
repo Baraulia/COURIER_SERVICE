@@ -127,14 +127,14 @@ func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(limit, page, id
 	return Orders, len(Ordersss)
 }
 
-func (r *OrderPostgres) GetAllOrdersOfCourierServiceWithPage_fromDB(limit, page, idService int) ([]Order, int) {
+func (r *OrderPostgres) GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService int) ([]Order, int) {
 	var Orders []Order
 	transaction, err := r.db.Begin()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer transaction.Commit()
-	res, err := transaction.Query(fmt.Sprintf("SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE delivery_service_id=%d LIMIT %d OFFSET %d", idService, limit, limit*(page-1)))
+	res, err := transaction.Query(fmt.Sprintf("SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status = 'ready to delivery' and delivery_service_id=%d LIMIT %d OFFSET %d", idService, limit, limit*(page-1)))
 	if err != nil {
 		panic(err)
 	}
@@ -270,4 +270,115 @@ func (r *OrderPostgres) GetServices(in *emptypb.Empty) (*courierProto.ServicesRe
 		Services.Services = append(Services.Services, &service)
 	}
 	return &Services, nil
+}
+
+func (r *OrderPostgres) GetCompletedOrdersOfCourierServiceFromDB(limit, page, idService int) ([]Order, int) {
+	var Orders []Order
+	transaction, err := r.db.Begin()
+	if err != nil {
+		log.Println(err)
+	}
+	defer transaction.Commit()
+
+	res, err := transaction.Query("SELECT order_date,courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status='completed' and delivery_service_id=$1 LIMIT $2 OFFSET $3",
+		idService, limit, limit*(page-1))
+	if err != nil {
+		log.Println(err)
+	}
+	for res.Next() {
+		var order Order
+		err = res.Scan(&order.OrderDate, &order.IdCourier, &order.Id, &order.DeliveryTime, &order.Status, &order.CustomerAddress)
+		if err != nil {
+			log.Println(err)
+		}
+
+		Orders = append(Orders, order)
+	}
+
+	resl, err := transaction.Query("SELECT count(*) FROM delivery WHERE status='completed' and delivery_service_id=$1", idService)
+	if err != nil {
+		log.Println(err)
+	}
+	var length int
+	for resl.Next() {
+
+		err = resl.Scan(&length)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	return Orders, length
+}
+
+func (r *OrderPostgres) GetCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService int) ([]Order, int) {
+	var Orders []Order
+	transaction, err := r.db.Begin()
+	if err != nil {
+		log.Println(err)
+	}
+	defer transaction.Commit()
+
+	res, err := transaction.Query("SELECT delivery_service_id, order_date, courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status='completed' and delivery_service_id=$1 ORDER BY order_date LIMIT $2 OFFSET $3",
+		idService, limit, limit*(page-1))
+	if err != nil {
+		log.Println(err)
+	}
+	for res.Next() {
+		var order Order
+		err = res.Scan(&order.IdDeliveryService, &order.OrderDate, &order.IdCourier, &order.Id, &order.DeliveryTime, &order.Status, &order.CustomerAddress)
+		if err != nil {
+			log.Println(err)
+		}
+
+		Orders = append(Orders, order)
+	}
+
+	resl, err := transaction.Query("SELECT count(*) FROM delivery WHERE status='completed' and delivery_service_id=$1", idService)
+	if err != nil {
+		log.Println(err)
+	}
+	var length int
+	for resl.Next() {
+		err = resl.Scan(&length)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	return Orders, length
+}
+
+func (r *OrderPostgres) GetCompletedOrdersOfCourierServiceByCourierIdFromDB(limit, page, idService int) ([]Order, int) {
+	var Orders []Order
+	transaction, err := r.db.Begin()
+	if err != nil {
+		log.Println(err)
+	}
+	defer transaction.Commit()
+
+	res, err := transaction.Query("SELECT delivery_service_id, order_date, courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status='completed' and delivery_service_id=$1 ORDER BY courier_id LIMIT $2 OFFSET $3",
+		idService, limit, limit*(page-1))
+	if err != nil {
+		log.Println(err)
+	}
+	for res.Next() {
+		var order Order
+		err = res.Scan(&order.IdDeliveryService, &order.OrderDate, &order.IdCourier, &order.Id, &order.DeliveryTime, &order.Status, &order.CustomerAddress)
+		if err != nil {
+			log.Println(err)
+		}
+
+		Orders = append(Orders, order)
+	}
+	reslen, err := transaction.Query("SELECT count(*) FROM delivery WHERE status='completed' and delivery_service_id=$1", idService)
+	if err != nil {
+		log.Println(err)
+	}
+	var length int
+	for reslen.Next() {
+		err = reslen.Scan(&length)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	return Orders, length
 }

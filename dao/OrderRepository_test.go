@@ -123,7 +123,7 @@ func TestRepository_GetAllOrdersOfCourierServiceWithPage_fromDB(t *testing.T) {
 	for _, tt := range testTable {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock(tt.delivery_service_id, tt.limit, tt.page)
-			got, _ := r.GetAllOrdersOfCourierServiceWithPage_fromDB(tt.delivery_service_id, tt.limit, tt.page)
+			got, _ := r.GetAllOrdersOfCourierServiceWithPageFromDB(tt.delivery_service_id, tt.limit, tt.page)
 
 			assert.Equal(t, tt.expectedOrder, got)
 			assert.NoError(t, mock.ExpectationsWereMet())

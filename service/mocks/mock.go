@@ -95,6 +95,51 @@ func (mr *MockOrderAppMockRecorder) GetAllOrdersOfCourierService(limit, page, id
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllOrdersOfCourierService", reflect.TypeOf((*MockOrderApp)(nil).GetAllOrdersOfCourierService), limit, page, idService)
 }
 
+// GetCompletedOrdersOfCourierService mocks base method.
+func (m *MockOrderApp) GetCompletedOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCompletedOrdersOfCourierService", limit, page, idService)
+	ret0, _ := ret[0].([]dao.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCompletedOrdersOfCourierService indicates an expected call of GetCompletedOrdersOfCourierService.
+func (mr *MockOrderAppMockRecorder) GetCompletedOrdersOfCourierService(limit, page, idService interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCompletedOrdersOfCourierService", reflect.TypeOf((*MockOrderApp)(nil).GetCompletedOrdersOfCourierService), limit, page, idService)
+}
+
+// GetCompletedOrdersOfCourierServiceByCourierId mocks base method.
+func (m *MockOrderApp) GetCompletedOrdersOfCourierServiceByCourierId(limit, page, idService int) ([]dao.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCompletedOrdersOfCourierServiceByCourierId", limit, page, idService)
+	ret0, _ := ret[0].([]dao.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCompletedOrdersOfCourierServiceByCourierId indicates an expected call of GetCompletedOrdersOfCourierServiceByCourierId.
+func (mr *MockOrderAppMockRecorder) GetCompletedOrdersOfCourierServiceByCourierId(limit, page, idService interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCompletedOrdersOfCourierServiceByCourierId", reflect.TypeOf((*MockOrderApp)(nil).GetCompletedOrdersOfCourierServiceByCourierId), limit, page, idService)
+}
+
+// GetCompletedOrdersOfCourierServiceByDate mocks base method.
+func (m *MockOrderApp) GetCompletedOrdersOfCourierServiceByDate(limit, page, idService int) ([]dao.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCompletedOrdersOfCourierServiceByDate", limit, page, idService)
+	ret0, _ := ret[0].([]dao.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCompletedOrdersOfCourierServiceByDate indicates an expected call of GetCompletedOrdersOfCourierServiceByDate.
+func (mr *MockOrderAppMockRecorder) GetCompletedOrdersOfCourierServiceByDate(limit, page, idService interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCompletedOrdersOfCourierServiceByDate", reflect.TypeOf((*MockOrderApp)(nil).GetCompletedOrdersOfCourierServiceByDate), limit, page, idService)
+}
+
 // GetCourierCompletedOrders mocks base method.
 func (m *MockOrderApp) GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.DetailedOrder, error) {
 	m.ctrl.T.Helper()
