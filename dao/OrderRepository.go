@@ -135,7 +135,7 @@ func (r *OrderPostgres) GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, 
 		log.Println(err)
 	}
 	defer transaction.Commit()
-	res, err := transaction.Query("SELECT d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_address,co.name, co.surname,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.delivery_service_id=$1 and status = 'ready to delivery' LIMIT $2 OFFSET $3", idService, limit, limit*(page-1))
+	res, err := transaction.Query("SELECT d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_address,co.name, co.surname,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.delivery_service_id=$1 and status = 'ready to delivery' ORDER BY d.id LIMIT $2 OFFSET $3", idService, limit, limit*(page-1))
 	if err != nil {
 		panic(err)
 	}
@@ -163,7 +163,7 @@ func (r *OrderPostgres) GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, 
 	return Orders, length
 }
 
-func (r *OrderPostgres) GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year int) ([]Order, int) {
+func (r *OrderPostgres) GetCourierCompletedOrdersByMouthWithPageFromDB(limit, page, idCourier, Month, Year int) ([]Order, int) {
 	var Orders []Order
 	transaction, err := r.db.Begin()
 	if err != nil {
@@ -172,7 +172,7 @@ func (r *OrderPostgres) GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, p
 	log.Println("connected to db")
 
 	defer transaction.Commit()
-	res, err := transaction.Query(fmt.Sprintf("SELECT courier_id ,id ,delivery_service_id ,delivery_time ,order_date ,status ,customer_address, restaurant_address FROM delivery where courier_id=%d and Extract(MONTH from order_date )=%d and Extract(Year from order_date )=%d LIMIT %d OFFSET %d ", idCourier, Month, Year, limit, limit*(page-1)))
+	res, err := transaction.Query("SELECT courier_id ,id ,delivery_service_id ,delivery_time ,order_date ,status ,customer_address, restaurant_address FROM delivery where status='completed' and courier_id=$1 and Extract(MONTH from order_date )=$2 and Extract(Year from order_date )=$3 LIMIT $4 OFFSET $5", idCourier, Month, Year, limit, limit*(page-1))
 	if err != nil {
 		panic(err)
 	}

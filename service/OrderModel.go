@@ -105,7 +105,7 @@ func (s *OrderService) GetCourierCompletedOrdersByMonth(limit, page, idService, 
 		log.Println("no more pages or limit")
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
-	Order, totalCount := s.repo.GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idService, Month, Year)
+	Order, totalCount := s.repo.GetCourierCompletedOrdersByMouthWithPageFromDB(limit, page, idService, Month, Year)
 	LimitOfPages := (totalCount / limit) + 1
 	if LimitOfPages < page {
 		err := errors.New("no page")
