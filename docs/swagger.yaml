@@ -134,8 +134,6 @@ definitions:
     type: object
 info:
   contact: {}
-  description: Courier Service for Food Delivery Application
-  title: Courier Service
 paths:
   /courier:
     post:
@@ -470,7 +468,7 @@ paths:
       - OrderStatusChange
   /orders:
     get:
-      description: get list of all orders by courier service id
+      description: get list of all orders by courier service id with custom status
       parameters:
       - description: page
         in: query
@@ -502,7 +500,7 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: GetAllOrdersOfCourierService
+      summary: GetOrdersOfCourierServiceForManager
       tags:
       - order
   /orders/{id}:

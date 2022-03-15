@@ -186,3 +186,16 @@ func (s *OrderService) GetCompletedOrdersOfCourierServiceByCourierId(limit, page
 	}
 	return Order, nil
 }
+
+func (s *OrderService) GetOrdersOfCourierServiceForManager(limit, page, idService int) ([]dao.DetailedOrder, error) {
+	var Order = []dao.DetailedOrder{}
+	Order, totalCount := s.repo.GetOrdersOfCourierServiceForManagerFromDB(limit, page, idService)
+	LimitOfPages := (totalCount / limit) + 1
+	if LimitOfPages < page {
+		err := errors.New("no page")
+		log.Println("no more pages")
+		return nil, fmt.Errorf("Error in OrderService: %s", err)
+	}
+	fmt.Println(Order)
+	return Order, nil
+}

@@ -518,14 +518,14 @@ const docTemplate_swagger = `{
         },
         "/orders": {
             "get": {
-                "description": "get list of all orders by courier service id",
+                "description": "get list of all orders by courier service id with custom status",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "order"
                 ],
-                "summary": "GetAllOrdersOfCourierService",
+                "summary": "GetOrdersOfCourierServiceForManager",
                 "parameters": [
                     {
                         "type": "integer",
@@ -1058,8 +1058,8 @@ var SwaggerInfo_swagger = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Courier Service",
-	Description:      "Courier Service for Food Delivery Application",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate_swagger,
 }

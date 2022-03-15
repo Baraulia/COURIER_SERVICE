@@ -34,6 +34,7 @@ type OrderRep interface {
 	GetCompletedOrdersOfCourierServiceFromDB(limit, page, idService int) ([]Order, int)
 	GetCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService int) ([]Order, int)
 	GetCompletedOrdersOfCourierServiceByCourierIdFromDB(limit, page, idService int) ([]Order, int)
+	GetOrdersOfCourierServiceForManagerFromDB(limit, page, idService int) ([]DetailedOrder, int)
 }
 
 type CourierRep interface {

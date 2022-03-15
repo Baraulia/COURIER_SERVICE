@@ -1,8 +1,6 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Courier Service for Food Delivery Application",
-        "title": "Courier Service",
         "contact": {}
     },
     "paths": {
@@ -508,14 +506,14 @@
         },
         "/orders": {
             "get": {
-                "description": "get list of all orders by courier service id",
+                "description": "get list of all orders by courier service id with custom status",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "order"
                 ],
-                "summary": "GetAllOrdersOfCourierService",
+                "summary": "GetOrdersOfCourierServiceForManager",
                 "parameters": [
                     {
                         "type": "integer",

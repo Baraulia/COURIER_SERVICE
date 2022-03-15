@@ -22,6 +22,7 @@ type OrderApp interface {
 	GetCompletedOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
 	GetCompletedOrdersOfCourierServiceByDate(limit, page, idService int) ([]dao.Order, error)
 	GetCompletedOrdersOfCourierServiceByCourierId(limit, page, idService int) ([]dao.Order, error)
+	GetOrdersOfCourierServiceForManager(limit, page, idService int) ([]dao.DetailedOrder, error)
 }
 
 type CourierApp interface {
