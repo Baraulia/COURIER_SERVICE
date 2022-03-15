@@ -23,7 +23,8 @@ func NewRepository(db *sql.DB) *Repository {
 type OrderRep interface {
 	GetActiveOrdersFromDB(id int) ([]Order, error)
 	GetActiveOrderFromDB(id int) (Order, error)
-	ChangeOrderStatusInDB(id uint16) (uint16, error)
+	ChangeOrderStatusInDB(text string, id uint16) (uint16, error)
+	GetOrderFromDB(id int) (Order, error)
 	GetCourierCompletedOrdersWithPage_fromDB(limit, page, idCourier int) ([]DetailedOrder, int)
 	GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService int) ([]Order, int)
 	GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year int) ([]Order, int)

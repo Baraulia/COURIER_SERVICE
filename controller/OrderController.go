@@ -80,12 +80,17 @@ func (h *Handler) GetOrder(ctx *gin.Context) {
 // @Router /order/status_change/{id} [put]
 func (h *Handler) ChangeOrderStatus(ctx *gin.Context) {
 	idQuery := ctx.Param("id")
+	var text string
+	if err := ctx.ShouldBindJSON(&text); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+		return
+	}
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
 		return
 	}
-	orderId, err := h.services.ChangeOrderStatus(uint16(id))
+	orderId, err := h.services.ChangeOrderStatus(text, uint16(id))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"No such order": err})
 		return

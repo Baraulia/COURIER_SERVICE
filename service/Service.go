@@ -11,7 +11,8 @@ import (
 type OrderApp interface {
 	GetOrder(id int) (dao.Order, error)
 	GetOrders(id int) ([]dao.Order, error)
-	ChangeOrderStatus(id uint16) (uint16, error)
+	ChangeOrderStatus(text string, id uint16) (uint16, error)
+	GetOrderForChange(id int) (dao.Order, error)
 	GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.DetailedOrder, error)
 	GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
 	GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error)
