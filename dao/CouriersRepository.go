@@ -34,6 +34,7 @@ type SmallInfo struct {
 	PhoneNumber string `json:"phone_number"`
 	Photo       string `json:"photo"`
 	Surname     string `json:"surname"`
+	Deleted     bool   `json:"deleted"`
 }
 
 func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
@@ -53,7 +54,7 @@ func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
 func (r *CourierPostgres) GetCouriersFromDB() ([]SmallInfo, error) {
 	var Couriers []SmallInfo
 
-	selectValue := `Select "id_courier","name", "phone_number","photo", "surname" from "couriers"`
+	selectValue := `Select "id_courier","name", "phone_number","photo", "surname", "deleted" from "couriers"`
 
 	get, err := r.db.Query(selectValue)
 
@@ -65,7 +66,7 @@ func (r *CourierPostgres) GetCouriersFromDB() ([]SmallInfo, error) {
 
 	for get.Next() {
 		var courier SmallInfo
-		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
+		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname, &courier.Deleted)
 		Couriers = append(Couriers, courier)
 	}
 	return Couriers, nil
@@ -74,7 +75,7 @@ func (r *CourierPostgres) GetCouriersFromDB() ([]SmallInfo, error) {
 func (r *CourierPostgres) GetCourierFromDB(id int) (SmallInfo, error) {
 	var cour SmallInfo
 
-	selectValue := `Select id_courier,name,phone_number,photo, surname from couriers where id_courier = $1`
+	selectValue := `Select id_courier,name,phone_number,photo, surname, deleted from couriers where id_courier = $1`
 
 	get, err := r.db.Query(selectValue, id)
 
@@ -85,7 +86,7 @@ func (r *CourierPostgres) GetCourierFromDB(id int) (SmallInfo, error) {
 
 	for get.Next() {
 		var courier SmallInfo
-		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname)
+		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname, &courier.Deleted)
 		cour = courier
 	}
 	return cour, nil

@@ -23,6 +23,7 @@ func TestHandler_GetCouriers(t *testing.T) {
 		PhoneNumber: "1038812",
 		Photo:       "my fav photo",
 		Surname:     "Shorokhov",
+		Deleted:     true,
 	}
 	couriers = append(couriers, cour)
 
@@ -36,7 +37,7 @@ func TestHandler_GetCouriers(t *testing.T) {
 	}{
 		{
 			name:      "OK",
-			inputBody: `{"name":"Test","id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov"}`,
+			inputBody: `{"name":"Test","id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov","deleted":true}`,
 			inputCourier: dao.SmallInfo{
 				Id:          1,
 				CourierName: "test",
@@ -48,7 +49,7 @@ func TestHandler_GetCouriers(t *testing.T) {
 				s.EXPECT().GetCouriers().Return(couriers, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov"}`,
+			expectedRequestBody: `{"id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov","deleted":true}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -87,6 +88,7 @@ func TestHandler_GetOneCourier(t *testing.T) {
 		PhoneNumber: "1038812",
 		Photo:       "my fav photo",
 		Surname:     "Shorokhov",
+		Deleted:     true,
 	}
 
 	testTable := []struct {
@@ -99,7 +101,7 @@ func TestHandler_GetOneCourier(t *testing.T) {
 	}{
 		{
 			name:      "OK",
-			inputBody: `{"name":"Test","id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov"}`,
+			inputBody: `{"name":"Test","id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov","deleted":true}`,
 			inputCourier: dao.SmallInfo{
 				Id:          1,
 				CourierName: "test",
@@ -111,7 +113,7 @@ func TestHandler_GetOneCourier(t *testing.T) {
 				s.EXPECT().GetCourier(1).Return(cour, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov"}`,
+			expectedRequestBody: `{"id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov","deleted":true}`,
 		},
 	}
 	for _, testCase := range testTable {
