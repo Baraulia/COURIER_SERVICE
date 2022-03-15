@@ -264,3 +264,78 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 		})
 	}
 }
+
+func TestHandler_GetAllCompletedOrdersOfCourierService(t *testing.T) {
+	type mockBehavior func(s *mock_service.MockOrderApp, order []dao.Order)
+	var orders []dao.Order
+	ord := dao.Order{
+		IdDeliveryService: 1,
+		Id:                1,
+		IdCourier:         1,
+		DeliveryTime:      time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
+		CustomerAddress:   "Some address",
+		Status:            "completed",
+		OrderDate:         "2022-02-02",
+		RestaurantAddress: "",
+		Picked:            false,
+	}
+	orders = append(orders, ord)
+
+	testTable := []struct {
+		name                string
+		inputBody           string
+		inputOrder          []dao.Order
+		mockBehavior        mockBehavior
+		expectedStatusCode  int
+		expectedRequestBody string
+	}{
+		{
+			name:      "OK",
+			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"completed","order_date":"2022-02-02","restaurant_address":"","picked":false}}`,
+			inputOrder: []dao.Order{
+				{
+					IdDeliveryService: 1,
+					Id:                1,
+					IdCourier:         1,
+					DeliveryTime:      time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
+					CustomerAddress:   "Some address",
+					Status:            "completed",
+					OrderDate:         "2022-02-02",
+					RestaurantAddress: "",
+					Picked:            false,
+				},
+			},
+			mockBehavior: func(s *mock_service.MockOrderApp, order []dao.Order) {
+				s.EXPECT().GetAllOrdersOfCourierService(1, 1, 1).Return(orders, nil)
+			},
+			expectedStatusCode:  200,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"completed","order_date":"2022-02-02","restaurant_address":"","picked":false}]}`,
+		},
+	}
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
+			c := gomock.NewController(t)
+			defer c.Finish()
+
+			get := mock_service.NewMockOrderApp(c)
+			testCase.mockBehavior(get, testCase.inputOrder)
+
+			services := &service.Service{OrderApp: get}
+			handler := controller.NewHandler(services)
+
+			r := gin.New()
+
+			r.GET("/orders/service/completed", handler.GetAllOrdersOfCourierService)
+
+			w := httptest.NewRecorder()
+			req := httptest.NewRequest("GET", "/orders/service/completed?limit=1&page=1&iddeliveryservice=1", bytes.NewBufferString(testCase.inputBody))
+
+			r.ServeHTTP(w, req)
+
+			assert.Equal(t, testCase.expectedStatusCode, w.Code)
+			assert.Equal(t, testCase.expectedRequestBody, w.Body.String())
+			assert.Contains(t, w.Body.String(), testCase.expectedRequestBody)
+
+		})
+	}
+}

@@ -87,7 +87,7 @@ func (s *OrderService) GetAllOrdersOfCourierService(limit, page, idService int) 
 		log.Println("no more pages or limit")
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
-	Order, totalCount := s.repo.GetAllOrdersOfCourierServiceWithPage_fromDB(limit, page, idService)
+	Order, totalCount := s.repo.GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService)
 	LimitOfPages := (totalCount / limit) + 1
 	if LimitOfPages < page {
 		err := errors.New("no page")
@@ -150,4 +150,39 @@ func (s *OrderService) CreateOrder(order *courierProto.OrderCourierServer) (*emp
 
 func (s *OrderService) GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error) {
 	return s.repo.OrderRep.GetServices(in)
+}
+func (s *OrderService) GetCompletedOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error) {
+	var Order = []dao.Order{}
+	Order, totalCount := s.repo.GetCompletedOrdersOfCourierServiceFromDB(limit, page, idService)
+	LimitOfPages := (totalCount / limit) + 1
+	if LimitOfPages < page {
+		err := errors.New("no page")
+		log.Println("no more pages")
+		return nil, fmt.Errorf("Error in OrderService: %s", err)
+	}
+	return Order, nil
+}
+
+func (s *OrderService) GetCompletedOrdersOfCourierServiceByDate(limit, page, idService int) ([]dao.Order, error) {
+	var Order = []dao.Order{}
+	Order, totalCount := s.repo.GetCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService)
+	LimitOfPages := (totalCount / limit) + 1
+	if LimitOfPages < page {
+		err := errors.New("no page")
+		log.Println("no more pages")
+		return nil, fmt.Errorf("Error in OrderService: %s", err)
+	}
+	return Order, nil
+}
+
+func (s *OrderService) GetCompletedOrdersOfCourierServiceByCourierId(limit, page, idService int) ([]dao.Order, error) {
+	var Order = []dao.Order{}
+	Order, totalCount := s.repo.GetCompletedOrdersOfCourierServiceByCourierIdFromDB(limit, page, idService)
+	LimitOfPages := (totalCount / limit) + 1
+	if LimitOfPages < page {
+		err := errors.New("no page")
+		log.Println("no more pages")
+		return nil, fmt.Errorf("Error in OrderService: %s", err)
+	}
+	return Order, nil
 }

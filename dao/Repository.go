@@ -25,12 +25,15 @@ type OrderRep interface {
 	GetActiveOrderFromDB(id int) (Order, error)
 	ChangeOrderStatusInDB(id uint16) (uint16, error)
 	GetCourierCompletedOrdersWithPage_fromDB(limit, page, idCourier int) ([]DetailedOrder, int)
-	GetAllOrdersOfCourierServiceWithPage_fromDB(limit, page, idService int) ([]Order, int)
+	GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService int) ([]Order, int)
 	GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year int) ([]Order, int)
 	AssigningOrderToCourierInDB(order Order) error
 	GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, error)
 	CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error)
 	GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error)
+	GetCompletedOrdersOfCourierServiceFromDB(limit, page, idService int) ([]Order, int)
+	GetCompletedOrdersOfCourierServiceByDateFromDB(limit, page, idService int) ([]Order, int)
+	GetCompletedOrdersOfCourierServiceByCourierIdFromDB(limit, page, idService int) ([]Order, int)
 }
 
 type CourierRep interface {
