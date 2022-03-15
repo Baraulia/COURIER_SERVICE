@@ -25,7 +25,7 @@ type OrderRep interface {
 	GetActiveOrderFromDB(id int) (Order, error)
 	ChangeOrderStatusInDB(id uint16) (uint16, error)
 	GetCourierCompletedOrdersWithPage_fromDB(limit, page, idCourier int) ([]DetailedOrder, int)
-	GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService int) ([]Order, int)
+	GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService int) ([]DetailedOrder, int)
 	GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year int) ([]Order, int)
 	AssigningOrderToCourierInDB(order Order) error
 	GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, error)

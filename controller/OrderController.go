@@ -134,6 +134,9 @@ func (h *Handler) GetCourierCompletedOrders(ctx *gin.Context) {
 type listShortOrders struct {
 	Data []dao.Order `json:"data"`
 }
+type listDetailedOrders struct {
+	Data []dao.DetailedOrder `json:"data"`
+}
 
 // @Summary GetAllOrdersOfCourierService
 // @Description get list of all orders by courier service id
@@ -142,7 +145,7 @@ type listShortOrders struct {
 // @Param page query int true "page"
 // @Param limit query int true "limit"
 // @Param iddeliveryservice query int true "iddeliveryservice"
-// @Success 200 {object} listShortOrders
+// @Success 200 {object} listDetailedOrders
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /orders [get]
@@ -168,7 +171,7 @@ func (h *Handler) GetAllOrdersOfCourierService(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
 	}
-	ctx.JSON(http.StatusOK, listShortOrders{Data: Orders})
+	ctx.JSON(http.StatusOK, listDetailedOrders{Data: Orders})
 
 }
 

@@ -40,6 +40,7 @@ type DetailedOrder struct {
 	RestaurantAddress  string    `json:"restaurant_address,omitempty"`
 	Picked             bool      `json:"picked"`
 	CourierName        string    `json:"name"`
+	CourierSurname     string    `json:"surname"`
 	CourierPhoneNumber string    `json:"phone_number"`
 }
 
@@ -127,42 +128,39 @@ func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(limit, page, id
 	return Orders, len(Ordersss)
 }
 
-func (r *OrderPostgres) GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService int) ([]Order, int) {
-	var Orders []Order
+func (r *OrderPostgres) GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService int) ([]DetailedOrder, int) {
+	var Orders []DetailedOrder
 	transaction, err := r.db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer transaction.Commit()
-	res, err := transaction.Query(fmt.Sprintf("SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status = 'ready to delivery' and delivery_service_id=%d LIMIT %d OFFSET %d", idService, limit, limit*(page-1)))
+	res, err := transaction.Query("SELECT d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_address,co.name, co.surname,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.delivery_service_id=$1 and status = 'ready to delivery' LIMIT $2 OFFSET $3", idService, limit, limit*(page-1))
 	if err != nil {
 		panic(err)
 	}
 	for res.Next() {
-		var order Order
-		err = res.Scan(&order.IdCourier, &order.Id, &order.DeliveryTime, &order.Status, &order.CustomerAddress)
+		var order DetailedOrder
+		err = res.Scan(&order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierSurname, &order.CourierPhoneNumber)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 
 		Orders = append(Orders, order)
 	}
 
-	var Ordersss []Order
-	resl, err := transaction.Query(fmt.Sprintf("SELECT courier_id FROM delivery WHERE delivery_service_id=%d ", idService))
+	var length int
+	resl, err := transaction.Query(fmt.Sprintf("SELECT count(*) FROM delivery WHERE delivery_service_id=%d ", idService))
 	if err != nil {
 		panic(err)
 	}
 	for resl.Next() {
-		var order Order
-		err = resl.Scan(&order.IdCourier)
+		err = resl.Scan(&length)
 		if err != nil {
 			panic(err)
 		}
-
-		Ordersss = append(Ordersss, order)
 	}
-	return Orders, len(Ordersss)
+	return Orders, length
 }
 
 func (r *OrderPostgres) GetCourierCompletedOrdersByMouthWithPage_fromDB(limit, page, idCourier, Month, Year int) ([]Order, int) {

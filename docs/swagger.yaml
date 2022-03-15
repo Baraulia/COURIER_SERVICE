@@ -6,6 +6,13 @@ definitions:
           $ref: '#/definitions/dao.DeliveryService'
         type: array
     type: object
+  controller.listDetailedOrders:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dao.DetailedOrder'
+        type: array
+    type: object
   controller.listOrders:
     properties:
       data:
@@ -87,6 +94,8 @@ definitions:
       restaurant_address:
         type: string
       status:
+        type: string
+      surname:
         type: string
     type: object
   dao.Order:
@@ -484,7 +493,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.listShortOrders'
+            $ref: '#/definitions/controller.listDetailedOrders'
         "400":
           description: Bad Request
           schema:

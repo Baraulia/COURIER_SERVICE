@@ -553,7 +553,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.listShortOrders"
+                            "$ref": "#/definitions/controller.listDetailedOrders"
                         }
                     },
                     "400": {
@@ -856,6 +856,17 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "controller.listDetailedOrders": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.DetailedOrder"
+                    }
+                }
+            }
+        },
         "controller.listOrders": {
             "type": "object",
             "properties": {
@@ -979,6 +990,9 @@ const docTemplate_swagger = `{
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                },
+                "surname": {
                     "type": "string"
                 }
             }

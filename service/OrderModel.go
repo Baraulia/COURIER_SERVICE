@@ -80,8 +80,8 @@ func (s *OrderService) GetCourierCompletedOrders(limit, page, idCourier int) ([]
 	return Order, nil
 }
 
-func (s *OrderService) GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error) {
-	var Order = []dao.Order{}
+func (s *OrderService) GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.DetailedOrder, error) {
+	var Order = []dao.DetailedOrder{}
 	if limit <= 0 || page <= 0 {
 		err := errors.New("no page or limit")
 		log.Println("no more pages or limit")

@@ -543,7 +543,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.listShortOrders"
+                            "$ref": "#/definitions/controller.listDetailedOrders"
                         }
                     },
                     "400": {
@@ -846,6 +846,17 @@
                 }
             }
         },
+        "controller.listDetailedOrders": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.DetailedOrder"
+                    }
+                }
+            }
+        },
         "controller.listOrders": {
             "type": "object",
             "properties": {
@@ -969,6 +980,9 @@
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                },
+                "surname": {
                     "type": "string"
                 }
             }
