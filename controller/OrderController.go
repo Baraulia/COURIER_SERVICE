@@ -74,6 +74,7 @@ func (h *Handler) GetOrder(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path int true "ID"
+// @Param input body string true "status"
 // @Success 200 {object} dao.Order
 // @Failure 400 {string} string
 // @Failure 500 {string} err

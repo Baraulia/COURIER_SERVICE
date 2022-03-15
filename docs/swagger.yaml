@@ -441,6 +441,12 @@ paths:
         name: id
         required: true
         type: integer
+      - description: status
+        in: body
+        name: input
+        required: true
+        schema:
+          type: string
       produces:
       - application/json
       responses:
