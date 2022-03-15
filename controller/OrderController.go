@@ -277,7 +277,7 @@ func (h *Handler) GetDetailedOrderById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, DetOrder)
 }
 
-// @Summary GetAllCompletedOrdersOfCourierService
+// @Summary GetCompletedOrdersOfCourierService
 // @Description get list of completed orders by courier service id
 // @Tags order
 // @Produce json

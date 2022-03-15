@@ -87,7 +87,7 @@ func (s *OrderService) GetAllOrdersOfCourierService(limit, page, idService int) 
 		log.Println("no more pages or limit")
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
-	Order, totalCount := s.repo.GetAllOrdersOfCourierServiceWithPage_fromDB(limit, page, idService)
+	Order, totalCount := s.repo.GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService)
 	LimitOfPages := (totalCount / limit) + 1
 	if LimitOfPages < page {
 		err := errors.New("no page")

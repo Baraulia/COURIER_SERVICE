@@ -127,14 +127,14 @@ func (r *OrderPostgres) GetCourierCompletedOrdersWithPage_fromDB(limit, page, id
 	return Orders, len(Ordersss)
 }
 
-func (r *OrderPostgres) GetAllOrdersOfCourierServiceWithPage_fromDB(limit, page, idService int) ([]Order, int) {
+func (r *OrderPostgres) GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService int) ([]Order, int) {
 	var Orders []Order
 	transaction, err := r.db.Begin()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer transaction.Commit()
-	res, err := transaction.Query(fmt.Sprintf("SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE delivery_service_id=%d LIMIT %d OFFSET %d", idService, limit, limit*(page-1)))
+	res, err := transaction.Query(fmt.Sprintf("SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status = 'ready to delivery' and delivery_service_id=%d LIMIT %d OFFSET %d", idService, limit, limit*(page-1)))
 	if err != nil {
 		panic(err)
 	}
