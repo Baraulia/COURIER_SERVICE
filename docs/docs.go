@@ -518,14 +518,14 @@ const docTemplate_swagger = `{
         },
         "/orders": {
             "get": {
-                "description": "get list of all orders by courier service id with custom status",
+                "description": "get list of all orders by courier service id",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "order"
                 ],
-                "summary": "GetOrdersOfCourierServiceForManager",
+                "summary": "GetAllOrdersOfCourierService",
                 "parameters": [
                     {
                         "type": "integer",
@@ -678,6 +678,61 @@ const docTemplate_swagger = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/controller.listOrders"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/manager": {
+            "get": {
+                "description": "get list of all orders by courier service id with custom status",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "GetOrdersOfCourierServiceForManager",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "iddeliveryservice",
+                        "name": "iddeliveryservice",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.listDetailedOrders"
                         }
                     },
                     "400": {
@@ -1058,8 +1113,8 @@ var SwaggerInfo_swagger = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "Courier Service",
+	Description:      "Courier Service for Food Delivery Application",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate_swagger,
 }

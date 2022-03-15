@@ -344,7 +344,7 @@ func (h *Handler) GetCompletedOrdersOfCourierService(ctx *gin.Context) {
 // @Success 200 {object} listDetailedOrders
 // @Failure 400 {string} string
 // @Failure 500 {string} string
-// @Router /orders [get]
+// @Router /orders/manager [get]
 func (h *Handler) GetOrdersOfCourierServiceForManager(ctx *gin.Context) {
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page == 0 {
