@@ -54,12 +54,28 @@ func (s *OrderService) GetOrder(id int) (dao.Order, error) {
 	return get, nil
 }
 
-func (s *OrderService) ChangeOrderStatus(id uint16) (uint16, error) {
-	_, err := s.GetOrder(int(id))
+func (s *OrderService) GetOrderForChange(id int) (dao.Order, error) {
+	get, err := s.repo.GetOrderFromDB(id)
+	if (get == dao.Order{}) {
+		return dao.Order{}, fmt.Errorf("Error in OrderService: %s", err)
+	}
+	if err != nil {
+		return dao.Order{}, fmt.Errorf("Error with database: %s", err)
+	}
+	if id == 0 {
+		err := errors.New("no id")
+		log.Println("id cannot be zero")
+		return dao.Order{}, fmt.Errorf("Error in OrderService: %s", err)
+	}
+	return get, nil
+}
+
+func (s *OrderService) ChangeOrderStatus(text string, id uint16) (uint16, error) {
+	_, err := s.GetOrderForChange(int(id))
 	if err != nil {
 		return 0, fmt.Errorf("Error in OrderService: %s", err)
 	}
-	orderId, err := s.repo.ChangeOrderStatusInDB(id)
+	orderId, err := s.repo.ChangeOrderStatusInDB(text, id)
 	if err != nil {
 		return 0, fmt.Errorf("Error with database: %s", err)
 	}

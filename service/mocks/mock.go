@@ -51,18 +51,18 @@ func (mr *MockOrderAppMockRecorder) AssigningOrderToCourier(order interface{}) *
 }
 
 // ChangeOrderStatus mocks base method.
-func (m *MockOrderApp) ChangeOrderStatus(id uint16) (uint16, error) {
+func (m *MockOrderApp) ChangeOrderStatus(text string, id uint16) (uint16, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ChangeOrderStatus", id)
+	ret := m.ctrl.Call(m, "ChangeOrderStatus", text, id)
 	ret0, _ := ret[0].(uint16)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ChangeOrderStatus indicates an expected call of ChangeOrderStatus.
-func (mr *MockOrderAppMockRecorder) ChangeOrderStatus(id interface{}) *gomock.Call {
+func (mr *MockOrderAppMockRecorder) ChangeOrderStatus(text, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeOrderStatus", reflect.TypeOf((*MockOrderApp)(nil).ChangeOrderStatus), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeOrderStatus", reflect.TypeOf((*MockOrderApp)(nil).ChangeOrderStatus), text, id)
 }
 
 // CreateOrder mocks base method.
@@ -198,6 +198,21 @@ func (m *MockOrderApp) GetOrder(id int) (dao.Order, error) {
 func (mr *MockOrderAppMockRecorder) GetOrder(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrder", reflect.TypeOf((*MockOrderApp)(nil).GetOrder), id)
+}
+
+// GetOrderForChange mocks base method.
+func (m *MockOrderApp) GetOrderForChange(id int) (dao.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrderForChange", id)
+	ret0, _ := ret[0].(dao.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrderForChange indicates an expected call of GetOrderForChange.
+func (mr *MockOrderAppMockRecorder) GetOrderForChange(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrderForChange", reflect.TypeOf((*MockOrderApp)(nil).GetOrderForChange), id)
 }
 
 // GetOrders mocks base method.

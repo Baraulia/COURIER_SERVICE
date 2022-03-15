@@ -13,6 +13,10 @@ type listOrders struct {
 	Data []dao.DetailedOrder `json:"data"`
 }
 
+type text struct {
+	Status string `json:"status"`
+}
+
 // getOrders by courier ID godoc
 // @Summary getOrder
 // @Description get orders by courier ID
@@ -74,18 +78,29 @@ func (h *Handler) GetOrder(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path int true "ID"
+// @Param input body string true "status"
 // @Success 200 {object} dao.Order
 // @Failure 400 {string} string
 // @Failure 500 {string} err
 // @Router /order/status_change/{id} [put]
 func (h *Handler) ChangeOrderStatus(ctx *gin.Context) {
 	idQuery := ctx.Param("id")
+	var txt text
+	var status string
+
+	if err := ctx.ShouldBindJSON(&txt); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+		return
+	}
+
+	status = txt.Status
+
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
 		return
 	}
-	orderId, err := h.services.ChangeOrderStatus(uint16(id))
+	orderId, err := h.services.ChangeOrderStatus(status, uint16(id))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"No such order": err})
 		return
