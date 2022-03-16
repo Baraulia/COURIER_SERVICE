@@ -101,3 +101,23 @@ func (r *CourierPostgres) UpdateCourierInDB(id uint16) (uint16, error) {
 	}
 	return id, nil
 }
+
+func (r *CourierPostgres) GetCouriersWithServiceFromDB() ([]Courier, error) {
+	var Couriers []Courier
+
+	selectValue := `Select "id_courier","name", "phone_number","photo", "surname","delivery_service_id" from "couriers"`
+
+	get, err := r.db.Query(selectValue)
+
+	if err != nil {
+		log.Println("Error of getting list of couriers :" + err.Error())
+		return []Courier{}, err
+	}
+
+	for get.Next() {
+		var courier Courier
+		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname, &courier.DeliveryServiceId)
+		Couriers = append(Couriers, courier)
+	}
+	return Couriers, nil
+}
