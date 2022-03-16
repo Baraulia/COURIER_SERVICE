@@ -50,6 +50,20 @@ func (s *DeliveryService) GetAllDeliveryServices() ([]dao.DeliveryService, error
 		log.Println(err)
 		return []dao.DeliveryService{}, fmt.Errorf("Error in DeliveryService: %s", err)
 	}
+	Couriers, err := s.repo.GetCouriersWithServiceFromDB()
+	if err != nil {
+		log.Println(err)
+		return []dao.DeliveryService{}, fmt.Errorf("Error in DeliveryService: %s", err)
+	}
+	for i, service := range services {
+		count := 0
+		for _, courier := range Couriers {
+			if service.Id == int(courier.DeliveryServiceId) {
+				count++
+			}
+		}
+		services[i].NumOfCouriers = count
+	}
 	return services, nil
 }
 
