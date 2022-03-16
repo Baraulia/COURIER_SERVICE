@@ -54,7 +54,7 @@ func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
 func (r *CourierPostgres) GetCouriersFromDB() ([]SmallInfo, error) {
 	var Couriers []SmallInfo
 
-	selectValue := `Select "id_courier","name", "phone_number","photo", "surname", "deleted" from "couriers"`
+	selectValue := `Select "id_courier","name", "phone_number","photo", "surname", "deleted" from "couriers" order by "surname" ASC `
 
 	get, err := r.db.Query(selectValue)
 
