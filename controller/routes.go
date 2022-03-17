@@ -25,7 +25,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	router.Use(
 		middleware.CorsMiddleware,
 	)
-	api := router.Group("api/", h.userIdentity)
+	api := router.Group("/api", h.userIdentity)
 	{
 		couriers := api.Group("/couriers")
 		{

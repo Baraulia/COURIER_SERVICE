@@ -17,6 +17,10 @@ import (
 
 // @title Courier Service
 // @description Courier Service for Food Delivery Application
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	log.Println("Start...")
 	database, err := dao.NewPostgresDB(dao.PostgresDB{

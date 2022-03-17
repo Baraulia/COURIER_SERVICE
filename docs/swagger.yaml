@@ -114,6 +114,8 @@ definitions:
     properties:
       courier_name:
         type: string
+      deleted:
+        type: boolean
       id_courier:
         type: integer
       phone_number:
@@ -685,4 +687,9 @@ paths:
       summary: GetCompletedOrdersOfCourierService
       tags:
       - order
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

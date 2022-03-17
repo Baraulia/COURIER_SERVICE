@@ -1030,6 +1030,9 @@ const docTemplate_swagger = `{
                 "courier_name": {
                     "type": "string"
                 },
+                "deleted": {
+                    "type": "boolean"
+                },
                 "id_courier": {
                     "type": "integer"
                 },
@@ -1043,6 +1046,13 @@ const docTemplate_swagger = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
