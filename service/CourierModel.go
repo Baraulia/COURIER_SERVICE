@@ -8,16 +8,17 @@ import (
 	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"log"
+	"strings"
 )
 
 type CourierService struct {
-	repo dao.Repository
+	repo    dao.Repository
 	grpcCli *grpcClient.GRPCClient
 }
 
 func NewCourierService(repo dao.Repository, grpcCli *grpcClient.GRPCClient) *CourierService {
 	return &CourierService{
-		repo: repo,
+		repo:    repo,
 		grpcCli: grpcCli,
 	}
 }
@@ -47,7 +48,6 @@ func (s *CourierService) GetCourier(id int) (dao.SmallInfo, error) {
 }
 
 func (s *CourierService) SaveCourier(courier *dao.Courier) (*dao.Courier, error) {
-
 	err := s.repo.SaveCourierInDB(courier)
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
@@ -63,15 +63,27 @@ func (s *CourierService) UpdateCourier(id uint16) (uint16, error) {
 	return courierId, nil
 }
 
-func (s *CourierService) CheckRights(token string, requiredRole string) (bool, error) {
-	User, err := s.grpcCli.GetUserWithRights(context.Background(), &courierProto.AccessToken{
-		AccessToken: token,
-	})
-	if err != nil {
-		return false, err
+func (s *CourierService) ParseToken(token string) (*courierProto.UserRole, error) {
+	return s.grpcCli.GetUserWithRights(context.Background(), &courierProto.AccessToken{AccessToken: token})
+}
+
+func (s *CourierService) CheckRoleRights(neededPerms []string, neededRole string, givenPerms string, givenRole string) error {
+	if neededPerms != nil {
+		ok := true
+		for _, perm := range neededPerms {
+			if !strings.Contains(givenPerms, perm) {
+				ok = false
+				return fmt.Errorf("not enough rights")
+			} else {
+				continue
+			}
+		}
+		if ok == true {
+			return nil
+		}
 	}
-	if User.Role != requiredRole {
-		return false, errors.New("no required rights")
+	if neededRole != givenRole {
+		return fmt.Errorf("not enough rights")
 	}
-	return true, nil
+	return nil
 }

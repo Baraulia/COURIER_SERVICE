@@ -3,12 +3,14 @@ package controller
 import (
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"strconv"
 )
 
 // getCouriers godoc
 // @Summary getCouriers
+// @Security ApiKeyAuth
 // @Description get all couriers
 // @Tags Couriers
 // @Accept  json
@@ -18,6 +20,12 @@ import (
 // @Failure 500 {string} string
 // @Router /couriers [get]
 func (h *Handler) GetCouriers(ctx *gin.Context) {
+	necessaryRole := "Courier manager"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler GetCouriers:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	Couriers, err := h.services.GetCouriers()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
@@ -28,6 +36,7 @@ func (h *Handler) GetCouriers(ctx *gin.Context) {
 
 // getCourier by ID godoc
 // @Summary getCourier
+// @Security ApiKeyAuth
 // @Description get courier by ID
 // @Tags Courier
 // @Accept  json
@@ -38,6 +47,12 @@ func (h *Handler) GetCouriers(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /courier/{id} [get]
 func (h *Handler) GetCourier(ctx *gin.Context) {
+	necessaryRole := "Courier manager"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler GetCourier:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	var Courier dao.SmallInfo
 	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
@@ -55,6 +70,7 @@ func (h *Handler) GetCourier(ctx *gin.Context) {
 
 // postCourier  godoc
 // @Summary postCourier
+// @Security ApiKeyAuth
 // @Description post new courier
 // @Tags Courier
 // @Accept  json
@@ -65,6 +81,12 @@ func (h *Handler) GetCourier(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /courier [post]
 func (h *Handler) SaveCourier(ctx *gin.Context) {
+	necessaryRole := "Courier manager"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler SaveCourier:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	var Courier *dao.Courier
 	if err := ctx.ShouldBindJSON(&Courier); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
@@ -80,6 +102,7 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 
 // ChangeCourierStatus by courier ID godoc
 // @Summary changeCourierStatus
+// @Security ApiKeyAuth
 // @Description put courier status by courier ID
 // @Tags Courier
 // @Accept  json
@@ -90,6 +113,12 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /courier/{id} [put]
 func (h *Handler) UpdateCourier(ctx *gin.Context) {
+	necessaryRole := "Courier manager"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler UpdateCourier:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {

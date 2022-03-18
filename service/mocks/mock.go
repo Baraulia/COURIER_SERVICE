@@ -268,19 +268,18 @@ func (m *MockCourierApp) EXPECT() *MockCourierAppMockRecorder {
 	return m.recorder
 }
 
-// CheckRights mocks base method.
-func (m *MockCourierApp) CheckRights(token, requiredRole string) (bool, error) {
+// CheckRoleRights mocks base method.
+func (m *MockCourierApp) CheckRoleRights(neededPerms []string, neededRole, givenPerms, givenRole string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CheckRights", token, requiredRole)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret := m.ctrl.Call(m, "CheckRoleRights", neededPerms, neededRole, givenPerms, givenRole)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
-// CheckRights indicates an expected call of CheckRights.
-func (mr *MockCourierAppMockRecorder) CheckRights(token, requiredRole interface{}) *gomock.Call {
+// CheckRoleRights indicates an expected call of CheckRoleRights.
+func (mr *MockCourierAppMockRecorder) CheckRoleRights(neededPerms, neededRole, givenPerms, givenRole interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckRights", reflect.TypeOf((*MockCourierApp)(nil).CheckRights), token, requiredRole)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckRoleRights", reflect.TypeOf((*MockCourierApp)(nil).CheckRoleRights), neededPerms, neededRole, givenPerms, givenRole)
 }
 
 // GetCourier mocks base method.
@@ -311,6 +310,21 @@ func (m *MockCourierApp) GetCouriers() ([]dao.SmallInfo, error) {
 func (mr *MockCourierAppMockRecorder) GetCouriers() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCouriers", reflect.TypeOf((*MockCourierApp)(nil).GetCouriers))
+}
+
+// ParseToken mocks base method.
+func (m *MockCourierApp) ParseToken(token string) (*courierProto.UserRole, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ParseToken", token)
+	ret0, _ := ret[0].(*courierProto.UserRole)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ParseToken indicates an expected call of ParseToken.
+func (mr *MockCourierAppMockRecorder) ParseToken(token interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ParseToken", reflect.TypeOf((*MockCourierApp)(nil).ParseToken), token)
 }
 
 // SaveCourier mocks base method.

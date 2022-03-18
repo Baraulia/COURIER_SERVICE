@@ -18,6 +18,11 @@ const docTemplate_swagger = `{
     "paths": {
         "/courier": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "post new courier",
                 "consumes": [
                     "application/json"
@@ -64,6 +69,11 @@ const docTemplate_swagger = `{
         },
         "/courier/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get courier by ID",
                 "consumes": [
                     "application/json"
@@ -106,6 +116,11 @@ const docTemplate_swagger = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "put courier status by courier ID",
                 "consumes": [
                     "application/json"
@@ -150,6 +165,11 @@ const docTemplate_swagger = `{
         },
         "/couriers": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get all couriers",
                 "consumes": [
                     "application/json"
@@ -185,6 +205,11 @@ const docTemplate_swagger = `{
         },
         "/deliveryservice": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of all delivery service",
                 "produces": [
                     "application/json"
@@ -215,6 +240,11 @@ const docTemplate_swagger = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "create a Delivery Service",
                 "consumes": [
                     "application/json"
@@ -263,6 +293,11 @@ const docTemplate_swagger = `{
         },
         "/deliveryservice/logo": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "set logo to DO Spaces and it's way to DB",
                 "consumes": [
                     "image/jpeg"
@@ -305,6 +340,11 @@ const docTemplate_swagger = `{
         },
         "/deliveryservice/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get delivery service by id",
                 "produces": [
                     "application/json"
@@ -344,6 +384,11 @@ const docTemplate_swagger = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "update delivery service information",
                 "consumes": [
                     "application/json"
@@ -389,6 +434,11 @@ const docTemplate_swagger = `{
         },
         "/order/detailed/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get detailed order by id",
                 "produces": [
                     "application/json"
@@ -430,6 +480,11 @@ const docTemplate_swagger = `{
         },
         "/order/status_change/{id}": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "put order status by order ID",
                 "consumes": [
                     "application/json"
@@ -483,6 +538,11 @@ const docTemplate_swagger = `{
         },
         "/order/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get orders by order ID",
                 "consumes": [
                     "application/json"
@@ -527,6 +587,11 @@ const docTemplate_swagger = `{
         },
         "/orders": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of all orders by courier service id",
                 "produces": [
                     "application/json"
@@ -582,6 +647,11 @@ const docTemplate_swagger = `{
         },
         "/orders/bymonth": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of completed orders by courier id sorted by month",
                 "produces": [
                     "application/json"
@@ -651,6 +721,11 @@ const docTemplate_swagger = `{
         },
         "/orders/completed": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of completed orders by courier id",
                 "produces": [
                     "application/json"
@@ -706,6 +781,11 @@ const docTemplate_swagger = `{
         },
         "/orders/service/completed": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of completed orders by courier service id",
                 "produces": [
                     "application/json"
@@ -767,6 +847,11 @@ const docTemplate_swagger = `{
         },
         "/orders/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get orders by courier ID",
                 "consumes": [
                     "application/json"
@@ -809,6 +894,11 @@ const docTemplate_swagger = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "assign order to courier",
                 "consumes": [
                     "application/json"

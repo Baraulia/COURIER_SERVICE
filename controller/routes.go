@@ -25,47 +25,50 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	router.Use(
 		middleware.CorsMiddleware,
 	)
-	api := router.Group("/api", h.userIdentity)
+
+	couriers := router.Group("/couriers")
+	couriers.Use(h.userIdentity)
 	{
-		couriers := api.Group("/couriers")
-		{
-			couriers.GET("/", h.GetCouriers)
+		couriers.GET("/", h.GetCouriers)
 
-		}
+	}
 
-		courier := api.Group("/courier")
-		{
-			courier.GET("/:id", h.GetCourier)
-			courier.POST("/", h.SaveCourier)
-			courier.PUT("/:id", h.UpdateCourier)
-		}
+	courier := router.Group("/courier")
+	courier.Use(h.userIdentity)
+	{
+		courier.GET("/:id", h.GetCourier)
+		courier.POST("/", h.SaveCourier)
+		courier.PUT("/:id", h.UpdateCourier)
+	}
 
-		orders := api.Group("/orders")
-		{
-			orders.GET("/completed", h.GetCourierCompletedOrders)
-			orders.GET("/", h.GetAllOrdersOfCourierService)
-			orders.GET("/bymonth", h.GetCourierCompletedOrdersByMonth)
-			orders.GET("/:id", h.GetOrders)
-			orders.PUT("/:id", h.UpdateOrder)
-			orders.GET("/service/completed", h.GetCompletedOrdersOfCourierService)
+	orders := router.Group("/orders")
+	orders.Use(h.userIdentity)
+	{
+		orders.GET("/completed", h.GetCourierCompletedOrders)
+		orders.GET("/", h.GetAllOrdersOfCourierService)
+		orders.GET("/bymonth", h.GetCourierCompletedOrdersByMonth)
+		orders.GET("/:id", h.GetOrders)
+		orders.PUT("/:id", h.UpdateOrder)
+		orders.GET("/service/completed", h.GetCompletedOrdersOfCourierService)
 
-		}
+	}
 
-		order := api.Group("/order")
-		{
-			order.GET("/:id", h.GetOrder)
-			order.PUT("/status_change/:id", h.ChangeOrderStatus)
-			order.GET("/detailed/:id", h.GetDetailedOrderById)
-		}
+	order := router.Group("/order")
+	order.Use(h.userIdentity)
+	{
+		order.GET("/:id", h.GetOrder)
+		order.PUT("/status_change/:id", h.ChangeOrderStatus)
+		order.GET("/detailed/:id", h.GetDetailedOrderById)
+	}
 
-		deliveryService := api.Group("/deliveryservice")
-		{
-			deliveryService.POST("/", h.CreateDeliveryService)
-			deliveryService.GET("/:id", h.GetDeliveryServiceById)
-			deliveryService.GET("/", h.GetAllDeliveryServices)
-			deliveryService.PUT("/:id", h.UpdateDeliveryService)
-			deliveryService.POST("/logo", h.SaveLogoController)
-		}
+	deliveryService := router.Group("/deliveryservice")
+	deliveryService.Use(h.userIdentity)
+	{
+		deliveryService.POST("/", h.CreateDeliveryService)
+		deliveryService.GET("/:id", h.GetDeliveryServiceById)
+		deliveryService.GET("/", h.GetAllDeliveryServices)
+		deliveryService.PUT("/:id", h.UpdateDeliveryService)
+		deliveryService.POST("/logo", h.SaveLogoController)
 	}
 	return router
 }

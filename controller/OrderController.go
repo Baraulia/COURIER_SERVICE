@@ -19,6 +19,7 @@ type text struct {
 
 // getOrders by courier ID godoc
 // @Summary getOrder
+// @Security ApiKeyAuth
 // @Description get orders by courier ID
 // @Tags Orders
 // @Accept  json
@@ -29,6 +30,12 @@ type text struct {
 // @Failure 500 {string} err
 // @Router /orders/{id} [get]
 func (h *Handler) GetOrders(ctx *gin.Context) {
+	necessaryRole := "Courier"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler GetOrders:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	var Orders []dao.Order
 	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
@@ -46,6 +53,7 @@ func (h *Handler) GetOrders(ctx *gin.Context) {
 
 // getOrder by order ID godoc
 // @Summary getOrder
+// @Security ApiKeyAuth
 // @Description get orders by order ID
 // @Tags Order
 // @Accept  json
@@ -56,6 +64,12 @@ func (h *Handler) GetOrders(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /order/{id} [get]
 func (h *Handler) GetOrder(ctx *gin.Context) {
+	necessaryRole := "Courier"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler GetOrder:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	var Order dao.Order
 	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
@@ -73,6 +87,7 @@ func (h *Handler) GetOrder(ctx *gin.Context) {
 
 // putOrderStatus by order ID godoc
 // @Summary putOrderStatus
+// @Security ApiKeyAuth
 // @Description put order status by order ID
 // @Tags OrderStatusChange
 // @Accept  json
@@ -84,6 +99,12 @@ func (h *Handler) GetOrder(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /order/status_change/{id} [put]
 func (h *Handler) ChangeOrderStatus(ctx *gin.Context) {
+	necessaryRole := "Courier"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler ChangeOrderStatus:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	idQuery := ctx.Param("id")
 	var txt text
 	var status string
@@ -110,6 +131,7 @@ func (h *Handler) ChangeOrderStatus(ctx *gin.Context) {
 }
 
 // @Summary GetCourierCompletedOrders
+// @Security ApiKeyAuth
 // @Description get list of completed orders by courier id
 // @Tags order
 // @Produce json
@@ -121,6 +143,12 @@ func (h *Handler) ChangeOrderStatus(ctx *gin.Context) {
 // @Failure 500 {string} string
 // @Router /orders/completed [get]
 func (h *Handler) GetCourierCompletedOrders(ctx *gin.Context) {
+	necessaryRole := "Courier"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler GetCourierCompletedOrders:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page == 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
@@ -151,6 +179,7 @@ type listShortOrders struct {
 }
 
 // @Summary GetAllOrdersOfCourierService
+// @Security ApiKeyAuth
 // @Description get list of all orders by courier service id
 // @Tags order
 // @Produce json
@@ -162,6 +191,12 @@ type listShortOrders struct {
 // @Failure 500 {string} string
 // @Router /orders [get]
 func (h *Handler) GetAllOrdersOfCourierService(ctx *gin.Context) {
+	necessaryRole := "Courier"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler GetAllOrdersOfCourierService:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page == 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
@@ -188,6 +223,7 @@ func (h *Handler) GetAllOrdersOfCourierService(ctx *gin.Context) {
 }
 
 // @Summary GetCourierCompletedOrdersByMonth
+// @Security ApiKeyAuth
 // @Description get list of completed orders by courier id sorted by month
 // @Tags order
 // @Produce json
@@ -201,6 +237,12 @@ func (h *Handler) GetAllOrdersOfCourierService(ctx *gin.Context) {
 // @Failure 500 {string} string
 // @Router /orders/bymonth [get]
 func (h *Handler) GetCourierCompletedOrdersByMonth(ctx *gin.Context) {
+	necessaryRole := "Courier"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler GetCourierCompletedOrdersByMonth:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page == 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
@@ -236,6 +278,7 @@ func (h *Handler) GetCourierCompletedOrdersByMonth(ctx *gin.Context) {
 }
 
 // @Summary UpdateOrder
+// @Security ApiKeyAuth
 // @Tags order
 // @Description assign order to courier
 // @ID UpdateOrder
@@ -247,6 +290,12 @@ func (h *Handler) GetCourierCompletedOrdersByMonth(ctx *gin.Context) {
 // @Failure 400 {string} string
 // @Router /orders/{id} [put]
 func (h *Handler) UpdateOrder(ctx *gin.Context) {
+	necessaryRole := "Courier"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler UpdateOrder:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		log.Println(err)
@@ -269,6 +318,7 @@ func (h *Handler) UpdateOrder(ctx *gin.Context) {
 }
 
 // @Summary GetDetailedOrderById
+// @Security ApiKeyAuth
 // @Description get detailed order by id
 // @Tags order
 // @Produce json
@@ -278,6 +328,12 @@ func (h *Handler) UpdateOrder(ctx *gin.Context) {
 // @Failure 500 {string} string
 // @Router /order/detailed/{id} [get]
 func (h *Handler) GetDetailedOrderById(ctx *gin.Context) {
+	necessaryRole := "Courier"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler GetDetailedOrderById:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil || id <= 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
@@ -293,6 +349,7 @@ func (h *Handler) GetDetailedOrderById(ctx *gin.Context) {
 }
 
 // @Summary GetCompletedOrdersOfCourierService
+// @Security ApiKeyAuth
 // @Description get list of completed orders by courier service id
 // @Tags order
 // @Produce json
@@ -305,6 +362,12 @@ func (h *Handler) GetDetailedOrderById(ctx *gin.Context) {
 // @Failure 500 {string} string
 // @Router /orders/service/completed [get]
 func (h *Handler) GetCompletedOrdersOfCourierService(ctx *gin.Context) {
+	necessaryRole := "Courier"
+	if err := h.services.CheckRoleRights(nil, necessaryRole, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler GetCompletedOrdersOfCourierService:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page <= 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})

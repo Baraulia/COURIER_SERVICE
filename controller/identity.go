@@ -7,7 +7,6 @@ import (
 	"strings"
 )
 
-
 func (h *Handler) userIdentity(ctx *gin.Context) {
 	header := ctx.GetHeader("Authorization")
 	if header == "" {
@@ -26,11 +25,12 @@ func (h *Handler) userIdentity(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "token is empty"})
 		return
 	}
-	ok, err := h.services.CourierApp.CheckRights(headerParts[1], "Courier")
-	if err != nil || !ok {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized,gin.H{"message": err.Error()})
+	user, err := h.services.CourierApp.ParseToken(headerParts[1])
+	if err != nil {
+		log.Printf("userIdentity:%s", err)
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
 		return
 	}
-	ctx.Next()
+	ctx.Set("perms", user.Permissions)
+	ctx.Set("role", user.Role)
 }
-
