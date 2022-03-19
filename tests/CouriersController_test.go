@@ -2,6 +2,7 @@ package tests
 
 import (
 	"bytes"
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
 	"github.com/Baraulia/COURIER_SERVICE/controller"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/Baraulia/COURIER_SERVICE/service"
@@ -15,7 +16,10 @@ import (
 )
 
 func TestHandler_GetCouriers(t *testing.T) {
+	type mockBehaviorCheck func(s *mock_service.MockCourierApp, perms, role string)
+	type mockBehaviorParseToken func(s *mock_service.MockCourierApp, token string)
 	type mockBehavior func(s *mock_service.MockCourierApp, courier dao.SmallInfo)
+
 	var couriers []dao.SmallInfo
 	cour := dao.SmallInfo{
 		Id:          1,
@@ -28,12 +32,17 @@ func TestHandler_GetCouriers(t *testing.T) {
 	couriers = append(couriers, cour)
 
 	testTable := []struct {
-		name                string
-		inputBody           string
-		inputCourier        dao.SmallInfo
-		mockBehavior        mockBehavior
-		expectedStatusCode  int
-		expectedRequestBody string
+		name                   string
+		inputBody              string
+		inputCourier           dao.SmallInfo
+		inputPerms             string
+		inputRole              string
+		inputToken             string
+		mockBehaviorParseToken mockBehaviorParseToken
+		mockBehavior           mockBehavior
+		mockBehaviorCheck      mockBehaviorCheck
+		expectedStatusCode     int
+		expectedRequestBody    string
 	}{
 		{
 			name:      "OK",
@@ -44,6 +53,19 @@ func TestHandler_GetCouriers(t *testing.T) {
 				PhoneNumber: "1038812",
 				Photo:       "my fav photo",
 				Surname:     "Shorokhov",
+			},
+			inputPerms: "",
+			inputRole:  "Courier manager",
+			inputToken: "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockCourierApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&courierProto.UserRole{
+					UserId:      1,
+					Role:        "Courier manager",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockCourierApp, perms, role string) {
+				s.EXPECT().CheckRoleRights(nil, "Courier manager", perms, role).Return(nil)
 			},
 			mockBehavior: func(s *mock_service.MockCourierApp, courier dao.SmallInfo) {
 				s.EXPECT().GetCouriers().Return(couriers, nil)
@@ -59,16 +81,16 @@ func TestHandler_GetCouriers(t *testing.T) {
 
 			get := mock_service.NewMockCourierApp(c)
 			testCase.mockBehavior(get, testCase.inputCourier)
+			testCase.mockBehaviorParseToken(get, testCase.inputToken)
+			testCase.mockBehaviorCheck(get, testCase.inputPerms, testCase.inputRole)
 
 			services := &service.Service{CourierApp: get}
 			handler := controller.NewHandler(services)
-
-			r := gin.New()
-
-			r.GET("/couriers", handler.GetCouriers)
+			r := handler.InitRoutesGin()
 
 			w := httptest.NewRecorder()
-			req := httptest.NewRequest("GET", "/couriers", bytes.NewBufferString(testCase.inputBody))
+			req := httptest.NewRequest("GET", "/couriers/", bytes.NewBufferString(testCase.inputBody))
+			req.Header.Set("Authorization", "Bearer testToken")
 
 			r.ServeHTTP(w, req)
 
@@ -81,7 +103,10 @@ func TestHandler_GetCouriers(t *testing.T) {
 }
 
 func TestHandler_GetOneCourier(t *testing.T) {
+	type mockBehaviorCheck func(s *mock_service.MockCourierApp, perms, role string)
+	type mockBehaviorParseToken func(s *mock_service.MockCourierApp, token string)
 	type mockBehavior func(s *mock_service.MockCourierApp, courier dao.SmallInfo)
+
 	cour := dao.SmallInfo{
 		Id:          1,
 		CourierName: "test",
@@ -92,12 +117,17 @@ func TestHandler_GetOneCourier(t *testing.T) {
 	}
 
 	testTable := []struct {
-		name                string
-		inputBody           string
-		inputCourier        dao.SmallInfo
-		mockBehavior        mockBehavior
-		expectedStatusCode  int
-		expectedRequestBody string
+		name                   string
+		inputBody              string
+		inputCourier           dao.SmallInfo
+		inputPerms             string
+		inputRole              string
+		inputToken             string
+		mockBehaviorParseToken mockBehaviorParseToken
+		mockBehavior           mockBehavior
+		mockBehaviorCheck      mockBehaviorCheck
+		expectedStatusCode     int
+		expectedRequestBody    string
 	}{
 		{
 			name:      "OK",
@@ -108,6 +138,19 @@ func TestHandler_GetOneCourier(t *testing.T) {
 				PhoneNumber: "1038812",
 				Photo:       "my fav photo",
 				Surname:     "Shorokhov",
+			},
+			inputPerms: "",
+			inputRole:  "Courier manager",
+			inputToken: "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockCourierApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&courierProto.UserRole{
+					UserId:      1,
+					Role:        "Courier manager",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockCourierApp, perms, role string) {
+				s.EXPECT().CheckRoleRights(nil, "Courier manager", perms, role).Return(nil)
 			},
 			mockBehavior: func(s *mock_service.MockCourierApp, courier dao.SmallInfo) {
 				s.EXPECT().GetCourier(1).Return(cour, nil)
@@ -123,16 +166,16 @@ func TestHandler_GetOneCourier(t *testing.T) {
 
 			get := mock_service.NewMockCourierApp(c)
 			testCase.mockBehavior(get, testCase.inputCourier)
+			testCase.mockBehaviorParseToken(get, testCase.inputToken)
+			testCase.mockBehaviorCheck(get, testCase.inputPerms, testCase.inputRole)
 
 			services := &service.Service{CourierApp: get}
 			handler := controller.NewHandler(services)
-
-			r := gin.New()
-
-			r.GET("/courier/:id", handler.GetCourier)
+			r := handler.InitRoutesGin()
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("GET", "/courier/1", bytes.NewBufferString(testCase.inputBody))
+			req.Header.Set("Authorization", "Bearer testToken")
 
 			r.ServeHTTP(w, req)
 

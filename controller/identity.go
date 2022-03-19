@@ -25,7 +25,7 @@ func (h *Handler) userIdentity(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "token is empty"})
 		return
 	}
-	user, err := h.services.CourierApp.ParseToken(headerParts[1])
+	user, err := h.services.ParseToken(headerParts[1])
 	if err != nil {
 		log.Printf("userIdentity:%s", err)
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
