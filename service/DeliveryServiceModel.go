@@ -4,25 +4,13 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/minio/minio-go"
 	"log"
 	"strconv"
 )
 
-type DeliveryService struct {
-	repo dao.Repository
-	grpcCli *grpcClient.GRPCClient
-}
-
-func NewDeliveryService(repo dao.Repository, grpcCli *grpcClient.GRPCClient) *DeliveryService {
-	return &DeliveryService{
-		repo: repo,
-		grpcCli: grpcCli,
-	}
-}
-func (s *DeliveryService) CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error) {
+func (s *CourierService) CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error) {
 	id, err := s.repo.SaveDeliveryServiceInDB(&DeliveryService)
 	if err != nil {
 		log.Println(err)
@@ -31,7 +19,7 @@ func (s *DeliveryService) CreateDeliveryService(DeliveryService dao.DeliveryServ
 	return id, nil
 }
 
-func (s *DeliveryService) GetDeliveryServiceById(Id int) (*dao.DeliveryService, error) {
+func (s *CourierService) GetDeliveryServiceById(Id int) (*dao.DeliveryService, error) {
 	var service *dao.DeliveryService
 	service, err := s.repo.GetDeliveryServiceByIdFromDB(Id)
 	if err != nil {
@@ -46,7 +34,7 @@ func (s *DeliveryService) GetDeliveryServiceById(Id int) (*dao.DeliveryService, 
 	return service, nil
 }
 
-func (s *DeliveryService) GetAllDeliveryServices() ([]dao.DeliveryService, error) {
+func (s *CourierService) GetAllDeliveryServices() ([]dao.DeliveryService, error) {
 	var services = []dao.DeliveryService{}
 	services, err := s.repo.GetAllDeliveryServicesFromDB()
 	if err != nil {
@@ -56,14 +44,14 @@ func (s *DeliveryService) GetAllDeliveryServices() ([]dao.DeliveryService, error
 	return services, nil
 }
 
-func (s *DeliveryService) UpdateDeliveryService(service dao.DeliveryService) error {
+func (s *CourierService) UpdateDeliveryService(service dao.DeliveryService) error {
 	if err := s.repo.UpdateDeliveryServiceInDB(service); err != nil {
 		log.Println(err)
 		return fmt.Errorf("Error in DeliveryService: %s", err)
 	}
 	return nil
 }
-func (s *DeliveryService) SaveLogoFile(cover []byte, id int) error {
+func (s *CourierService) SaveLogoFile(cover []byte, id int) error {
 	client, err := InitClientDO()
 	if err != nil {
 		log.Println(err)

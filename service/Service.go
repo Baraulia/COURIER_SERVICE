@@ -9,7 +9,7 @@ import (
 
 //go:generate mockgen -source=Service.go -destination=mocks/mock.go
 
-type OrderApp interface {
+type AllProjectApp interface {
 	GetOrder(id int) (dao.Order, error)
 	GetOrders(id int) ([]dao.Order, error)
 	ChangeOrderStatus(text string, id uint16) (uint16, error)
@@ -24,18 +24,12 @@ type OrderApp interface {
 	GetCompletedOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
 	GetCompletedOrdersOfCourierServiceByDate(limit, page, idService int) ([]dao.Order, error)
 	GetCompletedOrdersOfCourierServiceByCourierId(limit, page, idService int) ([]dao.Order, error)
-}
-
-type CourierApp interface {
 	GetCouriers() ([]dao.SmallInfo, error)
 	GetCourier(id int) (dao.SmallInfo, error)
 	SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 	UpdateCourier(id uint16) (uint16, error)
 	ParseToken(token string) (*courierProto.UserRole, error)
 	CheckRoleRights(neededPerms []string, neededRole string, givenPerms string, givenRole string) error
-}
-
-type DeliveryServiceApp interface {
 	CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error)
 	GetDeliveryServiceById(Id int) (*dao.DeliveryService, error)
 	GetAllDeliveryServices() ([]dao.DeliveryService, error)
@@ -44,15 +38,11 @@ type DeliveryServiceApp interface {
 }
 
 type Service struct {
-	OrderApp
-	CourierApp
-	DeliveryServiceApp
+	AllProjectApp
 }
 
 func NewService(rep *dao.Repository, grpcCli *grpcClient.GRPCClient) *Service {
 	return &Service{
-		NewOrderService(*rep, grpcCli),
-		NewCourierService(*rep, grpcCli),
-		NewDeliveryService(*rep, grpcCli),
+		NewProjectService(*rep, grpcCli),
 	}
 }

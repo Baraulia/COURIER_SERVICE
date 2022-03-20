@@ -16,7 +16,7 @@ type CourierService struct {
 	grpcCli *grpcClient.GRPCClient
 }
 
-func NewCourierService(repo dao.Repository, grpcCli *grpcClient.GRPCClient) *CourierService {
+func NewProjectService(repo dao.Repository, grpcCli *grpcClient.GRPCClient) *CourierService {
 	return &CourierService{
 		repo:    repo,
 		grpcCli: grpcCli,

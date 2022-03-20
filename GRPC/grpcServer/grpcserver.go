@@ -33,11 +33,11 @@ func NewGRPCServer(service *service.Service) {
 }
 
 func (g *GRPCServer) CreateOrder(ctx context.Context, order *courierProto.OrderCourierServer) (*emptypb.Empty, error) {
-	return g.service.OrderApp.CreateOrder(order)
+	return g.service.AllProjectApp.CreateOrder(order)
 }
 
 func (g *GRPCServer) GetDeliveryServicesList(ctx context.Context, in *emptypb.Empty) (*courierProto.ServicesResponse, error) {
-	res, err := g.service.OrderApp.GetServices(in)
+	res, err := g.service.AllProjectApp.GetServices(in)
 	if err != nil {
 		log.Fatalf("GetServices:%s", err)
 		return nil, fmt.Errorf("GetServices:%w", err)
