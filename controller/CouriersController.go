@@ -21,6 +21,12 @@ import (
 // @Failure 500 {string} string
 // @Router /couriers [get]
 func (h *Handler) GetCouriers(ctx *gin.Context) {
+	necessaryRole1, necessaryRole2 := "Courier manager", "Superadmin"
+	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler GetCouriers:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	Couriers, err := h.services.GetCouriers()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
