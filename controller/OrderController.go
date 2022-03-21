@@ -149,6 +149,9 @@ func (h *Handler) GetCourierCompletedOrders(ctx *gin.Context) {
 type listShortOrders struct {
 	Data []dao.Order `json:"data"`
 }
+type listDetailedOrders struct {
+	Data []dao.DetailedOrder `json:"data"`
+}
 
 // @Summary GetAllOrdersOfCourierService
 // @Description get list of all orders by courier service id
@@ -157,7 +160,7 @@ type listShortOrders struct {
 // @Param page query int true "page"
 // @Param limit query int true "limit"
 // @Param iddeliveryservice query int true "iddeliveryservice"
-// @Success 200 {object} listShortOrders
+// @Success 200 {object} listDetailedOrders
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /orders [get]
@@ -183,7 +186,7 @@ func (h *Handler) GetAllOrdersOfCourierService(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
 	}
-	ctx.JSON(http.StatusOK, listShortOrders{Data: Orders})
+	ctx.JSON(http.StatusOK, listDetailedOrders{Data: Orders})
 
 }
 
@@ -344,4 +347,41 @@ func (h *Handler) GetCompletedOrdersOfCourierService(ctx *gin.Context) {
 		}
 		ctx.JSON(http.StatusOK, listShortOrders{Data: Orders})
 	}
+}
+
+// @Summary GetOrdersOfCourierServiceForManager
+// @Description get list of all orders by courier service id with custom status
+// @Tags order
+// @Produce json
+// @Param page query int true "page"
+// @Param limit query int true "limit"
+// @Param iddeliveryservice query int true "iddeliveryservice"
+// @Success 200 {object} listDetailedOrders
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /orders/manager [get]
+func (h *Handler) GetOrdersOfCourierServiceForManager(ctx *gin.Context) {
+	page, er := strconv.Atoi(ctx.Query("page"))
+	if er != nil || page == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
+		return
+	}
+	limit, er1 := strconv.Atoi(ctx.Query("limit"))
+	if er1 != nil || limit == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
+		return
+	}
+	idService, er := strconv.Atoi(ctx.Query("iddeliveryservice"))
+	if er != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		return
+	}
+
+	Orders, err := h.services.OrderApp.GetOrdersOfCourierServiceForManager(limit, page, idService)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	ctx.JSON(http.StatusOK, listDetailedOrders{Data: Orders})
+
 }

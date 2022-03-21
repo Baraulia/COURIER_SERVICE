@@ -14,7 +14,7 @@ type OrderApp interface {
 	ChangeOrderStatus(text string, id uint16) (uint16, error)
 	GetOrderForChange(id int) (dao.Order, error)
 	GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.DetailedOrder, error)
-	GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
+	GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.DetailedOrder, error)
 	GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error)
 	AssigningOrderToCourier(order dao.Order) error
 	GetDetailedOrderById(Id int) (*dao.DetailedOrder, error)
@@ -23,6 +23,7 @@ type OrderApp interface {
 	GetCompletedOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
 	GetCompletedOrdersOfCourierServiceByDate(limit, page, idService int) ([]dao.Order, error)
 	GetCompletedOrdersOfCourierServiceByCourierId(limit, page, idService int) ([]dao.Order, error)
+	GetOrdersOfCourierServiceForManager(limit, page, idService int) ([]dao.DetailedOrder, error)
 }
 
 type CourierApp interface {
@@ -30,6 +31,7 @@ type CourierApp interface {
 	GetCourier(id int) (dao.SmallInfo, error)
 	SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 	UpdateCourier(id uint16) (uint16, error)
+	SaveCourierPhoto(cover []byte, id int) error
 }
 
 type DeliveryServiceApp interface {

@@ -29,6 +29,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	couriers := router.Group("/couriers")
 	{
 		couriers.GET("/", h.GetCouriers)
+		couriers.POST("/photo", h.SaveCourierPhoto)
 
 	}
 
@@ -47,6 +48,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 		orders.GET("/:id", h.GetOrders)
 		orders.PUT("/:id", h.UpdateOrder)
 		orders.GET("/service/completed", h.GetCompletedOrdersOfCourierService)
+		orders.GET("/manager", h.GetOrdersOfCourierServiceForManager)
 
 	}
 
