@@ -29,6 +29,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	couriers := router.Group("/couriers")
 	{
 		couriers.GET("/", h.GetCouriers)
+		couriers.POST("/photo", h.SaveCourierPhoto)
 
 	}
 

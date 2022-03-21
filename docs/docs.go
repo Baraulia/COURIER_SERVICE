@@ -183,6 +183,48 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "/couriers/photo": {
+            "post": {
+                "description": "set photo to DO Spaces and it's way to DB",
+                "consumes": [
+                    "image/jpeg"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Couriers"
+                ],
+                "summary": "SaveCourierPhoto",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id courier",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "logo image",
+                        "name": "logo",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/deliveryservice": {
             "get": {
                 "description": "get list of all delivery service",
@@ -1000,6 +1042,9 @@ const docTemplate_swagger = `{
                 "name": {
                     "type": "string"
                 },
+                "numOfCouriers": {
+                    "type": "integer"
+                },
                 "phone_number": {
                     "type": "string"
                 },
@@ -1113,8 +1158,8 @@ var SwaggerInfo_swagger = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Courier Service",
-	Description:      "Courier Service for Food Delivery Application",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate_swagger,
 }

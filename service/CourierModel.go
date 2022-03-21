@@ -1,10 +1,13 @@
 package service
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
+	"github.com/minio/minio-go"
 	"log"
+	"strconv"
 )
 
 type CourierService struct {
@@ -54,4 +57,30 @@ func (s *CourierService) UpdateCourier(id uint16) (uint16, error) {
 		return 0, fmt.Errorf("Error with database: %s", err)
 	}
 	return courierId, nil
+}
+
+func (s *CourierService) SaveCourierPhoto(cover []byte, id int) error {
+	client, err := InitClientDO()
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	_, err1 := client.PutObject("storage-like-s3", fmt.Sprintf("courier_photo/%s", strconv.Itoa(id)),
+		bytes.NewReader(cover), int64(len(cover)), minio.PutObjectOptions{ContentType: "image/jpeg", UserMetadata: map[string]string{"x-amz-acl": "public-read"}})
+	if err1 != nil {
+		log.Println(err1)
+		return err1
+	}
+	var courier dao.Courier
+	courier.Id = uint16(id)
+	courier.Photo = "https://storage-like-s3.fra1.digitaloceanspaces.com/courier_photo/" + strconv.Itoa(id)
+
+	if err := s.repo.UpdateCourierDB(courier); err != nil {
+		log.Println(err)
+		return fmt.Errorf("Error in DeliveryService: %s", err)
+	}
+
+	log.Println("Uploaded logo with link https://storage-like-s3.fra1.digitaloceanspaces.com/courier_photo/" + strconv.Itoa(id))
+	return nil
 }

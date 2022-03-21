@@ -313,6 +313,20 @@ func (mr *MockCourierAppMockRecorder) SaveCourier(courier interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveCourier", reflect.TypeOf((*MockCourierApp)(nil).SaveCourier), courier)
 }
 
+// SaveCourierPhoto mocks base method.
+func (m *MockCourierApp) SaveCourierPhoto(cover []byte, id int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SaveCourierPhoto", cover, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SaveCourierPhoto indicates an expected call of SaveCourierPhoto.
+func (mr *MockCourierAppMockRecorder) SaveCourierPhoto(cover, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveCourierPhoto", reflect.TypeOf((*MockCourierApp)(nil).SaveCourierPhoto), cover, id)
+}
+
 // UpdateCourier mocks base method.
 func (m *MockCourierApp) UpdateCourier(id uint16) (uint16, error) {
 	m.ctrl.T.Helper()
