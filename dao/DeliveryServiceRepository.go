@@ -133,3 +133,20 @@ func (r *DeliveryServicePostgres) UpdateDeliveryServiceInDB(service DeliveryServ
 	}
 	return nil
 }
+
+func (r *DeliveryServicePostgres) GetNumberCouriersByServiceFromDB(id int) (int, error) {
+
+	selectValue := `SELECT count(*) FROM couriers AS co JOIN delivery_service AS d ON co.delivery_service_id=d.id WHERE d.id=$1`
+	get, err := r.db.Query(selectValue, id)
+
+	if err != nil {
+		log.Println("Error of getting list of couriers :" + err.Error())
+		return 0, err
+	}
+
+	var numOfCouriers int
+	for get.Next() {
+		err = get.Scan(&numOfCouriers)
+	}
+	return numOfCouriers, nil
+}

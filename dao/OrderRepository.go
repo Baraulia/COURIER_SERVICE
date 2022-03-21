@@ -65,7 +65,7 @@ func (r *OrderPostgres) GetActiveOrdersFromDB(id int) ([]Order, error) {
 func (r *OrderPostgres) GetActiveOrderFromDB(id int) (Order, error) {
 	var Ord Order
 
-	insertValue := `Select delivery_service_id,id,courier_id,delivery_time,customer_address,status,order_date,restaurant_address,picked from delivery where id = $1 AND status = 'ready to delivery'`
+	insertValue := `Select delivery_service_id,id,courier_id,delivery_time,customer_address,status,order_date,restaurant_address,picked from delivery where id = $1`
 	get, err := r.db.Query(insertValue, id)
 	if err != nil {
 		log.Println("Error with getting order by id: " + err.Error())
@@ -224,13 +224,13 @@ func (r *OrderPostgres) GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, erro
 		return nil, err
 	}
 	defer transaction.Commit()
-	res, err := transaction.Query(fmt.Sprintf("SELECT d.id, d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_address,co.name,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.id=%d", Id))
+	res, err := transaction.Query(fmt.Sprintf("SELECT d.id, d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_address,co.name,co.surname,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.id=%d", Id))
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 	for res.Next() {
-		err = res.Scan(&order.IdOrder, &order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierPhoneNumber)
+		err = res.Scan(&order.IdOrder, &order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierSurname, &order.CourierPhoneNumber)
 		if err != nil {
 			log.Println(err)
 			return nil, err
@@ -278,7 +278,7 @@ func (r *OrderPostgres) GetCompletedOrdersOfCourierServiceFromDB(limit, page, id
 	}
 	defer transaction.Commit()
 
-	res, err := transaction.Query("SELECT order_date,courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status='completed' and delivery_service_id=$1 LIMIT $2 OFFSET $3",
+	res, err := transaction.Query("SELECT order_date,courier_id,id,delivery_time,status,customer_address FROM delivery WHERE status='completed' and delivery_service_id=$1 ORDER BY id LIMIT $2 OFFSET $3",
 		idService, limit, limit*(page-1))
 	if err != nil {
 		log.Println(err)

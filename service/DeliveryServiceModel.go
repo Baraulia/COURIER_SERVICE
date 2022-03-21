@@ -35,6 +35,11 @@ func (s *DeliveryService) GetDeliveryServiceById(Id int) (*dao.DeliveryService, 
 		log.Println(err)
 		return nil, fmt.Errorf("Error in DeliveryService: %s", err)
 	}
+	service.NumOfCouriers, err = s.repo.GetNumberCouriersByServiceFromDB(Id)
+	if err != nil {
+		log.Println(err)
+		return nil, fmt.Errorf("Error in DeliveryService: %s", err)
+	}
 	if service.Id == 0 {
 		err = errors.New("not found")
 		log.Println(err)

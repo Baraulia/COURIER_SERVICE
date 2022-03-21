@@ -51,4 +51,5 @@ type DeliveryServiceRep interface {
 	GetDeliveryServiceByIdFromDB(Id int) (*DeliveryService, error)
 	GetAllDeliveryServicesFromDB() ([]DeliveryService, error)
 	UpdateDeliveryServiceInDB(service DeliveryService) error
+	GetNumberCouriersByServiceFromDB(id int) (int, error)
 }
