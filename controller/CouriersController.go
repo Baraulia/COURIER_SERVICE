@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -26,7 +28,7 @@ func (h *Handler) GetCouriers(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
-	Couriers, err := h.services.AllProjectApp.GetCouriers()
+	Couriers, err := h.services.GetCouriers()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
@@ -60,7 +62,7 @@ func (h *Handler) GetCourier(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	Courier, err = h.services.AllProjectApp.GetCourier(id)
+	Courier, err = h.services.GetCourier(id)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"No such courier": err})
 		return
@@ -92,7 +94,7 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
 		return
 	}
-	Courier, err := h.services.AllProjectApp.SaveCourier(Courier)
+	Courier, err := h.services.SaveCourier(Courier)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err})
 		return
@@ -113,7 +115,7 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /courier/{id} [put]
 func (h *Handler) UpdateCourier(ctx *gin.Context) {
-	necessaryRole1, necessaryRole2 := "Courier manager", "Superadmin"
+	necessaryRole1, necessaryRole2 := "Courier manager", "Courier"
 	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
 		log.Print("Handler UpdateCourier:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
@@ -125,11 +127,50 @@ func (h *Handler) UpdateCourier(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
 		return
 	}
-	courierId, err := h.services.AllProjectApp.UpdateCourier(uint16(id))
+	courierId, err := h.services.UpdateCourier(uint16(id))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"No such courier": err})
 		return
 	}
 	ctx.JSON(http.StatusOK, map[string]interface{}{
 		"Courier id": courierId})
+}
+
+// @Summary SaveCourierPhoto
+// @Security ApiKeyAuth
+// @Description set photo to DO Spaces and it's way to DB
+// @Tags Couriers
+// @Accept  image/jpeg
+// @Produce   json
+// @Param id query int true "id courier"
+// @Param logo  formData  file  true  "logo image"
+// @Success 204
+// @Failure 400 {string} string
+// @Router /couriers/photo [post]
+func (h *Handler) SaveCourierPhoto(ctx *gin.Context) {
+	necessaryRole1, necessaryRole2 := "Courier manager", "Courier"
+	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler SaveCourierPhoto:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
+	id, er := strconv.Atoi(ctx.Query("id"))
+	if er != nil || id <= 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		return
+	}
+	if ctx.Request.Body == nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "empty"})
+	}
+	defer ctx.Request.Body.Close()
+	cover, err := ioutil.ReadAll(ctx.Request.Body)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+	}
+	if err := h.services.SaveCourierPhoto(cover, id); err != nil {
+		log.Println(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	ctx.Status(http.StatusNoContent)
 }

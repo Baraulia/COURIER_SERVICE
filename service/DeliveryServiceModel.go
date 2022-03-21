@@ -26,6 +26,11 @@ func (s *CourierService) GetDeliveryServiceById(Id int) (*dao.DeliveryService, e
 		log.Println(err)
 		return nil, fmt.Errorf("Error in DeliveryService: %s", err)
 	}
+	service.NumOfCouriers, err = s.repo.GetNumberCouriersByServiceFromDB(Id)
+	if err != nil {
+		log.Println(err)
+		return nil, fmt.Errorf("Error in DeliveryService: %s", err)
+	}
 	if service.Id == 0 {
 		err = errors.New("not found")
 		log.Println(err)
@@ -35,13 +40,27 @@ func (s *CourierService) GetDeliveryServiceById(Id int) (*dao.DeliveryService, e
 }
 
 func (s *CourierService) GetAllDeliveryServices() ([]dao.DeliveryService, error) {
-	var services = []dao.DeliveryService{}
-	services, err := s.repo.GetAllDeliveryServicesFromDB()
+	var Services = []dao.DeliveryService{}
+	Services, err := s.repo.GetAllDeliveryServicesFromDB()
 	if err != nil {
 		log.Println(err)
 		return []dao.DeliveryService{}, fmt.Errorf("Error in DeliveryService: %s", err)
 	}
-	return services, nil
+	Couriers, err := s.repo.GetCouriersWithServiceFromDB()
+	if err != nil {
+		log.Println(err)
+		return []dao.DeliveryService{}, fmt.Errorf("Error in DeliveryService: %s", err)
+	}
+	for i, service := range Services {
+		count := 0
+		for _, courier := range Couriers {
+			if service.Id == int(courier.DeliveryServiceId) {
+				count++
+			}
+		}
+		Services[i].NumOfCouriers = count
+	}
+	return Services, nil
 }
 
 func (s *CourierService) UpdateDeliveryService(service dao.DeliveryService) error {

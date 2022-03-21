@@ -41,7 +41,7 @@ func (h *Handler) CreateDeliveryService(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "empty fields"})
 		return
 	}
-	idService, err := h.services.AllProjectApp.CreateDeliveryService(service)
+	idService, err := h.services.CreateDeliveryService(service)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
@@ -72,7 +72,7 @@ func (h *Handler) GetDeliveryServiceById(ctx *gin.Context) {
 		return
 	}
 
-	service, err := h.services.AllProjectApp.GetDeliveryServiceById(id)
+	service, err := h.services.GetDeliveryServiceById(id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
@@ -100,7 +100,7 @@ func (h *Handler) GetAllDeliveryServices(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
-	services, err := h.services.AllProjectApp.GetAllDeliveryServices()
+	services, err := h.services.GetAllDeliveryServices()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
@@ -140,7 +140,7 @@ func (h *Handler) UpdateDeliveryService(ctx *gin.Context) {
 		return
 	}
 	service.Id = id
-	if err := h.services.AllProjectApp.UpdateDeliveryService(service); err != nil {
+	if err := h.services.UpdateDeliveryService(service); err != nil {
 		log.Println(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
@@ -179,7 +179,7 @@ func (h *Handler) SaveLogoController(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
 	}
-	if err := h.services.AllProjectApp.SaveLogoFile(cover, id); err != nil {
+	if err := h.services.SaveLogoFile(cover, id); err != nil {
 		log.Println(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return

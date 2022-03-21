@@ -201,6 +201,7 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 		OrderDate:          "11.11.2022",
 		CourierPhoneNumber: "",
 		CourierName:        "",
+		CourierSurname:     "",
 		Picked:             false,
 	}
 	orders = append(orders, ord)
@@ -238,13 +239,13 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 				}, nil)
 			},
 			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier", "Superadmin", perms, role).Return(nil)
+				s.EXPECT().CheckRoleRights(nil, "Courier", "Courier manager", perms, role).Return(nil)
 			},
 			mockBehavior: func(s *mock_service.MockAllProjectApp, order []dao.DetailedOrder) {
 				s.EXPECT().GetCourierCompletedOrders(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","phone_number":""}]}`,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","surname":"","phone_number":""}]}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -278,12 +279,12 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, perms, role string)
 	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
-	type mockBehavior func(s *mock_service.MockAllProjectApp, order []dao.Order)
+	type mockBehavior func(s *mock_service.MockAllProjectApp, order []dao.DetailedOrder)
 
-	var orders []dao.Order
-	ord := dao.Order{
+	var orders []dao.DetailedOrder
+	ord := dao.DetailedOrder{
 		IdDeliveryService: 1,
-		Id:                1,
+		IdOrder:           1,
 		IdCourier:         1,
 		DeliveryTime:      time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
 		CustomerAddress:   "Some address",
@@ -297,7 +298,7 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 	testTable := []struct {
 		name                   string
 		inputBody              string
-		inputOrder             []dao.Order
+		inputOrder             []dao.DetailedOrder
 		inputPerms             string
 		inputRole              string
 		inputToken             string
@@ -310,10 +311,10 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 		{
 			name:      "OK",
 			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}}`,
-			inputOrder: []dao.Order{
+			inputOrder: []dao.DetailedOrder{
 				{
 					IdDeliveryService: 1,
-					Id:                1,
+					IdOrder:           1,
 					IdCourier:         1,
 					DeliveryTime:      time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
 					CustomerAddress:   "Some address",
@@ -334,13 +335,13 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 				}, nil)
 			},
 			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier", "Superadmin", perms, role).Return(nil)
+				s.EXPECT().CheckRoleRights(nil, "Courier", "Courier manager", perms, role).Return(nil)
 			},
-			mockBehavior: func(s *mock_service.MockAllProjectApp, order []dao.Order) {
+			mockBehavior: func(s *mock_service.MockAllProjectApp, order []dao.DetailedOrder) {
 				s.EXPECT().GetAllOrdersOfCourierService(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}]}`,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","surname":"","phone_number":""}]}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -430,7 +431,7 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 				}, nil)
 			},
 			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier", "Superadmin", perms, role).Return(nil)
+				s.EXPECT().CheckRoleRights(nil, "Courier", "Courier manager", perms, role).Return(nil)
 			},
 			mockBehavior: func(s *mock_service.MockAllProjectApp, order []dao.Order) {
 				s.EXPECT().GetCourierCompletedOrdersByMonth(1, 1, 1, 11, 2022).Return(orders, nil)

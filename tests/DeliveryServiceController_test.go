@@ -136,14 +136,15 @@ func TestHandler_GetAllDeliveryServices(t *testing.T) {
 
 	var servicess []dao.DeliveryService
 	serv := dao.DeliveryService{
-		Id:          1,
-		Name:        "name",
-		Email:       "email",
-		Photo:       "photo",
-		Description: "description",
-		PhoneNumber: "123",
-		ManagerId:   1,
-		Status:      "active",
+		Id:            1,
+		Name:          "name",
+		Email:         "email",
+		Photo:         "photo",
+		Description:   "description",
+		PhoneNumber:   "123",
+		ManagerId:     1,
+		Status:        "active",
+		NumOfCouriers: 5,
 	}
 	servicess = append(servicess, serv)
 
@@ -180,7 +181,7 @@ func TestHandler_GetAllDeliveryServices(t *testing.T) {
 				s.EXPECT().GetAllDeliveryServices().Return(servicess, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"data":[{"id":1,"name":"name","email":"email","photo":"photo","description":"description","phone_number":"123","manager_id":1,"status":"active"}]}`,
+			expectedRequestBody: `{"data":[{"id":1,"name":"name","email":"email","photo":"photo","description":"description","phone_number":"123","manager_id":1,"status":"active","NumOfCouriers":5}]}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -214,14 +215,15 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 	type mockBehavior func(s *mock_service.MockAllProjectApp, service *dao.DeliveryService)
 
 	serv := &dao.DeliveryService{
-		Id:          1,
-		Name:        "name",
-		Email:       "email",
-		Photo:       "photo",
-		Description: "description",
-		PhoneNumber: "123",
-		ManagerId:   1,
-		Status:      "active",
+		Id:            1,
+		Name:          "name",
+		Email:         "email",
+		Photo:         "photo",
+		Description:   "description",
+		PhoneNumber:   "123",
+		ManagerId:     1,
+		NumOfCouriers: 3,
+		Status:        "active",
 	}
 
 	testTable := []struct {
@@ -260,7 +262,7 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 				s.EXPECT().CheckRoleRights(nil, "Courier manager", "Superadmin", perms, role).Return(nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"id":1,"name":"name","email":"email","photo":"photo","description":"description","phone_number":"123","manager_id":1,"status":"active"}`,
+			expectedRequestBody: `{"id":1,"name":"name","email":"email","photo":"photo","description":"description","phone_number":"123","manager_id":1,"status":"active","NumOfCouriers":3}`,
 		},
 	}
 	for _, testCase := range testTable {

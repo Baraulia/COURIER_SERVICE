@@ -203,6 +203,53 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "/couriers/photo": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "set photo to DO Spaces and it's way to DB",
+                "consumes": [
+                    "image/jpeg"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Couriers"
+                ],
+                "summary": "SaveCourierPhoto",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id courier",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "logo image",
+                        "name": "logo",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/deliveryservice": {
             "get": {
                 "security": [
@@ -627,7 +674,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.listShortOrders"
+                            "$ref": "#/definitions/controller.listDetailedOrders"
                         }
                     },
                     "400": {
@@ -762,6 +809,66 @@ const docTemplate_swagger = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/controller.listOrders"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/manager": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get list of all orders by courier service id with custom status",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "GetOrdersOfCourierServiceForManager",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "iddeliveryservice",
+                        "name": "iddeliveryservice",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.listDetailedOrders"
                         }
                     },
                     "400": {
@@ -955,6 +1062,17 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "controller.listDetailedOrders": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.DetailedOrder"
+                    }
+                }
+            }
+        },
         "controller.listOrders": {
             "type": "object",
             "properties": {
@@ -1033,6 +1151,9 @@ const docTemplate_swagger = `{
                 "name": {
                     "type": "string"
                 },
+                "numOfCouriers": {
+                    "type": "integer"
+                },
                 "phone_number": {
                     "type": "string"
                 },
@@ -1078,6 +1199,9 @@ const docTemplate_swagger = `{
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                },
+                "surname": {
                     "type": "string"
                 }
             }

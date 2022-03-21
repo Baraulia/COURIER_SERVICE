@@ -30,6 +30,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	couriers.Use(h.userIdentity)
 	{
 		couriers.GET("/", h.GetCouriers)
+		couriers.POST("/photo", h.SaveCourierPhoto)
 
 	}
 
@@ -50,6 +51,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 		orders.GET("/:id", h.GetOrders)
 		orders.PUT("/:id", h.UpdateOrder)
 		orders.GET("/service/completed", h.GetCompletedOrdersOfCourierService)
+		orders.GET("/manager", h.GetOrdersOfCourierServiceForManager)
 
 	}
 

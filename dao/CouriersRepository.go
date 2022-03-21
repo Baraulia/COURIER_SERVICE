@@ -102,3 +102,76 @@ func (r *CourierPostgres) UpdateCourierInDB(id uint16) (uint16, error) {
 	}
 	return id, nil
 }
+
+func (r *CourierPostgres) GetCouriersWithServiceFromDB() ([]Courier, error) {
+	var Couriers []Courier
+
+	selectValue := `Select "id_courier","name", "phone_number","photo", "surname","delivery_service_id" from "couriers"`
+
+	get, err := r.db.Query(selectValue)
+
+	if err != nil {
+		log.Println("Error of getting list of couriers :" + err.Error())
+		return []Courier{}, err
+	}
+
+	for get.Next() {
+		var courier Courier
+		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname, &courier.DeliveryServiceId)
+		Couriers = append(Couriers, courier)
+	}
+	return Couriers, nil
+}
+
+func (r *CourierPostgres) UpdateCourierDB(courier Courier) error {
+	var oldCourier Courier
+	transaction, err := r.db.Begin()
+	if err != nil {
+		log.Println(err)
+	}
+	defer transaction.Commit()
+	res, err := transaction.Query(`SELECT id_courier, name, surname, delivery_service_id, email, photo, phone_number
+                                  FROM couriers Where id_courier=$1`, courier.Id)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	for res.Next() {
+		err = res.Scan(&oldCourier.Id, &oldCourier.CourierName, &oldCourier.Surname, &oldCourier.DeliveryServiceId, &oldCourier.Email,
+			&oldCourier.Photo, &oldCourier.PhoneNumber)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
+	}
+	if courier.CourierName == "" {
+		courier.CourierName = oldCourier.CourierName
+	}
+	if courier.Email == "" {
+		courier.Email = oldCourier.Email
+	}
+	if courier.Photo == "" {
+		courier.Photo = oldCourier.Photo
+	}
+	if courier.Surname == "" {
+		courier.Surname = oldCourier.Surname
+	}
+	if courier.DeliveryServiceId == 0 {
+		courier.DeliveryServiceId = oldCourier.DeliveryServiceId
+	}
+	if courier.PhoneNumber == "" {
+		courier.PhoneNumber = courier.PhoneNumber
+	}
+
+	s := `UPDATE couriers SET name=$1, surname=$2, delivery_service_id=$3, email=$4, photo=$5, phone_number=$6 
+                            WHERE id_courier = $7`
+	log.Println(s)
+	insert, err := transaction.Query(s, courier.CourierName, courier.Surname, courier.DeliveryServiceId, courier.Email,
+		courier.Photo, courier.PhoneNumber, courier.Id)
+	defer insert.Close()
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}

@@ -70,7 +70,7 @@ func TestHandler_GetOrders(t *testing.T) {
 				}, nil)
 			},
 			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier", "Superadmin", perms, role).Return(nil)
+				s.EXPECT().CheckRoleRights(nil, "Courier", "Courier manager", perms, role).Return(nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}`,
@@ -158,7 +158,7 @@ func TestHandler_GetOneOrder(t *testing.T) {
 				}, nil)
 			},
 			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier", "Superadmin", perms, role).Return(nil)
+				s.EXPECT().CheckRoleRights(nil, "Courier", "Courier manager", perms, role).Return(nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}`,
@@ -229,7 +229,7 @@ func TestHandler_UpdateOrder(t *testing.T) {
 				}, nil)
 			},
 			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier", "Superadmin", perms, role).Return(nil)
+				s.EXPECT().CheckRoleRights(nil, "Courier", "Courier manager", perms, role).Return(nil)
 			},
 			expectedStatusCode: 204,
 		},
@@ -276,6 +276,7 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 		RestaurantAddress:  "Some address",
 		Picked:             true,
 		CourierName:        "Sam",
+		CourierSurname:     "",
 		CourierPhoneNumber: "1234567",
 	}
 
@@ -312,10 +313,10 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 				}, nil)
 			},
 			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier", "Superadmin", perms, role).Return(nil)
+				s.EXPECT().CheckRoleRights(nil, "Courier", "Courier manager", perms, role).Return(nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","picked":true,"name":"Sam","phone_number":"1234567"}`,
+			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","picked":true,"name":"Sam","surname":"","phone_number":"1234567"}`,
 		},
 	}
 	for _, testCase := range testTable {

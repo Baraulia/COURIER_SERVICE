@@ -15,7 +15,7 @@ type AllProjectApp interface {
 	ChangeOrderStatus(text string, id uint16) (uint16, error)
 	GetOrderForChange(id int) (dao.Order, error)
 	GetCourierCompletedOrders(limit, page, idCourier int) ([]dao.DetailedOrder, error)
-	GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
+	GetAllOrdersOfCourierService(limit, page, idService int) ([]dao.DetailedOrder, error)
 	GetCourierCompletedOrdersByMonth(limit, page, idService, Month, Year int) ([]dao.Order, error)
 	AssigningOrderToCourier(order dao.Order) error
 	GetDetailedOrderById(Id int) (*dao.DetailedOrder, error)
@@ -24,17 +24,22 @@ type AllProjectApp interface {
 	GetCompletedOrdersOfCourierService(limit, page, idService int) ([]dao.Order, error)
 	GetCompletedOrdersOfCourierServiceByDate(limit, page, idService int) ([]dao.Order, error)
 	GetCompletedOrdersOfCourierServiceByCourierId(limit, page, idService int) ([]dao.Order, error)
+	GetOrdersOfCourierServiceForManager(limit, page, idService int) ([]dao.DetailedOrder, error)
+
 	GetCouriers() ([]dao.SmallInfo, error)
 	GetCourier(id int) (dao.SmallInfo, error)
 	SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 	UpdateCourier(id uint16) (uint16, error)
-	ParseToken(token string) (*courierProto.UserRole, error)
-	CheckRoleRights(neededPerms []string, neededRole1 string, neededRole2 string, givenPerms string, givenRole string) error
+	SaveCourierPhoto(cover []byte, id int) error
+
 	CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error)
 	GetDeliveryServiceById(Id int) (*dao.DeliveryService, error)
 	GetAllDeliveryServices() ([]dao.DeliveryService, error)
 	UpdateDeliveryService(service dao.DeliveryService) error
 	SaveLogoFile(cover []byte, id int) error
+
+	ParseToken(token string) (*courierProto.UserRole, error)
+	CheckRoleRights(neededPerms []string, neededRole1 string, neededRole2 string, givenPerms string, givenRole string) error
 }
 
 type Service struct {

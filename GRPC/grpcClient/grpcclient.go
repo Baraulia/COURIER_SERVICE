@@ -29,7 +29,7 @@ func (c *GRPCClient) GetUserWithRights(ctx context.Context, in *courierProto.Acc
 }
 
 func (c *GRPCClient) BindUserAndRole(ctx context.Context, in *courierProto.User, opts ...grpc.CallOption) (*courierProto.ResultBinding, error) {
-	return c.cli.BindUserAndRole(ctx, in)
+	return nil, nil
 }
 
 func (c *GRPCClient) TokenGenerationByRefresh(ctx context.Context, in *courierProto.RefreshToken, opts ...grpc.CallOption) (*courierProto.GeneratedTokens, error) {
@@ -37,9 +37,9 @@ func (c *GRPCClient) TokenGenerationByRefresh(ctx context.Context, in *courierPr
 }
 
 func (c *GRPCClient) TokenGenerationByUserId(ctx context.Context, in *courierProto.User, opts ...grpc.CallOption) (*courierProto.GeneratedTokens, error) {
-	return c.cli.TokenGenerationByUserId(ctx, in)
+	return nil, nil
 }
 
 func (c *GRPCClient) GetAllRoles(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*courierProto.Roles, error) {
-	return c.cli.GetAllRoles(ctx, in)
+	return nil, nil
 }
