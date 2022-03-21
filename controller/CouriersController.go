@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -103,4 +106,36 @@ func (h *Handler) UpdateCourier(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, map[string]interface{}{
 		"Courier id": courierId})
+}
+
+// @Summary SaveCourierPhoto
+// @Description set photo to DO Spaces and it's way to DB
+// @Tags Couriers
+// @Accept  image/jpeg
+// @Produce   json
+// @Param id query int true "id courier"
+// @Param logo  formData  file  true  "logo image"
+// @Success 204
+// @Failure 400 {string} string
+// @Router /couriers/photo [post]
+func (h *Handler) SaveCourierPhoto(ctx *gin.Context) {
+	id, er := strconv.Atoi(ctx.Query("id"))
+	if er != nil || id <= 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		return
+	}
+	if ctx.Request.Body == nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "empty"})
+	}
+	defer ctx.Request.Body.Close()
+	cover, err := ioutil.ReadAll(ctx.Request.Body)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+	}
+	if err := h.services.SaveCourierPhoto(cover, id); err != nil {
+		log.Println(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	ctx.Status(http.StatusNoContent)
 }

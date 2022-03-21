@@ -214,6 +214,7 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 		RestaurantAddress:  "Some address",
 		Picked:             true,
 		CourierName:        "Sam",
+		CourierSurname:     "",
 		CourierPhoneNumber: "1234567",
 	}
 
@@ -235,7 +236,7 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 				s.EXPECT().GetDetailedOrderById(1).Return(ord, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","picked":true,"name":"Sam","phone_number":"1234567"}`,
+			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","picked":true,"name":"Sam","surname":"","phone_number":"1234567"}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -265,7 +266,7 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 	}
 }
 
-func TestHandler_GetAllCompletedOrdersOfCourierService(t *testing.T) {
+func TestHandler_GetCompletedOrdersOfCourierService(t *testing.T) {
 	type mockBehavior func(s *mock_service.MockOrderApp, order []dao.Order)
 	var orders []dao.Order
 	ord := dao.Order{
@@ -306,7 +307,7 @@ func TestHandler_GetAllCompletedOrdersOfCourierService(t *testing.T) {
 				},
 			},
 			mockBehavior: func(s *mock_service.MockOrderApp, order []dao.Order) {
-				s.EXPECT().GetAllOrdersOfCourierService(1, 1, 1).Return(orders, nil)
+				s.EXPECT().GetCompletedOrdersOfCourierService(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"completed","order_date":"2022-02-02","restaurant_address":"","picked":false}]}`,
@@ -325,7 +326,7 @@ func TestHandler_GetAllCompletedOrdersOfCourierService(t *testing.T) {
 
 			r := gin.New()
 
-			r.GET("/orders/service/completed", handler.GetAllOrdersOfCourierService)
+			r.GET("/orders/service/completed", handler.GetCompletedOrdersOfCourierService)
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("GET", "/orders/service/completed?limit=1&page=1&iddeliveryservice=1", bytes.NewBufferString(testCase.inputBody))
