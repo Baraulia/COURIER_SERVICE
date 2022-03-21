@@ -1,11 +1,18 @@
 {
     "swagger": "2.0",
     "info": {
+        "description": "Courier Service for Food Delivery Application",
+        "title": "Courier Service",
         "contact": {}
     },
     "paths": {
         "/courier": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "post new courier",
                 "consumes": [
                     "application/json"
@@ -52,6 +59,11 @@
         },
         "/courier/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get courier by ID",
                 "consumes": [
                     "application/json"
@@ -94,6 +106,11 @@
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "put courier status by courier ID",
                 "consumes": [
                     "application/json"
@@ -138,6 +155,11 @@
         },
         "/couriers": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get all couriers",
                 "consumes": [
                     "application/json"
@@ -173,6 +195,11 @@
         },
         "/couriers/photo": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "set photo to DO Spaces and it's way to DB",
                 "consumes": [
                     "image/jpeg"
@@ -215,6 +242,11 @@
         },
         "/deliveryservice": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of all delivery service",
                 "produces": [
                     "application/json"
@@ -245,6 +277,11 @@
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "create a Delivery Service",
                 "consumes": [
                     "application/json"
@@ -293,6 +330,11 @@
         },
         "/deliveryservice/logo": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "set logo to DO Spaces and it's way to DB",
                 "consumes": [
                     "image/jpeg"
@@ -335,6 +377,11 @@
         },
         "/deliveryservice/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get delivery service by id",
                 "produces": [
                     "application/json"
@@ -374,6 +421,11 @@
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "update delivery service information",
                 "consumes": [
                     "application/json"
@@ -419,6 +471,11 @@
         },
         "/order/detailed/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get detailed order by id",
                 "produces": [
                     "application/json"
@@ -460,6 +517,11 @@
         },
         "/order/status_change/{id}": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "put order status by order ID",
                 "consumes": [
                     "application/json"
@@ -513,6 +575,11 @@
         },
         "/order/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get orders by order ID",
                 "consumes": [
                     "application/json"
@@ -557,6 +624,11 @@
         },
         "/orders": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of all orders by courier service id",
                 "produces": [
                     "application/json"
@@ -612,6 +684,11 @@
         },
         "/orders/bymonth": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of completed orders by courier id sorted by month",
                 "produces": [
                     "application/json"
@@ -681,6 +758,11 @@
         },
         "/orders/completed": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of completed orders by courier id",
                 "produces": [
                     "application/json"
@@ -736,6 +818,11 @@
         },
         "/orders/manager": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of all orders by courier service id with custom status",
                 "produces": [
                     "application/json"
@@ -791,6 +878,11 @@
         },
         "/orders/service/completed": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of completed orders by courier service id",
                 "produces": [
                     "application/json"
@@ -852,6 +944,11 @@
         },
         "/orders/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get orders by courier ID",
                 "consumes": [
                     "application/json"
@@ -894,6 +991,11 @@
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "assign order to courier",
                 "consumes": [
                     "application/json"
@@ -1132,6 +1234,9 @@
                 "courier_name": {
                     "type": "string"
                 },
+                "deleted": {
+                    "type": "boolean"
+                },
                 "id_courier": {
                     "type": "integer"
                 },
@@ -1145,6 +1250,13 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

@@ -125,6 +125,8 @@ definitions:
     properties:
       courier_name:
         type: string
+      deleted:
+        type: boolean
       id_courier:
         type: integer
       phone_number:
@@ -136,6 +138,8 @@ definitions:
     type: object
 info:
   contact: {}
+  description: Courier Service for Food Delivery Application
+  title: Courier Service
 paths:
   /courier:
     post:
@@ -164,6 +168,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: postCourier
       tags:
       - Courier
@@ -193,6 +199,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: getCourier
       tags:
       - Courier
@@ -221,6 +229,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: changeCourierStatus
       tags:
       - Courier
@@ -244,6 +254,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: getCouriers
       tags:
       - Couriers
@@ -272,6 +284,8 @@ paths:
           description: Bad Request
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: SaveCourierPhoto
       tags:
       - Couriers
@@ -293,6 +307,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetAllDeliveryServices
       tags:
       - DeliveryService
@@ -324,6 +340,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: CreateDeliveryService
       tags:
       - DeliveryService
@@ -351,6 +369,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetDeliveryServiceById
       tags:
       - DeliveryService
@@ -380,6 +400,8 @@ paths:
           description: Bad Request
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: UpdateDeliveryService
       tags:
       - DeliveryService
@@ -408,6 +430,8 @@ paths:
           description: Bad Request
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: SaveLogoController
       tags:
       - DeliveryService
@@ -437,6 +461,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: getOrder
       tags:
       - Order
@@ -464,6 +490,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetDetailedOrderById
       tags:
       - order
@@ -499,6 +527,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: putOrderStatus
       tags:
       - OrderStatusChange
@@ -536,6 +566,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetAllOrdersOfCourierService
       tags:
       - order
@@ -565,6 +597,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: getOrder
       tags:
       - Orders
@@ -594,6 +628,8 @@ paths:
           description: Bad Request
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: UpdateOrder
       tags:
       - order
@@ -641,6 +677,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetCourierCompletedOrdersByMonth
       tags:
       - order
@@ -678,6 +716,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetCourierCompletedOrders
       tags:
       - order
@@ -715,6 +755,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetOrdersOfCourierServiceForManager
       tags:
       - order
@@ -756,7 +798,14 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetCompletedOrdersOfCourierService
       tags:
       - order
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

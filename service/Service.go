@@ -2,6 +2,7 @@ package service
 
 import (
 	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
+	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -36,6 +37,9 @@ type AllProjectApp interface {
 	GetAllDeliveryServices() ([]dao.DeliveryService, error)
 	UpdateDeliveryService(service dao.DeliveryService) error
 	SaveLogoFile(cover []byte, id int) error
+
+	ParseToken(token string) (*courierProto.UserRole, error)
+	CheckRoleRights(neededPerms []string, neededRole1 string, neededRole2 string, givenPerms string, givenRole string) error
 }
 
 type Service struct {
