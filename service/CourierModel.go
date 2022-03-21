@@ -1,21 +1,26 @@
 package service
 
 import (
-	"bytes"
+	"context"
 	"errors"
 	"fmt"
+	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
+	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
-	"github.com/minio/minio-go"
 	"log"
-	"strconv"
+	"strings"
 )
 
 type CourierService struct {
-	repo dao.Repository
+	repo    dao.Repository
+	grpcCli *grpcClient.GRPCClient
 }
 
-func NewCourierService(repo dao.Repository) *CourierService {
-	return &CourierService{repo: repo}
+func NewProjectService(repo dao.Repository, grpcCli *grpcClient.GRPCClient) *CourierService {
+	return &CourierService{
+		repo:    repo,
+		grpcCli: grpcCli,
+	}
 }
 
 func (s *CourierService) GetCouriers() ([]dao.SmallInfo, error) {
@@ -43,7 +48,6 @@ func (s *CourierService) GetCourier(id int) (dao.SmallInfo, error) {
 }
 
 func (s *CourierService) SaveCourier(courier *dao.Courier) (*dao.Courier, error) {
-
 	err := s.repo.SaveCourierInDB(courier)
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
@@ -59,28 +63,27 @@ func (s *CourierService) UpdateCourier(id uint16) (uint16, error) {
 	return courierId, nil
 }
 
-func (s *CourierService) SaveCourierPhoto(cover []byte, id int) error {
-	client, err := InitClientDO()
-	if err != nil {
-		log.Println(err)
-		return err
-	}
+func (s *CourierService) ParseToken(token string) (*courierProto.UserRole, error) {
+	return s.grpcCli.GetUserWithRights(context.Background(), &courierProto.AccessToken{AccessToken: token})
+}
 
-	_, err1 := client.PutObject("storage-like-s3", fmt.Sprintf("courier_photo/%s", strconv.Itoa(id)),
-		bytes.NewReader(cover), int64(len(cover)), minio.PutObjectOptions{ContentType: "image/jpeg", UserMetadata: map[string]string{"x-amz-acl": "public-read"}})
-	if err1 != nil {
-		log.Println(err1)
-		return err1
+func (s *CourierService) CheckRoleRights(neededPerms []string, neededRole1 string, neededRole2 string, givenPerms string, givenRole string) error {
+	if neededPerms != nil {
+		ok := true
+		for _, perm := range neededPerms {
+			if !strings.Contains(givenPerms, perm) {
+				ok = false
+				return fmt.Errorf("not enough rights")
+			} else {
+				continue
+			}
+		}
+		if ok == true {
+			return nil
+		}
 	}
-	var courier dao.Courier
-	courier.Id = uint16(id)
-	courier.Photo = "https://storage-like-s3.fra1.digitaloceanspaces.com/courier_photo/" + strconv.Itoa(id)
-
-	if err := s.repo.UpdateCourierDB(courier); err != nil {
-		log.Println(err)
-		return fmt.Errorf("Error in DeliveryService: %s", err)
+	if neededRole1 != givenRole || neededRole2 != givenRole {
+		return fmt.Errorf("not enough rights")
 	}
-
-	log.Println("Uploaded logo with link https://storage-like-s3.fra1.digitaloceanspaces.com/courier_photo/" + strconv.Itoa(id))
 	return nil
 }

@@ -12,6 +12,7 @@ import (
 )
 
 // @Summary  CreateDeliveryService
+// @Security ApiKeyAuth
 // @Tags DeliveryService
 // @Description create a Delivery Service
 // @ID CreateDeliveryService
@@ -23,6 +24,12 @@ import (
 // @Failure 500 {string} string
 // @Router /deliveryservice [post]
 func (h *Handler) CreateDeliveryService(ctx *gin.Context) {
+	necessaryRole1, necessaryRole2 := "Courier manager", "Superadmin"
+	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler CreateDeliveryService:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	var service dao.DeliveryService
 	if err := ctx.ShouldBindJSON(&service); err != nil {
 		log.Println(err)
@@ -34,7 +41,7 @@ func (h *Handler) CreateDeliveryService(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "empty fields"})
 		return
 	}
-	idService, err := h.services.CreateDeliveryService(service)
+	idService, err := h.services.AllProjectApp.CreateDeliveryService(service)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
@@ -43,6 +50,7 @@ func (h *Handler) CreateDeliveryService(ctx *gin.Context) {
 }
 
 // @Summary GetDeliveryServiceById
+// @Security ApiKeyAuth
 // @Description get delivery service by id
 // @Tags DeliveryService
 // @Produce json
@@ -52,13 +60,19 @@ func (h *Handler) CreateDeliveryService(ctx *gin.Context) {
 // @Failure 500 {string} string
 // @Router /deliveryservice/{id} [get]
 func (h *Handler) GetDeliveryServiceById(ctx *gin.Context) {
+	necessaryRole1, necessaryRole2 := "Courier manager", "Superadmin"
+	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler GetDeliveryServiceById:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
 		return
 	}
 
-	service, err := h.services.DeliveryServiceApp.GetDeliveryServiceById(id)
+	service, err := h.services.AllProjectApp.GetDeliveryServiceById(id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
@@ -71,6 +85,7 @@ type listDeliveryServices struct {
 }
 
 // @Summary GetAllDeliveryServices
+// @Security ApiKeyAuth
 // @Description get list of all delivery service
 // @Tags DeliveryService
 // @Produce json
@@ -79,7 +94,13 @@ type listDeliveryServices struct {
 // @Failure 500 {string} string
 // @Router /deliveryservice [get]
 func (h *Handler) GetAllDeliveryServices(ctx *gin.Context) {
-	services, err := h.services.DeliveryServiceApp.GetAllDeliveryServices()
+	necessaryRole1, necessaryRole2 := "Courier manager", "Superadmin"
+	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler GetAllDeliveryServices:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
+	services, err := h.services.AllProjectApp.GetAllDeliveryServices()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
@@ -88,6 +109,7 @@ func (h *Handler) GetAllDeliveryServices(ctx *gin.Context) {
 }
 
 // @Summary UpdateDeliveryService
+// @Security ApiKeyAuth
 // @Tags DeliveryService
 // @Description update delivery service information
 // @ID UpdateDeliveryService
@@ -99,6 +121,12 @@ func (h *Handler) GetAllDeliveryServices(ctx *gin.Context) {
 // @Failure 400 {string} string
 // @Router /deliveryservice/{id} [put]
 func (h *Handler) UpdateDeliveryService(ctx *gin.Context) {
+	necessaryRole1, necessaryRole2 := "Courier manager", "Superadmin"
+	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler UpdateDeliveryService:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		log.Println(err)
@@ -112,7 +140,7 @@ func (h *Handler) UpdateDeliveryService(ctx *gin.Context) {
 		return
 	}
 	service.Id = id
-	if err := h.services.UpdateDeliveryService(service); err != nil {
+	if err := h.services.AllProjectApp.UpdateDeliveryService(service); err != nil {
 		log.Println(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return
@@ -121,6 +149,7 @@ func (h *Handler) UpdateDeliveryService(ctx *gin.Context) {
 }
 
 // @Summary SaveLogoController
+// @Security ApiKeyAuth
 // @Description set logo to DO Spaces and it's way to DB
 // @Tags DeliveryService
 // @Accept  image/jpeg
@@ -131,6 +160,12 @@ func (h *Handler) UpdateDeliveryService(ctx *gin.Context) {
 // @Failure 400 {string} string
 // @Router /deliveryservice/logo [post]
 func (h *Handler) SaveLogoController(ctx *gin.Context) {
+	necessaryRole1, necessaryRole2 := "Courier manager", "Superadmin"
+	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
+		log.Print("Handler SaveLogoController:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	id, er := strconv.Atoi(ctx.Query("id"))
 	if er != nil || id <= 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
@@ -144,7 +179,7 @@ func (h *Handler) SaveLogoController(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
 	}
-	if err := h.services.SaveLogoFile(cover, id); err != nil {
+	if err := h.services.AllProjectApp.SaveLogoFile(cover, id); err != nil {
 		log.Println(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
 		return

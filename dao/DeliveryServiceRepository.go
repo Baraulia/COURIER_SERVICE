@@ -15,15 +15,14 @@ func NewDeliveryServicePostgres(db *sql.DB) *DeliveryServicePostgres {
 }
 
 type DeliveryService struct {
-	Id            int    `json:"id"`
-	Name          string `json:"name"`
-	Email         string `json:"email"`
-	Photo         string `json:"photo"`
-	Description   string `json:"description"`
-	PhoneNumber   string `json:"phone_number"`
-	ManagerId     int    `json:"manager_id"`
-	Status        string `json:"status"`
-	NumOfCouriers int
+	Id          int    `json:"id"`
+	Name        string `json:"name"`
+	Email       string `json:"email"`
+	Photo       string `json:"photo"`
+	Description string `json:"description"`
+	PhoneNumber string `json:"phone_number"`
+	ManagerId   int    `json:"manager_id"`
+	Status      string `json:"status"`
 }
 
 func (r *DeliveryServicePostgres) SaveDeliveryServiceInDB(service *DeliveryService) (int, error) {
@@ -41,7 +40,7 @@ func (r *DeliveryServicePostgres) SaveDeliveryServiceInDB(service *DeliveryServi
 
 func (r *DeliveryServicePostgres) GetDeliveryServiceByIdFromDB(Id int) (*DeliveryService, error) {
 	var service DeliveryService
-	res, err := r.db.Query("SELECT id, name,email,photo,description,phone_number,manager_id,status FROM delivery_service Where id=$1", Id)
+	res, err := r.db.Query(fmt.Sprintf("SELECT id, name,email,photo,description,phone_number,manager_id,status FROM delivery_service Where id=%d", Id))
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -57,11 +56,10 @@ func (r *DeliveryServicePostgres) GetDeliveryServiceByIdFromDB(Id int) (*Deliver
 	return &service, nil
 }
 
-//SELECT count(*) FROM couriers AS co JOIN delivery_service AS d ON co.delivery_service_id=d.id WHERE d.id=2
 func (r *DeliveryServicePostgres) GetAllDeliveryServicesFromDB() ([]DeliveryService, error) {
 	var services []DeliveryService
 	res, err := r.db.Query(`SELECT id, name, email, photo, description, phone_number, manager_id, status
-                                  FROM delivery_service ORDER BY id`)
+                                  FROM delivery_service`)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -76,7 +74,6 @@ func (r *DeliveryServicePostgres) GetAllDeliveryServicesFromDB() ([]DeliveryServ
 		}
 		services = append(services, service)
 	}
-
 	return services, nil
 }
 
@@ -132,21 +129,4 @@ func (r *DeliveryServicePostgres) UpdateDeliveryServiceInDB(service DeliveryServ
 		return err
 	}
 	return nil
-}
-
-func (r *DeliveryServicePostgres) GetNumberCouriersByServiceFromDB(id int) (int, error) {
-
-	selectValue := `SELECT count(*) FROM couriers AS co JOIN delivery_service AS d ON co.delivery_service_id=d.id WHERE d.id=$1`
-	get, err := r.db.Query(selectValue, id)
-
-	if err != nil {
-		log.Println("Error of getting list of couriers :" + err.Error())
-		return 0, err
-	}
-
-	var numOfCouriers int
-	for get.Next() {
-		err = get.Scan(&numOfCouriers)
-	}
-	return numOfCouriers, nil
 }

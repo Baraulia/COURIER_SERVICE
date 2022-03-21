@@ -10,16 +10,7 @@ import (
 	"strconv"
 )
 
-type DeliveryService struct {
-	repo dao.Repository
-}
-
-func NewDeliveryService(repo dao.Repository) *DeliveryService {
-	return &DeliveryService{
-		repo: repo,
-	}
-}
-func (s *DeliveryService) CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error) {
+func (s *CourierService) CreateDeliveryService(DeliveryService dao.DeliveryService) (int, error) {
 	id, err := s.repo.SaveDeliveryServiceInDB(&DeliveryService)
 	if err != nil {
 		log.Println(err)
@@ -28,14 +19,9 @@ func (s *DeliveryService) CreateDeliveryService(DeliveryService dao.DeliveryServ
 	return id, nil
 }
 
-func (s *DeliveryService) GetDeliveryServiceById(Id int) (*dao.DeliveryService, error) {
+func (s *CourierService) GetDeliveryServiceById(Id int) (*dao.DeliveryService, error) {
 	var service *dao.DeliveryService
 	service, err := s.repo.GetDeliveryServiceByIdFromDB(Id)
-	if err != nil {
-		log.Println(err)
-		return nil, fmt.Errorf("Error in DeliveryService: %s", err)
-	}
-	service.NumOfCouriers, err = s.repo.GetNumberCouriersByServiceFromDB(Id)
 	if err != nil {
 		log.Println(err)
 		return nil, fmt.Errorf("Error in DeliveryService: %s", err)
@@ -48,38 +34,24 @@ func (s *DeliveryService) GetDeliveryServiceById(Id int) (*dao.DeliveryService, 
 	return service, nil
 }
 
-func (s *DeliveryService) GetAllDeliveryServices() ([]dao.DeliveryService, error) {
-	var Services = []dao.DeliveryService{}
-	Services, err := s.repo.GetAllDeliveryServicesFromDB()
+func (s *CourierService) GetAllDeliveryServices() ([]dao.DeliveryService, error) {
+	var services = []dao.DeliveryService{}
+	services, err := s.repo.GetAllDeliveryServicesFromDB()
 	if err != nil {
 		log.Println(err)
 		return []dao.DeliveryService{}, fmt.Errorf("Error in DeliveryService: %s", err)
 	}
-	Couriers, err := s.repo.GetCouriersWithServiceFromDB()
-	if err != nil {
-		log.Println(err)
-		return []dao.DeliveryService{}, fmt.Errorf("Error in DeliveryService: %s", err)
-	}
-	for i, service := range Services {
-		count := 0
-		for _, courier := range Couriers {
-			if service.Id == int(courier.DeliveryServiceId) {
-				count++
-			}
-		}
-		Services[i].NumOfCouriers = count
-	}
-	return Services, nil
+	return services, nil
 }
 
-func (s *DeliveryService) UpdateDeliveryService(service dao.DeliveryService) error {
+func (s *CourierService) UpdateDeliveryService(service dao.DeliveryService) error {
 	if err := s.repo.UpdateDeliveryServiceInDB(service); err != nil {
 		log.Println(err)
 		return fmt.Errorf("Error in DeliveryService: %s", err)
 	}
 	return nil
 }
-func (s *DeliveryService) SaveLogoFile(cover []byte, id int) error {
+func (s *CourierService) SaveLogoFile(cover []byte, id int) error {
 	client, err := InitClientDO()
 	if err != nil {
 		log.Println(err)

@@ -6,13 +6,6 @@ definitions:
           $ref: '#/definitions/dao.DeliveryService'
         type: array
     type: object
-  controller.listDetailedOrders:
-    properties:
-      data:
-        items:
-          $ref: '#/definitions/dao.DetailedOrder'
-        type: array
-    type: object
   controller.listOrders:
     properties:
       data:
@@ -64,8 +57,6 @@ definitions:
         type: integer
       name:
         type: string
-      numOfCouriers:
-        type: integer
       phone_number:
         type: string
       photo:
@@ -97,8 +88,6 @@ definitions:
         type: string
       status:
         type: string
-      surname:
-        type: string
     type: object
   dao.Order:
     properties:
@@ -125,6 +114,8 @@ definitions:
     properties:
       courier_name:
         type: string
+      deleted:
+        type: boolean
       id_courier:
         type: integer
       phone_number:
@@ -136,6 +127,8 @@ definitions:
     type: object
 info:
   contact: {}
+  description: Courier Service for Food Delivery Application
+  title: Courier Service
 paths:
   /courier:
     post:
@@ -164,6 +157,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: postCourier
       tags:
       - Courier
@@ -193,6 +188,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: getCourier
       tags:
       - Courier
@@ -221,6 +218,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: changeCourierStatus
       tags:
       - Courier
@@ -244,35 +243,9 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: getCouriers
-      tags:
-      - Couriers
-  /couriers/photo:
-    post:
-      consumes:
-      - image/jpeg
-      description: set photo to DO Spaces and it's way to DB
-      parameters:
-      - description: id courier
-        in: query
-        name: id
-        required: true
-        type: integer
-      - description: logo image
-        in: formData
-        name: logo
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: ""
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-      summary: SaveCourierPhoto
       tags:
       - Couriers
   /deliveryservice:
@@ -293,6 +266,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetAllDeliveryServices
       tags:
       - DeliveryService
@@ -324,6 +299,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: CreateDeliveryService
       tags:
       - DeliveryService
@@ -351,6 +328,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetDeliveryServiceById
       tags:
       - DeliveryService
@@ -380,6 +359,8 @@ paths:
           description: Bad Request
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: UpdateDeliveryService
       tags:
       - DeliveryService
@@ -408,6 +389,8 @@ paths:
           description: Bad Request
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: SaveLogoController
       tags:
       - DeliveryService
@@ -437,6 +420,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: getOrder
       tags:
       - Order
@@ -464,6 +449,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetDetailedOrderById
       tags:
       - order
@@ -499,6 +486,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: putOrderStatus
       tags:
       - OrderStatusChange
@@ -527,7 +516,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.listDetailedOrders'
+            $ref: '#/definitions/controller.listShortOrders'
         "400":
           description: Bad Request
           schema:
@@ -536,6 +525,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetAllOrdersOfCourierService
       tags:
       - order
@@ -565,6 +556,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: getOrder
       tags:
       - Orders
@@ -594,6 +587,8 @@ paths:
           description: Bad Request
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: UpdateOrder
       tags:
       - order
@@ -641,6 +636,8 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetCourierCompletedOrdersByMonth
       tags:
       - order
@@ -678,44 +675,9 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetCourierCompletedOrders
-      tags:
-      - order
-  /orders/manager:
-    get:
-      description: get list of all orders by courier service id with custom status
-      parameters:
-      - description: page
-        in: query
-        name: page
-        required: true
-        type: integer
-      - description: limit
-        in: query
-        name: limit
-        required: true
-        type: integer
-      - description: iddeliveryservice
-        in: query
-        name: iddeliveryservice
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controller.listDetailedOrders'
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: GetOrdersOfCourierServiceForManager
       tags:
       - order
   /orders/service/completed:
@@ -756,7 +718,14 @@ paths:
           description: Internal Server Error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: GetCompletedOrdersOfCourierService
       tags:
       - order
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

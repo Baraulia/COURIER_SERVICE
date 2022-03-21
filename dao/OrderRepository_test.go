@@ -71,6 +71,66 @@ func TestRepository_GetCourierCompletedOrdersWithPage_fromDB(t *testing.T) {
 		})
 	}
 }
+
+func TestRepository_GetAllOrdersOfCourierServiceWithPage_fromDB(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	r := NewRepository(db)
+
+	testTable := []struct {
+		name                string
+		mock                func(delivery_service_id, limit, page int)
+		delivery_service_id int
+		limit               int
+		page                int
+		expectedOrder       []Order
+	}{
+		{
+			name: "OK",
+			mock: func(delivery_service_id, limit, page int) {
+				mock.ExpectBegin()
+				rows := sqlmock.NewRows([]string{"courier_id", "id", "delivery_time", "status", "customer_address"}).
+					AddRow(1, 1, time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC), "completed", "address")
+
+				mock.ExpectQuery(`SELECT courier_id,id,delivery_time,status,customer_address FROM delivery WHERE (.+)`).
+					WillReturnRows(rows)
+
+				rows2 := sqlmock.NewRows([]string{"courier_id"}).
+					AddRow(1)
+				mock.ExpectQuery(`SELECT courier_id FROM delivery WHERE (.+)`).
+					WillReturnRows(rows2)
+
+				mock.ExpectCommit()
+			},
+			delivery_service_id: 1,
+			limit:               1,
+			page:                1,
+			expectedOrder: []Order{
+				{
+					Id:              1,
+					IdCourier:       1,
+					DeliveryTime:    time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
+					CustomerAddress: "address",
+					Status:          "completed",
+				},
+			},
+		},
+	}
+
+	for _, tt := range testTable {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mock(tt.delivery_service_id, tt.limit, tt.page)
+			got, _ := r.GetAllOrdersOfCourierServiceWithPageFromDB(tt.delivery_service_id, tt.limit, tt.page)
+
+			assert.Equal(t, tt.expectedOrder, got)
+			assert.NoError(t, mock.ExpectationsWereMet())
+		})
+	}
+}
+
 func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -129,7 +189,7 @@ func TestRepository_GetCourierCompletedOrdersByMouthWithPage_fromDB(t *testing.T
 	for _, tt := range testTable {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock(tt.courier_id, tt.limit, tt.page)
-			got, _ := r.GetCourierCompletedOrdersByMouthWithPageFromDB(tt.courier_id, tt.limit, tt.page, tt.month, tt.year)
+			got, _ := r.GetCourierCompletedOrdersByMouthWithPage_fromDB(tt.courier_id, tt.limit, tt.page, tt.month, tt.year)
 
 			assert.Equal(t, tt.expectedOrder, got)
 			assert.NoError(t, mock.ExpectationsWereMet())
