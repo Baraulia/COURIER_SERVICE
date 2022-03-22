@@ -245,6 +245,21 @@ func (mr *MockAllProjectAppMockRecorder) GetCouriers() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCouriers", reflect.TypeOf((*MockAllProjectApp)(nil).GetCouriers))
 }
 
+// GetCouriersOfCourierService mocks base method.
+func (m *MockAllProjectApp) GetCouriersOfCourierService(limit, page, id int) ([]dao.Courier, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCouriersOfCourierService", limit, page, id)
+	ret0, _ := ret[0].([]dao.Courier)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCouriersOfCourierService indicates an expected call of GetCouriersOfCourierService.
+func (mr *MockAllProjectAppMockRecorder) GetCouriersOfCourierService(limit, page, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCouriersOfCourierService", reflect.TypeOf((*MockAllProjectApp)(nil).GetCouriersOfCourierService), limit, page, id)
+}
+
 // GetDeliveryServiceById mocks base method.
 func (m *MockAllProjectApp) GetDeliveryServiceById(Id int) (*dao.DeliveryService, error) {
 	m.ctrl.T.Helper()

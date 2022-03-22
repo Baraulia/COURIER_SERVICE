@@ -192,17 +192,18 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 
 	var orders []dao.DetailedOrder
 	ord := dao.DetailedOrder{
-		IdDeliveryService:  1,
-		IdOrder:            1,
-		IdCourier:          1,
-		DeliveryTime:       time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
-		CustomerAddress:    "Some address",
-		Status:             "ready to delivery",
-		OrderDate:          "11.11.2022",
-		CourierPhoneNumber: "",
-		CourierName:        "",
-		CourierSurname:     "",
-		Picked:             false,
+		IdDeliveryService:     1,
+		IdOrder:               1,
+		IdCourier:             1,
+		DeliveryTime:          time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
+		CustomerAddress:       "Some address",
+		Status:                "ready to delivery",
+		OrderDate:             "11.11.2022",
+		CourierPhoneNumber:    "",
+		CourierName:           "",
+		CourierSurname:        "",
+		OrderIdFromRestaurant: 0,
+		Picked:                false,
 	}
 	orders = append(orders, ord)
 
@@ -245,7 +246,7 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 				s.EXPECT().GetCourierCompletedOrders(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","surname":"","phone_number":""}]}`,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","surname":"","phone_number":"","id_from_restaurant":0}]}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -313,15 +314,16 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}}`,
 			inputOrder: []dao.DetailedOrder{
 				{
-					IdDeliveryService: 1,
-					IdOrder:           1,
-					IdCourier:         1,
-					DeliveryTime:      time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
-					CustomerAddress:   "Some address",
-					Status:            "ready to delivery",
-					OrderDate:         "11.11.2022",
-					RestaurantAddress: "",
-					Picked:            false,
+					IdDeliveryService:     1,
+					IdOrder:               1,
+					IdCourier:             1,
+					DeliveryTime:          time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
+					CustomerAddress:       "Some address",
+					Status:                "ready to delivery",
+					OrderDate:             "11.11.2022",
+					RestaurantAddress:     "",
+					OrderIdFromRestaurant: 0,
+					Picked:                false,
 				},
 			},
 			inputPerms: "",
@@ -341,7 +343,7 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 				s.EXPECT().GetAllOrdersOfCourierService(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","surname":"","phone_number":""}]}`,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","surname":"","phone_number":"","id_from_restaurant":0}]}`,
 		},
 	}
 	for _, testCase := range testTable {
