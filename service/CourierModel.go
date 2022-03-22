@@ -111,10 +111,8 @@ func (s *CourierService) CheckRoleRights(neededPerms []string, neededRole1 strin
 			return nil
 		}
 	}
-	if neededRole1 != givenRole {
-		return fmt.Errorf("not enough rightss")
-	} else if neededRole2 != givenRole {
-		return fmt.Errorf("not enough rightssss")
+	if givenRole != neededRole1 || givenRole != neededRole2 {
+		return fmt.Errorf("not enough rights")
 	}
 	return nil
 }
