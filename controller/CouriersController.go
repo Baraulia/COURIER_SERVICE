@@ -139,3 +139,44 @@ func (h *Handler) SaveCourierPhoto(ctx *gin.Context) {
 	}
 	ctx.Status(http.StatusNoContent)
 }
+
+type listCouriers struct {
+	Data []dao.Courier `json:"data"`
+}
+
+// @Summary GetCouriersOfCourierService
+// @Description get list of all couriers by courier service id
+// @Tags order
+// @Produce json
+// @Param page query int true "page"
+// @Param limit query int true "limit"
+// @Param iddeliveryservice query int true "iddeliveryservice"
+// @Success 200 {object} listCouriers
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /orders [get]
+func (h *Handler) GetCouriersOfCourierService(ctx *gin.Context) {
+	page, er := strconv.Atoi(ctx.Query("page"))
+	if er != nil || page == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
+		return
+	}
+	limit, er1 := strconv.Atoi(ctx.Query("limit"))
+	if er1 != nil || limit == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "limit query param is wrong. Expected an integer greater than 0"})
+		return
+	}
+	idService, er := strconv.Atoi(ctx.Query("iddeliveryservice"))
+	if er != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
+		return
+	}
+
+	Couriers, err := h.services.GetCouriersOfCourierService(limit, page, idService)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	ctx.JSON(http.StatusOK, listCouriers{Data: Couriers})
+
+}

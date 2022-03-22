@@ -14,6 +14,7 @@ import (
 	"syscall"
 )
 
+/*
 // @title Courier Service
 // @description Courier Service for Food Delivery Application
 func main() {
@@ -32,6 +33,44 @@ func main() {
 	services := service.NewService(repository)
 	handlers := controller.NewHandler(services)
 	port := os.Getenv("API_SERVER_PORT")
+
+	serv := new(server.Server)
+
+	go func() {
+		err := serv.Run(port, handlers.InitRoutesGin())
+		if err != nil {
+			log.Fatalf("Error occured while running http server: %s", err.Error())
+		}
+	}()
+	go func() {
+		grpcServer.NewGRPCServer(services)
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+	if err := serv.Shutdown(context.Background()); err != nil {
+		log.Fatalf("Error occured while shutting down http server: %s", err.Error())
+	}
+
+}*/
+
+func main() {
+	log.Println("Start...")
+	database, err := dao.NewPostgresDB(dao.PostgresDB{
+		Host:     "159.223.1.135",
+		Port:     "5434",
+		User:     "courierteam1",
+		Password: "qwerty",
+		DBName:   "courier_db",
+		SSLMode:  "disable"})
+	if err != nil {
+		log.Fatal("failed to initialize dao:", err.Error())
+	}
+	repository := dao.NewRepository(database)
+	services := service.NewService(repository)
+	handlers := controller.NewHandler(services)
+	port := "80810"
 
 	serv := new(server.Server)
 
