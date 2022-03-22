@@ -1,4 +1,11 @@
 definitions:
+  controller.listCouriers:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dao.Courier'
+        type: array
+    type: object
   controller.listDeliveryServices:
     properties:
       data:
@@ -125,6 +132,8 @@ definitions:
     properties:
       courier_name:
         type: string
+      deleted:
+        type: boolean
       id_courier:
         type: integer
       phone_number:
@@ -273,6 +282,43 @@ paths:
           schema:
             type: string
       summary: SaveCourierPhoto
+      tags:
+      - Couriers
+  /couriers/service:
+    get:
+      description: get list of all couriers by courier service id
+      parameters:
+      - description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: iddeliveryservice
+        in: query
+        name: iddeliveryservice
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.listCouriers'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetCouriersOfCourierService
       tags:
       - Couriers
   /deliveryservice:

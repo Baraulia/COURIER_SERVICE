@@ -146,7 +146,7 @@ type listCouriers struct {
 
 // @Summary GetCouriersOfCourierService
 // @Description get list of all couriers by courier service id
-// @Tags order
+// @Tags Couriers
 // @Produce json
 // @Param page query int true "page"
 // @Param limit query int true "limit"
@@ -154,7 +154,7 @@ type listCouriers struct {
 // @Success 200 {object} listCouriers
 // @Failure 400 {string} string
 // @Failure 500 {string} string
-// @Router /orders [get]
+// @Router /couriers/service [get]
 func (h *Handler) GetCouriersOfCourierService(ctx *gin.Context) {
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page == 0 {

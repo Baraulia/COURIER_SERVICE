@@ -225,6 +225,61 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "/couriers/service": {
+            "get": {
+                "description": "get list of all couriers by courier service id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Couriers"
+                ],
+                "summary": "GetCouriersOfCourierService",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "iddeliveryservice",
+                        "name": "iddeliveryservice",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.listCouriers"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/deliveryservice": {
             "get": {
                 "description": "get list of all delivery service",
@@ -951,6 +1006,17 @@ const docTemplate_swagger = `{
         }
     },
     "definitions": {
+        "controller.listCouriers": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.Courier"
+                    }
+                }
+            }
+        },
         "controller.listDeliveryServices": {
             "type": "object",
             "properties": {
@@ -1143,6 +1209,9 @@ const docTemplate_swagger = `{
             "properties": {
                 "courier_name": {
                     "type": "string"
+                },
+                "deleted": {
+                    "type": "boolean"
                 },
                 "id_courier": {
                     "type": "integer"

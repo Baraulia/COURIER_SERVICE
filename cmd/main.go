@@ -70,7 +70,7 @@ func main() {
 	repository := dao.NewRepository(database)
 	services := service.NewService(repository)
 	handlers := controller.NewHandler(services)
-	port := "80810"
+	port := "8080"
 
 	serv := new(server.Server)
 
