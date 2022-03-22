@@ -92,7 +92,7 @@ func (s *CourierService) SaveCourierPhoto(cover []byte, id int) error {
 	return nil
 }
 
-func (s CourierService) ParseToken(token string) (*authProto.UserRole, error) {
+func (s *CourierService) ParseToken(token string) (*authProto.UserRole, error) {
 	return s.grpcCli.GetUserWithRights(context.Background(), &authProto.AccessToken{AccessToken: token})
 }
 
@@ -102,7 +102,7 @@ func (s *CourierService) CheckRoleRights(neededPerms []string, neededRole1 strin
 		for _, perm := range neededPerms {
 			if !strings.Contains(givenPerms, perm) {
 				ok = false
-				return fmt.Errorf("not enough rights")
+				return fmt.Errorf("not enough perms")
 			} else {
 				continue
 			}
