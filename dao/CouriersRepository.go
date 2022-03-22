@@ -175,3 +175,38 @@ func (r *CourierPostgres) UpdateCourierDB(courier Courier) error {
 	}
 	return nil
 }
+
+func (r *CourierPostgres) GetCouriersOfCourierServiceFromDB(limit, page, idService int) ([]Courier, int) {
+	var Couriers []Courier
+	transaction, err := r.db.Begin()
+	if err != nil {
+		log.Println(err)
+	}
+	defer transaction.Commit()
+	//запрос!!!
+	res, err := transaction.Query("SELECT id_courier,name,surname,phone_number,email,rating,photo,deleted,delivery_service_id FROM couriers Where delivery_service_id=$1 ORDER BY surname LIMIT $2 OFFSET $3", idService, limit, limit*(page-1))
+	if err != nil {
+		log.Println(err)
+	}
+	for res.Next() {
+		var courier Courier
+		err = res.Scan(&courier.Id, &courier.CourierName, &courier.Surname, &courier.PhoneNumber, &courier.Email, &courier.Rating, &courier.Photo, &courier.Deleted, &courier.DeliveryServiceId)
+		if err != nil {
+			log.Println(err)
+		}
+		Couriers = append(Couriers, courier)
+	}
+
+	var length int
+	resl, err := transaction.Query("SELECT count(*) FROM couriers WHERE delivery_service_id=$1", idService)
+	if err != nil {
+		log.Println(err)
+	}
+	for resl.Next() {
+		err = resl.Scan(&length)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	return Couriers, length
+}
