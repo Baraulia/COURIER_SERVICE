@@ -10,6 +10,10 @@ import (
 	"strconv"
 )
 
+type delete struct {
+	Status bool `json:"status"`
+}
+
 // getCouriers godoc
 // @Summary getCouriers
 // @Description get all couriers
@@ -88,6 +92,7 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path int true "ID"
+// @Param input body bool true "status"
 // @Success 200 {object} int
 // @Failure 400 {string} string
 // @Failure 500 {string} err
@@ -95,11 +100,21 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 func (h *Handler) UpdateCourier(ctx *gin.Context) {
 	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
+
+	var txt delete
+	var status bool
+
+	if err := ctx.ShouldBindJSON(&txt); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+		return
+	}
+
+	status = txt.Status
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
 		return
 	}
-	courierId, err := h.services.CourierApp.UpdateCourier(uint16(id))
+	courierId, err := h.services.CourierApp.UpdateCourier(uint16(id), status)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"No such courier": err})
 		return

@@ -51,8 +51,17 @@ func (s *CourierService) SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 	return courier, nil
 }
 
-func (s *CourierService) UpdateCourier(id uint16) (uint16, error) {
-	courierId, err := s.repo.CourierRep.UpdateCourierInDB(id)
+func (s *CourierService) UpdateCourier(id uint16, status bool) (uint16, error) {
+	get, err := s.repo.GetCourierFromDB(int(id))
+	if (get == dao.SmallInfo{}) {
+		return 0, fmt.Errorf("Error in CourierService: %s", err)
+	}
+	if id == 0 {
+		err := errors.New("no id")
+		log.Println("id cannot be zero")
+		return 0, fmt.Errorf("Error in CourierService: %s", err)
+	}
+	courierId, err := s.repo.CourierRep.UpdateCourierInDB(id, status)
 	if err != nil {
 		return 0, fmt.Errorf("Error with database: %s", err)
 	}

@@ -92,10 +92,10 @@ func (r *CourierPostgres) GetCourierFromDB(id int) (SmallInfo, error) {
 	return cour, nil
 }
 
-func (r *CourierPostgres) UpdateCourierInDB(id uint16) (uint16, error) {
+func (r *CourierPostgres) UpdateCourierInDB(id uint16, status bool) (uint16, error) {
 
 	UpdateValue := `UPDATE couriers SET deleted = $1 WHERE id_courier = $2`
-	_, err := r.db.Exec(UpdateValue, "true", id)
+	_, err := r.db.Exec(UpdateValue, status, id)
 	if err != nil {
 		log.Println("Error with getting courier by id: " + err.Error())
 		return 0, fmt.Errorf("updateCourier: error while scanning:%w", err)
