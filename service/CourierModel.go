@@ -121,3 +121,15 @@ func (s *CourierService) CheckRights(neededPerms []string, givenPerms string) er
 	}
 	return nil
 }
+
+func (s *CourierService) GetCouriersOfCourierService(limit, page, idService int) ([]dao.Courier, error) {
+	var Couriers = []dao.Courier{}
+	Couriers, totalCount := s.repo.GetCouriersOfCourierServiceFromDB(limit, page, idService)
+	LimitOfPages := (totalCount / limit) + 1
+	if LimitOfPages < page {
+		err := errors.New("no page")
+		log.Println("no more pages")
+		return nil, fmt.Errorf("Error in OrderService: %s", err)
+	}
+	return Couriers, nil
+}

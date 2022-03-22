@@ -45,6 +45,7 @@ type CourierRep interface {
 	UpdateCourierInDB(id uint16) (uint16, error)
 	GetCouriersWithServiceFromDB() ([]Courier, error)
 	UpdateCourierDB(courier Courier) error
+	GetCouriersOfCourierServiceFromDB(limit, page, idService int) ([]Courier, int)
 }
 
 type DeliveryServiceRep interface {
