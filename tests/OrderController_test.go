@@ -204,18 +204,19 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 	type mockBehavior func(s *mock_service.MockOrderApp, order *dao.DetailedOrder)
 
 	ord := &dao.DetailedOrder{
-		IdDeliveryService:  1,
-		IdOrder:            1,
-		IdCourier:          1,
-		DeliveryTime:       time.Date(2022, 02, 19, 13, 34, 53, 93589, time.UTC),
-		CustomerAddress:    "Some address",
-		Status:             "ready to delivery",
-		OrderDate:          "2022-11-11",
-		RestaurantAddress:  "Some address",
-		Picked:             true,
-		CourierName:        "Sam",
-		CourierSurname:     "",
-		CourierPhoneNumber: "1234567",
+		IdDeliveryService:     1,
+		IdOrder:               1,
+		IdCourier:             1,
+		DeliveryTime:          time.Date(2022, 02, 19, 13, 34, 53, 93589, time.UTC),
+		CustomerAddress:       "Some address",
+		Status:                "ready to delivery",
+		OrderDate:             "2022-11-11",
+		RestaurantAddress:     "Some address",
+		Picked:                true,
+		CourierName:           "Sam",
+		CourierSurname:        "",
+		OrderIdFromRestaurant: 0,
+		CourierPhoneNumber:    "1234567",
 	}
 
 	testTable := []struct {
@@ -236,7 +237,7 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 				s.EXPECT().GetDetailedOrderById(1).Return(ord, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","picked":true,"name":"Sam","surname":"","phone_number":"1234567"}`,
+			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","picked":true,"name":"Sam","surname":"","phone_number":"1234567","id_from_restaurant":0}`,
 		},
 	}
 	for _, testCase := range testTable {

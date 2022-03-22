@@ -313,6 +313,21 @@ func (mr *MockCourierAppMockRecorder) GetCouriers() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCouriers", reflect.TypeOf((*MockCourierApp)(nil).GetCouriers))
 }
 
+// GetCouriersOfCourierService mocks base method.
+func (m *MockCourierApp) GetCouriersOfCourierService(limit, page, idService int) ([]dao.Courier, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCouriersOfCourierService", limit, page, idService)
+	ret0, _ := ret[0].([]dao.Courier)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCouriersOfCourierService indicates an expected call of GetCouriersOfCourierService.
+func (mr *MockCourierAppMockRecorder) GetCouriersOfCourierService(limit, page, idService interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCouriersOfCourierService", reflect.TypeOf((*MockCourierApp)(nil).GetCouriersOfCourierService), limit, page, idService)
+}
+
 // SaveCourier mocks base method.
 func (m *MockCourierApp) SaveCourier(courier *dao.Courier) (*dao.Courier, error) {
 	m.ctrl.T.Helper()
