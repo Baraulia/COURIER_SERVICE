@@ -192,9 +192,9 @@ type listCouriers struct {
 // @Failure 500 {string} string
 // @Router /orders [get]
 func (h *Handler) GetCouriersOfCourierService(ctx *gin.Context) {
-	necessaryRole1, necessaryRole2 := "Courier manager", "Superadmin"
-	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
-		log.Print("Handler GetAllOrdersOfCourierService:not enough rights")
+	necessaryRole := []string{"Superadmin", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetCouriersOfCourierService:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
