@@ -2,7 +2,8 @@ package service
 
 import (
 	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
-	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcClient"
+	authProto "github.com/Baraulia/COURIER_SERVICE/GRPCC"
+	"github.com/Baraulia/COURIER_SERVICE/GRPCC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -38,7 +39,7 @@ type AllProjectApp interface {
 	UpdateDeliveryService(service dao.DeliveryService) error
 	SaveLogoFile(cover []byte, id int) error
 
-	ParseToken(token string) (*courierProto.UserRole, error)
+	ParseToken(token string) (*authProto.UserRole, error)
 	CheckRoleRights(neededPerms []string, neededRole1 string, neededRole2 string, givenPerms string, givenRole string) error
 }
 

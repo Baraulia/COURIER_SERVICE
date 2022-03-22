@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcServer"
+	"github.com/Baraulia/COURIER_SERVICE/GRPCC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/controller"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/Baraulia/COURIER_SERVICE/server"

@@ -5,8 +5,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
-	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcClient"
+	authProto "github.com/Baraulia/COURIER_SERVICE/GRPCC"
+	"github.com/Baraulia/COURIER_SERVICE/GRPCC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/minio/minio-go"
 	"log"
@@ -92,8 +92,8 @@ func (s *CourierService) SaveCourierPhoto(cover []byte, id int) error {
 	return nil
 }
 
-func (s CourierService) ParseToken(token string) (*courierProto.UserRole, error) {
-	return s.grpcCli.GetUserWithRights(context.Background(), &courierProto.AccessToken{AccessToken: token})
+func (s CourierService) ParseToken(token string) (*authProto.UserRole, error) {
+	return s.grpcCli.GetUserWithRights(context.Background(), &authProto.AccessToken{AccessToken: token})
 }
 
 func (s *CourierService) CheckRoleRights(neededPerms []string, neededRole1 string, neededRole2 string, givenPerms string, givenRole string) error {

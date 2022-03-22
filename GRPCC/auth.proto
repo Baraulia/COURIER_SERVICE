@@ -1,9 +1,9 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
 
-option go_package = "GRPC/courierProto";
+option go_package = "GRPCC/authProto";
 
-package courier;
+package auth;
 
 service Auth {
   rpc GetUserWithRights(AccessToken) returns (UserRole) {}

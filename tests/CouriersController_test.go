@@ -2,7 +2,7 @@ package tests
 
 import (
 	"bytes"
-	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
+	authProto "github.com/Baraulia/COURIER_SERVICE/GRPCC"
 	"github.com/Baraulia/COURIER_SERVICE/controller"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/Baraulia/COURIER_SERVICE/service"
@@ -57,7 +57,7 @@ func TestHandler_GetCouriers(t *testing.T) {
 			inputRole:  "Courier manager",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
-				s.EXPECT().ParseToken(token).Return(&courierProto.UserRole{
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
 					UserId:      1,
 					Role:        "Courier manager",
 					Permissions: "",
@@ -142,7 +142,7 @@ func TestHandler_GetOneCourier(t *testing.T) {
 			inputRole:  "Courier manager",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
-				s.EXPECT().ParseToken(token).Return(&courierProto.UserRole{
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
 					UserId:      1,
 					Role:        "Courier manager",
 					Permissions: "",
@@ -232,7 +232,7 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 			inputRole:  "Courier",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
-				s.EXPECT().ParseToken(token).Return(&courierProto.UserRole{
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
 					UserId:      1,
 					Role:        "Courier",
 					Permissions: "",
@@ -328,7 +328,7 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 			inputRole:  "Courier",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
-				s.EXPECT().ParseToken(token).Return(&courierProto.UserRole{
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
 					UserId:      1,
 					Role:        "Courier",
 					Permissions: "",
@@ -424,7 +424,7 @@ func TestHandler_GetCourierCompletedOrdersByMonth(t *testing.T) {
 			inputRole:  "Courier",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
-				s.EXPECT().ParseToken(token).Return(&courierProto.UserRole{
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
 					UserId:      1,
 					Role:        "Courier",
 					Permissions: "",

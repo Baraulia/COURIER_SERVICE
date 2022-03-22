@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	courierProto "github.com/Baraulia/COURIER_SERVICE/GRPC"
+	authProto "github.com/Baraulia/COURIER_SERVICE/GRPCC"
 	dao "github.com/Baraulia/COURIER_SERVICE/dao"
 	gomock "github.com/golang/mock/gomock"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -350,10 +351,10 @@ func (mr *MockAllProjectAppMockRecorder) GetServices(in interface{}) *gomock.Cal
 }
 
 // ParseToken mocks base method.
-func (m *MockAllProjectApp) ParseToken(token string) (*courierProto.UserRole, error) {
+func (m *MockAllProjectApp) ParseToken(token string) (*authProto.UserRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ParseToken", token)
-	ret0, _ := ret[0].(*courierProto.UserRole)
+	ret0, _ := ret[0].(*authProto.UserRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
