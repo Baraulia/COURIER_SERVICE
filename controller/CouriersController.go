@@ -11,7 +11,7 @@ import (
 )
 
 type delete struct {
-	Status bool `json:"status"`
+	Status bool `json:"deleted"`
 }
 
 // getCouriers godoc
@@ -92,7 +92,7 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path int true "ID"
-// @Param input body bool true "status"
+// @Param input body bool true "deleted"
 // @Success 200 {object} int
 // @Failure 400 {string} string
 // @Failure 500 {string} err
