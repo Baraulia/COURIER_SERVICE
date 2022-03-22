@@ -66,18 +66,32 @@ func (mr *MockAllProjectAppMockRecorder) ChangeOrderStatus(text, id interface{})
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeOrderStatus", reflect.TypeOf((*MockAllProjectApp)(nil).ChangeOrderStatus), text, id)
 }
 
-// CheckRoleRights mocks base method.
-func (m *MockAllProjectApp) CheckRoleRights(neededPerms []string, neededRole1, neededRole2, givenPerms, givenRole string) error {
+// CheckRights mocks base method.
+func (m *MockAllProjectApp) CheckRights(neededPerms []string, givenPerms string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CheckRoleRights", neededPerms, neededRole1, neededRole2, givenPerms, givenRole)
+	ret := m.ctrl.Call(m, "CheckRights", neededPerms, givenPerms)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// CheckRoleRights indicates an expected call of CheckRoleRights.
-func (mr *MockAllProjectAppMockRecorder) CheckRoleRights(neededPerms, neededRole1, neededRole2, givenPerms, givenRole interface{}) *gomock.Call {
+// CheckRights indicates an expected call of CheckRights.
+func (mr *MockAllProjectAppMockRecorder) CheckRights(neededPerms, givenPerms interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckRoleRights", reflect.TypeOf((*MockAllProjectApp)(nil).CheckRoleRights), neededPerms, neededRole1, neededRole2, givenPerms, givenRole)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckRights", reflect.TypeOf((*MockAllProjectApp)(nil).CheckRights), neededPerms, givenPerms)
+}
+
+// CheckRole mocks base method.
+func (m *MockAllProjectApp) CheckRole(neededRoles []string, givenRole string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckRole", neededRoles, givenRole)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CheckRole indicates an expected call of CheckRole.
+func (mr *MockAllProjectAppMockRecorder) CheckRole(neededRoles, givenRole interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckRole", reflect.TypeOf((*MockAllProjectApp)(nil).CheckRole), neededRoles, givenRole)
 }
 
 // CreateDeliveryService mocks base method.

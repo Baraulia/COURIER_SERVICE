@@ -15,7 +15,7 @@ import (
 )
 
 func TestHandler_GetOrders(t *testing.T) {
-	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, perms, role string)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
 	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
 	type mockBehavior func(s *mock_service.MockAllProjectApp, courier dao.Order)
 
@@ -35,7 +35,6 @@ func TestHandler_GetOrders(t *testing.T) {
 		name                   string
 		inputBody              string
 		inputCourier           dao.Order
-		inputPerms             string
 		inputRole              string
 		inputToken             string
 		mockBehaviorParseToken mockBehaviorParseToken
@@ -59,7 +58,6 @@ func TestHandler_GetOrders(t *testing.T) {
 			mockBehavior: func(s *mock_service.MockAllProjectApp, courier dao.Order) {
 				s.EXPECT().GetOrders(3).Return(orders, nil)
 			},
-			inputPerms: "",
 			inputRole:  "Courier",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
@@ -69,8 +67,8 @@ func TestHandler_GetOrders(t *testing.T) {
 					Permissions: "",
 				}, nil)
 			},
-			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier", "Courier manager", perms, role).Return(nil)
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Courier", "Courier manager"}, role).Return(nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}`,
@@ -84,7 +82,7 @@ func TestHandler_GetOrders(t *testing.T) {
 			get := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(get, testCase.inputCourier)
 			testCase.mockBehaviorParseToken(get, testCase.inputToken)
-			testCase.mockBehaviorCheck(get, testCase.inputPerms, testCase.inputRole)
+			testCase.mockBehaviorCheck(get, testCase.inputRole)
 
 			services := &service.Service{AllProjectApp: get}
 			handler := controller.NewHandler(services)
@@ -105,7 +103,7 @@ func TestHandler_GetOrders(t *testing.T) {
 }
 
 func TestHandler_GetOneOrder(t *testing.T) {
-	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, perms, role string)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
 	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
 	type mockBehavior func(s *mock_service.MockAllProjectApp, courier dao.Order)
 
@@ -123,7 +121,6 @@ func TestHandler_GetOneOrder(t *testing.T) {
 		name                   string
 		inputBody              string
 		inputCourier           dao.Order
-		inputPerms             string
 		inputRole              string
 		inputToken             string
 		mockBehaviorParseToken mockBehaviorParseToken
@@ -147,7 +144,6 @@ func TestHandler_GetOneOrder(t *testing.T) {
 			mockBehavior: func(s *mock_service.MockAllProjectApp, courier dao.Order) {
 				s.EXPECT().GetOrder(1).Return(ord, nil)
 			},
-			inputPerms: "",
 			inputRole:  "Courier",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
@@ -157,8 +153,8 @@ func TestHandler_GetOneOrder(t *testing.T) {
 					Permissions: "",
 				}, nil)
 			},
-			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier", "Courier manager", perms, role).Return(nil)
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Courier", "Courier manager"}, role).Return(nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}`,
@@ -172,7 +168,7 @@ func TestHandler_GetOneOrder(t *testing.T) {
 			get := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(get, testCase.inputCourier)
 			testCase.mockBehaviorParseToken(get, testCase.inputToken)
-			testCase.mockBehaviorCheck(get, testCase.inputPerms, testCase.inputRole)
+			testCase.mockBehaviorCheck(get, testCase.inputRole)
 
 			services := &service.Service{AllProjectApp: get}
 			handler := controller.NewHandler(services)
@@ -192,7 +188,7 @@ func TestHandler_GetOneOrder(t *testing.T) {
 }
 
 func TestHandler_UpdateOrder(t *testing.T) {
-	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, perms, role string)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
 	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
 	type mockBehavior func(s *mock_service.MockAllProjectApp, order dao.Order)
 
@@ -200,7 +196,6 @@ func TestHandler_UpdateOrder(t *testing.T) {
 		name                   string
 		inputBody              string
 		inputOrder             dao.Order
-		inputPerms             string
 		inputRole              string
 		inputToken             string
 		mockBehaviorParseToken mockBehaviorParseToken
@@ -218,7 +213,6 @@ func TestHandler_UpdateOrder(t *testing.T) {
 			mockBehavior: func(s *mock_service.MockAllProjectApp, order dao.Order) {
 				s.EXPECT().AssigningOrderToCourier(order).Return(nil)
 			},
-			inputPerms: "",
 			inputRole:  "Courier",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
@@ -228,8 +222,8 @@ func TestHandler_UpdateOrder(t *testing.T) {
 					Permissions: "",
 				}, nil)
 			},
-			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier", "Courier manager", perms, role).Return(nil)
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Courier", "Courier manager"}, role).Return(nil)
 			},
 			expectedStatusCode: 204,
 		},
@@ -242,7 +236,7 @@ func TestHandler_UpdateOrder(t *testing.T) {
 			get := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(get, testCase.inputOrder)
 			testCase.mockBehaviorParseToken(get, testCase.inputToken)
-			testCase.mockBehaviorCheck(get, testCase.inputPerms, testCase.inputRole)
+			testCase.mockBehaviorCheck(get, testCase.inputRole)
 
 			services := &service.Service{AllProjectApp: get}
 			handler := controller.NewHandler(services)
@@ -261,7 +255,7 @@ func TestHandler_UpdateOrder(t *testing.T) {
 }
 
 func TestHandler_GetDetailedOrdersById(t *testing.T) {
-	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, perms, role string)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
 	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
 	type mockBehavior func(s *mock_service.MockAllProjectApp, order *dao.DetailedOrder)
 
@@ -284,7 +278,6 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 		name                   string
 		inputBody              string
 		inputOrder             dao.DetailedOrder
-		inputPerms             string
 		inputRole              string
 		inputToken             string
 		mockBehaviorParseToken mockBehaviorParseToken
@@ -302,7 +295,6 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 			mockBehavior: func(s *mock_service.MockAllProjectApp, order *dao.DetailedOrder) {
 				s.EXPECT().GetDetailedOrderById(1).Return(ord, nil)
 			},
-			inputPerms: "",
 			inputRole:  "Courier",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
@@ -312,8 +304,8 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 					Permissions: "",
 				}, nil)
 			},
-			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier", "Courier manager", perms, role).Return(nil)
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Courier", "Courier manager"}, role).Return(nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","picked":true,"name":"Sam","surname":"","phone_number":"1234567"}`,
@@ -327,7 +319,7 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 			get := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(get, &testCase.inputOrder)
 			testCase.mockBehaviorParseToken(get, testCase.inputToken)
-			testCase.mockBehaviorCheck(get, testCase.inputPerms, testCase.inputRole)
+			testCase.mockBehaviorCheck(get, testCase.inputRole)
 
 			services := &service.Service{AllProjectApp: get}
 			handler := controller.NewHandler(services)

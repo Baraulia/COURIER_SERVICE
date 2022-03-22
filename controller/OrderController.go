@@ -30,9 +30,9 @@ type text struct {
 // @Failure 500 {string} err
 // @Router /orders/{id} [get]
 func (h *Handler) GetOrders(ctx *gin.Context) {
-	necessaryRole1, necessaryRole2 := "Courier", "Courier manager"
-	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
-		log.Print("Handler GetOrders:not enough rights")
+	necessaryRole := []string{"Courier", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetOrders:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
@@ -64,9 +64,9 @@ func (h *Handler) GetOrders(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /order/{id} [get]
 func (h *Handler) GetOrder(ctx *gin.Context) {
-	necessaryRole1, necessaryRole2 := "Courier", "Courier manager"
-	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
-		log.Print("Handler GetOrder:not enough rights")
+	necessaryRole := []string{"Courier", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetOrder:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
@@ -99,9 +99,9 @@ func (h *Handler) GetOrder(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /order/status_change/{id} [put]
 func (h *Handler) ChangeOrderStatus(ctx *gin.Context) {
-	necessaryRole1, necessaryRole2 := "Courier", "Courier manager"
-	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
-		log.Print("Handler ChangeOrderStatus:not enough rights")
+	necessaryRole := []string{"Courier", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler ChangeOrderStatus:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
@@ -143,9 +143,9 @@ func (h *Handler) ChangeOrderStatus(ctx *gin.Context) {
 // @Failure 500 {string} string
 // @Router /orders/completed [get]
 func (h *Handler) GetCourierCompletedOrders(ctx *gin.Context) {
-	necessaryRole1, necessaryRole2 := "Courier", "Courier manager"
-	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
-		log.Print("Handler GetCourierCompletedOrders:not enough rights")
+	necessaryRole := []string{"Courier", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetCourierCompletedOrders:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
@@ -194,9 +194,9 @@ type listDetailedOrders struct {
 // @Failure 500 {string} string
 // @Router /orders [get]
 func (h *Handler) GetAllOrdersOfCourierService(ctx *gin.Context) {
-	necessaryRole1, necessaryRole2 := "Courier", "Courier manager"
-	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
-		log.Print("Handler GetAllOrdersOfCourierService:not enough rights")
+	necessaryRole := []string{"Courier", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetAllOrdersOfCourierService:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
@@ -240,9 +240,9 @@ func (h *Handler) GetAllOrdersOfCourierService(ctx *gin.Context) {
 // @Failure 500 {string} string
 // @Router /orders/bymonth [get]
 func (h *Handler) GetCourierCompletedOrdersByMonth(ctx *gin.Context) {
-	necessaryRole1, necessaryRole2 := "Courier", "Courier manager"
-	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
-		log.Print("Handler GetCourierCompletedOrdersByMonth:not enough rights")
+	necessaryRole := []string{"Courier", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetCourierCompletedOrdersByMonth:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
@@ -293,9 +293,9 @@ func (h *Handler) GetCourierCompletedOrdersByMonth(ctx *gin.Context) {
 // @Failure 400 {string} string
 // @Router /orders/{id} [put]
 func (h *Handler) UpdateOrder(ctx *gin.Context) {
-	necessaryRole1, necessaryRole2 := "Courier", "Courier manager"
-	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
-		log.Print("Handler UpdateOrder:not enough rights")
+	necessaryRole := []string{"Courier", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler UpdateOrder:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
@@ -331,9 +331,9 @@ func (h *Handler) UpdateOrder(ctx *gin.Context) {
 // @Failure 500 {string} string
 // @Router /order/detailed/{id} [get]
 func (h *Handler) GetDetailedOrderById(ctx *gin.Context) {
-	necessaryRole1, necessaryRole2 := "Courier", "Courier manager"
-	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
-		log.Print("Handler UpdateOrder:not enough rights")
+	necessaryRole := []string{"Courier", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetDetailedOrderById:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
@@ -365,9 +365,9 @@ func (h *Handler) GetDetailedOrderById(ctx *gin.Context) {
 // @Failure 500 {string} string
 // @Router /orders/service/completed [get]
 func (h *Handler) GetCompletedOrdersOfCourierService(ctx *gin.Context) {
-	necessaryRole1, necessaryRole2 := "Courier", "Courier manager"
-	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
-		log.Print("Handler UpdateOrder:not enough rights")
+	necessaryRole := []string{"Courier", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetCompletedOrdersOfCourierService:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
@@ -425,9 +425,9 @@ func (h *Handler) GetCompletedOrdersOfCourierService(ctx *gin.Context) {
 // @Failure 500 {string} string
 // @Router /orders/manager [get]
 func (h *Handler) GetOrdersOfCourierServiceForManager(ctx *gin.Context) {
-	necessaryRole1, necessaryRole2 := "Courier", "Courier manager"
-	if err := h.services.AllProjectApp.CheckRoleRights(nil, necessaryRole1, necessaryRole2, ctx.GetString("perms"), ctx.GetString("role")); err != nil {
-		log.Print("Handler GetOrdersOfCourierServiceForManager:not enough rights")
+	necessaryRole := []string{"Courier", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetOrdersOfCourierServiceForManager:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}

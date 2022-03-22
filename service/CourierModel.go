@@ -96,13 +96,21 @@ func (s *CourierService) ParseToken(token string) (*authProto.UserRole, error) {
 	return s.grpcCli.GetUserWithRights(context.Background(), &authProto.AccessToken{AccessToken: token})
 }
 
-func (s *CourierService) CheckRoleRights(neededPerms []string, neededRole1 string, neededRole2 string, givenPerms string, givenRole string) error {
+func (s *CourierService) CheckRole(neededRoles []string, givenRole string) error {
+	neededRolesString := strings.Join(neededRoles, ",")
+	if !strings.Contains(neededRolesString, givenRole) {
+		return fmt.Errorf("not enough rights")
+	}
+	return nil
+}
+
+func (s *CourierService) CheckRights(neededPerms []string, givenPerms string) error {
 	if neededPerms != nil {
 		ok := true
 		for _, perm := range neededPerms {
 			if !strings.Contains(givenPerms, perm) {
 				ok = false
-				return fmt.Errorf("not enough perms")
+				return fmt.Errorf("not enough rights")
 			} else {
 				continue
 			}
@@ -110,9 +118,6 @@ func (s *CourierService) CheckRoleRights(neededPerms []string, neededRole1 strin
 		if ok == true {
 			return nil
 		}
-	}
-	if givenRole != neededRole1 || givenRole != neededRole2 {
-		return fmt.Errorf("not enough rights")
 	}
 	return nil
 }

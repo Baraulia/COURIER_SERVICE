@@ -14,7 +14,7 @@ import (
 )
 
 func TestHandler_CreateDeliveryService(t *testing.T) {
-	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, perms, role string)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
 	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
 	type mockBehavior func(s *mock_service.MockAllProjectApp, service dao.DeliveryService)
 
@@ -22,7 +22,6 @@ func TestHandler_CreateDeliveryService(t *testing.T) {
 		name                   string
 		inputBody              string
 		inputService           dao.DeliveryService
-		inputPerms             string
 		inputRole              string
 		inputToken             string
 		mockBehaviorParseToken mockBehaviorParseToken
@@ -42,7 +41,6 @@ func TestHandler_CreateDeliveryService(t *testing.T) {
 				Status:      "active",
 				PhoneNumber: "1234567",
 			},
-			inputPerms: "",
 			inputRole:  "Courier manager",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
@@ -52,8 +50,8 @@ func TestHandler_CreateDeliveryService(t *testing.T) {
 					Permissions: "",
 				}, nil)
 			},
-			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier manager", "Superadmin", perms, role).Return(nil)
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
 			},
 			mockBehavior: func(s *mock_service.MockAllProjectApp, service dao.DeliveryService) {
 				s.EXPECT().CreateDeliveryService(service).Return(1, nil)
@@ -65,7 +63,6 @@ func TestHandler_CreateDeliveryService(t *testing.T) {
 			name:         "Invalid request",
 			inputBody:    "a",
 			inputService: dao.DeliveryService{},
-			inputPerms:   "",
 			inputRole:    "Courier manager",
 			inputToken:   "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
@@ -75,8 +72,8 @@ func TestHandler_CreateDeliveryService(t *testing.T) {
 					Permissions: "",
 				}, nil)
 			},
-			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier manager", "Superadmin", perms, role).Return(nil)
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
 			},
 			mockBehavior:        func(r *mock_service.MockAllProjectApp, service dao.DeliveryService) {},
 			expectedStatusCode:  400,
@@ -86,7 +83,6 @@ func TestHandler_CreateDeliveryService(t *testing.T) {
 			name:         "empty fields",
 			inputBody:    "{}",
 			inputService: dao.DeliveryService{},
-			inputPerms:   "",
 			inputRole:    "Courier manager",
 			inputToken:   "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
@@ -96,8 +92,8 @@ func TestHandler_CreateDeliveryService(t *testing.T) {
 					Permissions: "",
 				}, nil)
 			},
-			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier manager", "Superadmin", perms, role).Return(nil)
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
 			},
 			mockBehavior:        func(r *mock_service.MockAllProjectApp, service dao.DeliveryService) {},
 			expectedStatusCode:  400,
@@ -112,7 +108,7 @@ func TestHandler_CreateDeliveryService(t *testing.T) {
 			newMock := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(newMock, testCase.inputService)
 			testCase.mockBehaviorParseToken(newMock, testCase.inputToken)
-			testCase.mockBehaviorCheck(newMock, testCase.inputPerms, testCase.inputRole)
+			testCase.mockBehaviorCheck(newMock, testCase.inputRole)
 
 			services := &service.Service{AllProjectApp: newMock}
 			handler := controller.NewHandler(services)
@@ -130,7 +126,7 @@ func TestHandler_CreateDeliveryService(t *testing.T) {
 }
 
 func TestHandler_GetAllDeliveryServices(t *testing.T) {
-	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, perms, role string)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
 	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
 	type mockBehavior func(s *mock_service.MockAllProjectApp, service dao.DeliveryService)
 
@@ -152,7 +148,6 @@ func TestHandler_GetAllDeliveryServices(t *testing.T) {
 		name                   string
 		inputBody              string
 		inputService           dao.DeliveryService
-		inputPerms             string
 		inputRole              string
 		inputToken             string
 		mockBehaviorParseToken mockBehaviorParseToken
@@ -163,7 +158,6 @@ func TestHandler_GetAllDeliveryServices(t *testing.T) {
 	}{
 		{
 			name:       "OK",
-			inputPerms: "",
 			inputRole:  "Courier manager",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
@@ -173,10 +167,9 @@ func TestHandler_GetAllDeliveryServices(t *testing.T) {
 					Permissions: "",
 				}, nil)
 			},
-			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier manager", "Superadmin", perms, role).Return(nil)
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
 			},
-
 			mockBehavior: func(s *mock_service.MockAllProjectApp, service dao.DeliveryService) {
 				s.EXPECT().GetAllDeliveryServices().Return(servicess, nil)
 			},
@@ -191,7 +184,7 @@ func TestHandler_GetAllDeliveryServices(t *testing.T) {
 			newMock := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(newMock, testCase.inputService)
 			testCase.mockBehaviorParseToken(newMock, testCase.inputToken)
-			testCase.mockBehaviorCheck(newMock, testCase.inputPerms, testCase.inputRole)
+			testCase.mockBehaviorCheck(newMock, testCase.inputRole)
 
 			services := &service.Service{AllProjectApp: newMock}
 			handler := controller.NewHandler(services)
@@ -210,7 +203,7 @@ func TestHandler_GetAllDeliveryServices(t *testing.T) {
 }
 
 func TestHandler_GetDeliveryServiceById(t *testing.T) {
-	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, perms, role string)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
 	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
 	type mockBehavior func(s *mock_service.MockAllProjectApp, service *dao.DeliveryService)
 
@@ -230,7 +223,6 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 		name                   string
 		inputBody              string
 		inputService           dao.DeliveryService
-		inputPerms             string
 		inputRole              string
 		inputToken             string
 		mockBehaviorParseToken mockBehaviorParseToken
@@ -248,7 +240,6 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 			mockBehavior: func(s *mock_service.MockAllProjectApp, service *dao.DeliveryService) {
 				s.EXPECT().GetDeliveryServiceById(1).Return(serv, nil)
 			},
-			inputPerms: "",
 			inputRole:  "Courier manager",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
@@ -258,8 +249,8 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 					Permissions: "",
 				}, nil)
 			},
-			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier manager", "Superadmin", perms, role).Return(nil)
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"id":1,"name":"name","email":"email","photo":"photo","description":"description","phone_number":"123","manager_id":1,"status":"active","NumOfCouriers":3}`,
@@ -272,7 +263,7 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 			newMock := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(newMock, &testCase.inputService)
 			testCase.mockBehaviorParseToken(newMock, testCase.inputToken)
-			testCase.mockBehaviorCheck(newMock, testCase.inputPerms, testCase.inputRole)
+			testCase.mockBehaviorCheck(newMock, testCase.inputRole)
 
 			services := &service.Service{AllProjectApp: newMock}
 			handler := controller.NewHandler(services)
@@ -290,7 +281,7 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 	}
 }
 func TestHandler_UpdateDeliveryService(t *testing.T) {
-	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, perms, role string)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
 	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
 	type mockBehavior func(s *mock_service.MockAllProjectApp, serv dao.DeliveryService)
 
@@ -299,7 +290,6 @@ func TestHandler_UpdateDeliveryService(t *testing.T) {
 		inputBody              string
 		inputService           dao.DeliveryService
 		id                     int
-		inputPerms             string
 		inputRole              string
 		inputToken             string
 		mockBehaviorParseToken mockBehaviorParseToken
@@ -319,7 +309,6 @@ func TestHandler_UpdateDeliveryService(t *testing.T) {
 			mockBehavior: func(s *mock_service.MockAllProjectApp, serv dao.DeliveryService) {
 				s.EXPECT().UpdateDeliveryService(serv).Return(nil)
 			},
-			inputPerms: "",
 			inputRole:  "Courier manager",
 			inputToken: "testToken",
 			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
@@ -329,8 +318,8 @@ func TestHandler_UpdateDeliveryService(t *testing.T) {
 					Permissions: "",
 				}, nil)
 			},
-			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, perms, role string) {
-				s.EXPECT().CheckRoleRights(nil, "Courier manager", "Superadmin", perms, role).Return(nil)
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
 			},
 			expectedStatusCode: 204,
 		},
@@ -343,7 +332,7 @@ func TestHandler_UpdateDeliveryService(t *testing.T) {
 			get := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(get, testCase.inputService)
 			testCase.mockBehaviorParseToken(get, testCase.inputToken)
-			testCase.mockBehaviorCheck(get, testCase.inputPerms, testCase.inputRole)
+			testCase.mockBehaviorCheck(get, testCase.inputRole)
 
 			services := &service.Service{AllProjectApp: get}
 			handler := controller.NewHandler(services)

@@ -33,4 +33,5 @@ func (h *Handler) userIdentity(ctx *gin.Context) {
 	}
 	ctx.Set("perms", user.Permissions)
 	ctx.Set("role", user.Role)
+	ctx.Set("userId", user.UserId)
 }
