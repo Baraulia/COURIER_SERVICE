@@ -88,7 +88,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dao.SmallInfo"
+                            "$ref": "#/definitions/dao.Courier"
                         }
                     },
                     "400": {
@@ -1147,6 +1147,9 @@ const docTemplate_swagger = `{
                     "type": "string"
                 },
                 "id": {
+                    "type": "integer"
+                },
+                "id_from_restaurant": {
                     "type": "integer"
                 },
                 "name": {

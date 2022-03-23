@@ -54,7 +54,7 @@ func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
 func (r *CourierPostgres) GetCouriersFromDB() ([]SmallInfo, error) {
 	var Couriers []SmallInfo
 
-	selectValue := `Select "id_courier","name", "phone_number","photo", "surname", "deleted" from "couriers"`
+	selectValue := `Select "id_courier","name", "phone_number","photo", "surname", "deleted" from "couriers" order by "surname"`
 
 	get, err := r.db.Query(selectValue)
 
@@ -72,24 +72,24 @@ func (r *CourierPostgres) GetCouriersFromDB() ([]SmallInfo, error) {
 	return Couriers, nil
 }
 
-func (r *CourierPostgres) GetCourierFromDB(id int) (SmallInfo, error) {
-	var cour SmallInfo
+func (r *CourierPostgres) GetCourierFromDB(id int) (Courier, error) {
+	var courier Courier
 
-	selectValue := `Select id_courier,name,phone_number,photo, surname, deleted from couriers where id_courier = $1`
+	selectValue := `Select id_courier,name,phone_number,photo, surname, deleted,email,delivery_service_id
+			from couriers where id_courier = $1`
 
 	get, err := r.db.Query(selectValue, id)
 
 	if err != nil {
 		log.Println("Error of getting courier :" + err.Error())
-		return SmallInfo{}, err
+		return Courier{}, err
 	}
 
 	for get.Next() {
-		var courier SmallInfo
-		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname, &courier.Deleted)
-		cour = courier
+		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname,
+			&courier.Deleted, &courier.Email, &courier.DeliveryServiceId)
 	}
-	return cour, nil
+	return courier, nil
 }
 
 func (r *CourierPostgres) UpdateCourierInDB(id uint16) (uint16, error) {

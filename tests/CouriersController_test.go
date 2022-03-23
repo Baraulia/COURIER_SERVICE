@@ -81,8 +81,8 @@ func TestHandler_GetCouriers(t *testing.T) {
 }
 
 func TestHandler_GetOneCourier(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockCourierApp, courier dao.SmallInfo)
-	cour := dao.SmallInfo{
+	type mockBehavior func(s *mock_service.MockCourierApp, courier dao.Courier)
+	cour := dao.Courier{
 		Id:          1,
 		CourierName: "test",
 		PhoneNumber: "1038812",
@@ -94,7 +94,7 @@ func TestHandler_GetOneCourier(t *testing.T) {
 	testTable := []struct {
 		name                string
 		inputBody           string
-		inputCourier        dao.SmallInfo
+		inputCourier        dao.Courier
 		mockBehavior        mockBehavior
 		expectedStatusCode  int
 		expectedRequestBody string
@@ -102,18 +102,19 @@ func TestHandler_GetOneCourier(t *testing.T) {
 		{
 			name:      "OK",
 			inputBody: `{"name":"Test","id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov","deleted":true}`,
-			inputCourier: dao.SmallInfo{
-				Id:          1,
-				CourierName: "test",
-				PhoneNumber: "1038812",
-				Photo:       "my fav photo",
-				Surname:     "Shorokhov",
+			inputCourier: dao.Courier{
+				Id:                1,
+				CourierName:       "test",
+				PhoneNumber:       "1038812",
+				Photo:             "my fav photo",
+				Surname:           "Shorokhov",
+				DeliveryServiceId: 0,
 			},
-			mockBehavior: func(s *mock_service.MockCourierApp, courier dao.SmallInfo) {
+			mockBehavior: func(s *mock_service.MockCourierApp, courier dao.Courier) {
 				s.EXPECT().GetCourier(1).Return(cour, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov","deleted":true}`,
+			expectedRequestBody: `{"id_courier":1,"courier_name":"test","ready_to_go":false,"phone_number":"1038812","email":"","rating":0,"photo":"my fav photo","surname":"Shorokhov","number_of_failures":0,"deleted":true,"delivery_service_id":0}`,
 		},
 	}
 	for _, testCase := range testTable {

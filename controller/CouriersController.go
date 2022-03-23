@@ -36,19 +36,18 @@ func (h *Handler) GetCouriers(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path int true "Courier ID"
-// @Success 200 {object} dao.SmallInfo
+// @Success 200 {object} dao.Courier
 // @Failure 400 {string} string
 // @Failure 500 {string} err
 // @Router /courier/{id} [get]
 func (h *Handler) GetCourier(ctx *gin.Context) {
-	var Courier dao.SmallInfo
 	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	Courier, err = h.services.GetCourier(id)
+	Courier, err := h.services.GetCourier(id)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"No such courier": err})
 		return

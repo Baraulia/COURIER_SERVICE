@@ -29,15 +29,15 @@ func (s *CourierService) GetCouriers() ([]dao.SmallInfo, error) {
 	return get, nil
 }
 
-func (s *CourierService) GetCourier(id int) (dao.SmallInfo, error) {
+func (s *CourierService) GetCourier(id int) (dao.Courier, error) {
 	get, err := s.repo.GetCourierFromDB(id)
-	if (get == dao.SmallInfo{}) {
-		return dao.SmallInfo{}, fmt.Errorf("Error in CourierService: %s", err)
+	if (get == dao.Courier{}) {
+		return dao.Courier{}, fmt.Errorf("Error in CourierService: %s", err)
 	}
 	if id == 0 {
 		err := errors.New("no id")
 		log.Println("id cannot be zero")
-		return dao.SmallInfo{}, fmt.Errorf("Error in CourierService: %s", err)
+		return dao.Courier{}, fmt.Errorf("Error in CourierService: %s", err)
 	}
 	return get, nil
 }

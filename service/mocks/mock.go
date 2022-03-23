@@ -284,10 +284,10 @@ func (m *MockCourierApp) EXPECT() *MockCourierAppMockRecorder {
 }
 
 // GetCourier mocks base method.
-func (m *MockCourierApp) GetCourier(id int) (dao.SmallInfo, error) {
+func (m *MockCourierApp) GetCourier(id int) (dao.Courier, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCourier", id)
-	ret0, _ := ret[0].(dao.SmallInfo)
+	ret0, _ := ret[0].(dao.Courier)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
