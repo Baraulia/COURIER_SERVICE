@@ -171,10 +171,10 @@ func (mr *MockOrderAppMockRecorder) GetCourierCompletedOrdersByMonth(limit, page
 }
 
 // GetDetailedOrderById mocks base method.
-func (m *MockOrderApp) GetDetailedOrderById(Id int) (*dao.DetailedOrder, error) {
+func (m *MockOrderApp) GetDetailedOrderById(Id int) (*dao.AllInfoAboutOrder, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDetailedOrderById", Id)
-	ret0, _ := ret[0].(*dao.DetailedOrder)
+	ret0, _ := ret[0].(*dao.AllInfoAboutOrder)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

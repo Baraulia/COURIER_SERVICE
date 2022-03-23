@@ -507,7 +507,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dao.DetailedOrder"
+                            "$ref": "#/definitions/dao.AllInfoAboutOrder"
                         }
                     },
                     "400": {
@@ -1058,6 +1058,59 @@ const docTemplate_swagger = `{
                     "items": {
                         "$ref": "#/definitions/dao.Order"
                     }
+                }
+            }
+        },
+        "dao.AllInfoAboutOrder": {
+            "type": "object",
+            "properties": {
+                "courier_id": {
+                    "type": "integer"
+                },
+                "customer_address": {
+                    "type": "string"
+                },
+                "customer_name": {
+                    "type": "string"
+                },
+                "customer_phone": {
+                    "type": "string"
+                },
+                "delivery_service_id": {
+                    "type": "integer"
+                },
+                "delivery_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "id_from_restaurant": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order_date": {
+                    "type": "string"
+                },
+                "payment_type": {
+                    "type": "integer"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "picked": {
+                    "type": "boolean"
+                },
+                "restaurant_address": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
                 }
             }
         },

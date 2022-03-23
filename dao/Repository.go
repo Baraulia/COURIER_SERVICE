@@ -29,7 +29,7 @@ type OrderRep interface {
 	GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, idService int) ([]DetailedOrder, int)
 	GetCourierCompletedOrdersByMouthWithPageFromDB(limit, page, idCourier, Month, Year int) ([]Order, int)
 	AssigningOrderToCourierInDB(order Order) error
-	GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, error)
+	GetDetailedOrderByIdFromDB(Id int) (*AllInfoAboutOrder, error)
 	CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error)
 	GetServices(in *emptypb.Empty) (*courierProto.ServicesResponse, error)
 	GetCompletedOrdersOfCourierServiceFromDB(limit, page, idService int) ([]Order, int)
