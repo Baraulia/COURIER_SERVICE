@@ -219,6 +219,7 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 		CourierPhoneNumber:    "1234567",
 		CustomerPhone:         "",
 		CustomerName:          "",
+		RestaurantName:        "",
 		PaymentType:           0,
 	}
 
@@ -240,7 +241,7 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 				s.EXPECT().GetDetailedOrderById(1).Return(ord, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","picked":true,"name":"Sam","surname":"","phone_number":"1234567","id_from_restaurant":0,"customer_name":"","customer_phone":"","payment_type":0}`,
+			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","restaurant_name":"","picked":true,"name":"Sam","surname":"","phone_number":"1234567","id_from_restaurant":0,"customer_name":"","customer_phone":"","payment_type":0}`,
 		},
 	}
 	for _, testCase := range testTable {

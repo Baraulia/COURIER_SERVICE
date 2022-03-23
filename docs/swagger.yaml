@@ -182,6 +182,8 @@ definitions:
     type: object
 info:
   contact: {}
+  description: Courier Service for Food Delivery Application
+  title: Courier Service
 paths:
   /courier:
     post:

@@ -54,6 +54,7 @@ type AllInfoAboutOrder struct {
 	Status                string    `json:"status"`
 	OrderDate             string    `json:"order_date,omitempty"`
 	RestaurantAddress     string    `json:"restaurant_address,omitempty"`
+	RestaurantName        string    `json:"restaurant_name"`
 	Picked                bool      `json:"picked"`
 	CourierName           string    `json:"name"`
 	CourierSurname        string    `json:"surname"`
@@ -261,13 +262,13 @@ func (r *OrderPostgres) GetDetailedOrderByIdFromDB(Id int) (*AllInfoAboutOrder, 
 		return nil, err
 	}
 	defer transaction.Commit()
-	res, err := transaction.Query(fmt.Sprintf("SELECT d.payment_type,d.customer_name,d.customer_phone,d.id_from_restaurant,d.id, d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_address,co.name,co.surname,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.id=%d", Id))
+	res, err := transaction.Query(fmt.Sprintf("SELECT d.payment_type,d.customer_name,d.customer_phone,d.id_from_restaurant,d.id, d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_name,d.restaurant_address,co.name,co.surname,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.id=%d", Id))
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 	for res.Next() {
-		err = res.Scan(&order.PaymentType, &order.CourierName, &order.CustomerPhone, &order.OrderIdFromRestaurant, &order.IdOrder, &order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierSurname, &order.CourierPhoneNumber)
+		err = res.Scan(&order.PaymentType, &order.CourierName, &order.CustomerPhone, &order.OrderIdFromRestaurant, &order.IdOrder, &order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantName, &order.RestaurantAddress, &order.CourierName, &order.CourierSurname, &order.CourierPhoneNumber)
 		if err != nil {
 			log.Println(err)
 			return nil, err
