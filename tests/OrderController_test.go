@@ -201,27 +201,32 @@ func TestHandler_UpdateOrder(t *testing.T) {
 }
 
 func TestHandler_GetDetailedOrdersById(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockOrderApp, order *dao.DetailedOrder)
+	type mockBehavior func(s *mock_service.MockOrderApp, order *dao.AllInfoAboutOrder)
 
-	ord := &dao.DetailedOrder{
-		IdDeliveryService:  1,
-		IdOrder:            1,
-		IdCourier:          1,
-		DeliveryTime:       time.Date(2022, 02, 19, 13, 34, 53, 93589, time.UTC),
-		CustomerAddress:    "Some address",
-		Status:             "ready to delivery",
-		OrderDate:          "2022-11-11",
-		RestaurantAddress:  "Some address",
-		Picked:             true,
-		CourierName:        "Sam",
-		CourierSurname:     "",
-		CourierPhoneNumber: "1234567",
+	ord := &dao.AllInfoAboutOrder{
+		IdDeliveryService:     1,
+		IdOrder:               1,
+		IdCourier:             1,
+		DeliveryTime:          time.Date(2022, 02, 19, 13, 34, 53, 93589, time.UTC),
+		CustomerAddress:       "Some address",
+		Status:                "ready to delivery",
+		OrderDate:             "2022-11-11",
+		RestaurantAddress:     "Some address",
+		Picked:                true,
+		CourierName:           "Sam",
+		CourierSurname:        "",
+		OrderIdFromRestaurant: 0,
+		CourierPhoneNumber:    "1234567",
+		CustomerPhone:         "",
+		CustomerName:          "",
+		RestaurantName:        "",
+		PaymentType:           0,
 	}
 
 	testTable := []struct {
 		name                string
 		inputBody           string
-		inputOrder          dao.DetailedOrder
+		inputOrder          dao.AllInfoAboutOrder
 		mockBehavior        mockBehavior
 		expectedStatusCode  int
 		expectedRequestBody string
@@ -229,14 +234,14 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 		{
 			name:      "OK",
 			inputBody: `{"id":1}`,
-			inputOrder: dao.DetailedOrder{
+			inputOrder: dao.AllInfoAboutOrder{
 				IdOrder: 1,
 			},
-			mockBehavior: func(s *mock_service.MockOrderApp, order *dao.DetailedOrder) {
+			mockBehavior: func(s *mock_service.MockOrderApp, order *dao.AllInfoAboutOrder) {
 				s.EXPECT().GetDetailedOrderById(1).Return(ord, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","picked":true,"name":"Sam","surname":"","phone_number":"1234567"}`,
+			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","restaurant_name":"","picked":true,"name":"Sam","surname":"","phone_number":"1234567","id_from_restaurant":0,"customer_name":"","customer_phone":"","payment_type":0}`,
 		},
 	}
 	for _, testCase := range testTable {

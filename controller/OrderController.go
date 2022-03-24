@@ -276,7 +276,7 @@ func (h *Handler) UpdateOrder(ctx *gin.Context) {
 // @Tags order
 // @Produce json
 // @Param id path int true "id"
-// @Success 200 {object} dao.DetailedOrder
+// @Success 200 {object} dao.AllInfoAboutOrder
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /order/detailed/{id} [get]
