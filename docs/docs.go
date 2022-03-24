@@ -1106,6 +1106,9 @@ const docTemplate_swagger = `{
                 "restaurant_address": {
                     "type": "string"
                 },
+                "restaurant_name": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string"
                 },
@@ -1149,6 +1152,9 @@ const docTemplate_swagger = `{
                 },
                 "surname": {
                     "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },

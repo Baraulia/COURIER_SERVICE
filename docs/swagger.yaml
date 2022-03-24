@@ -64,6 +64,8 @@ definitions:
         type: boolean
       restaurant_address:
         type: string
+      restaurant_name:
+        type: string
       status:
         type: string
       surname:
@@ -93,6 +95,8 @@ definitions:
         type: boolean
       surname:
         type: string
+      user_id:
+        type: integer
     type: object
   dao.DeliveryService:
     properties:
