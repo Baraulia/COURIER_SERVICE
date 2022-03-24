@@ -81,7 +81,7 @@ jobs:
             export DB_SSL_MODE=${{ secrets.DB_SSL_MODE }}
             export API_SERVER_PORT=${{ secrets.API_SERVER_PORT }}
             export ACCESS_KEY=${{ secrets.ACCESS_KEY }}
-            export SECRET_KEY=${{ secrets.SECRET_KEYC }}
+            export SECRET_KEY=${{ secrets.SECRET_KEY }}
             # Run a new container from a new image
             docker run -e AUTH_SERVER_URL -e DB_PORT -e DB_USER -e DB_PASSWORD -e HOST -e DB_DATABASE \
             -e DB_SSL_MODE -e API_SERVER_PORT -e ACCESS_KEY -e SECRET_KEY -d \
