@@ -30,18 +30,39 @@ type Order struct {
 }
 
 type DetailedOrder struct {
-	IdDeliveryService  int       `json:"delivery_service_id,omitempty"`
-	IdOrder            int       `json:"id"`
-	IdCourier          int       `json:"courier_id,omitempty"`
-	DeliveryTime       time.Time `json:"delivery_time,omitempty"`
-	CustomerAddress    string    `json:"customer_address,omitempty"`
-	Status             string    `json:"status"`
-	OrderDate          string    `json:"order_date,omitempty"`
-	RestaurantAddress  string    `json:"restaurant_address,omitempty"`
-	Picked             bool      `json:"picked"`
-	CourierName        string    `json:"name"`
-	CourierSurname     string    `json:"surname"`
-	CourierPhoneNumber string    `json:"phone_number"`
+	IdDeliveryService     int       `json:"delivery_service_id,omitempty"`
+	IdOrder               int       `json:"id"`
+	IdCourier             int       `json:"courier_id,omitempty"`
+	DeliveryTime          time.Time `json:"delivery_time,omitempty"`
+	CustomerAddress       string    `json:"customer_address,omitempty"`
+	Status                string    `json:"status"`
+	OrderDate             string    `json:"order_date,omitempty"`
+	RestaurantAddress     string    `json:"restaurant_address,omitempty"`
+	Picked                bool      `json:"picked"`
+	CourierName           string    `json:"name"`
+	CourierSurname        string    `json:"surname"`
+	CourierPhoneNumber    string    `json:"phone_number"`
+	OrderIdFromRestaurant int       `json:"id_from_restaurant"`
+}
+
+type AllInfoAboutOrder struct {
+	IdDeliveryService     int       `json:"delivery_service_id,omitempty"`
+	IdOrder               int       `json:"id"`
+	IdCourier             int       `json:"courier_id,omitempty"`
+	DeliveryTime          time.Time `json:"delivery_time,omitempty"`
+	CustomerAddress       string    `json:"customer_address,omitempty"`
+	Status                string    `json:"status"`
+	OrderDate             string    `json:"order_date,omitempty"`
+	RestaurantAddress     string    `json:"restaurant_address,omitempty"`
+	RestaurantName        string    `json:"restaurant_name"`
+	Picked                bool      `json:"picked"`
+	CourierName           string    `json:"name"`
+	CourierSurname        string    `json:"surname"`
+	CourierPhoneNumber    string    `json:"phone_number"`
+	OrderIdFromRestaurant int       `json:"id_from_restaurant"`
+	CustomerName          string    `json:"customer_name"`
+	CustomerPhone         string    `json:"customer_phone"`
+	PaymentType           int       `json:"payment_type"`
 }
 
 func (r *OrderPostgres) GetActiveOrdersFromDB(id int) ([]Order, error) {
@@ -152,13 +173,13 @@ func (r *OrderPostgres) GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, 
 		log.Println(err)
 	}
 	defer transaction.Commit()
-	res, err := transaction.Query("SELECT d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_address,co.name, co.surname,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.delivery_service_id=$1 and status = 'ready to delivery' ORDER BY d.id LIMIT $2 OFFSET $3", idService, limit, limit*(page-1))
+	res, err := transaction.Query("SELECT d.id_from_restaurant, d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_address,co.name, co.surname,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.delivery_service_id=$1 and status = 'ready to delivery' ORDER BY d.id LIMIT $2 OFFSET $3", idService, limit, limit*(page-1))
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 	for res.Next() {
 		var order DetailedOrder
-		err = res.Scan(&order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierSurname, &order.CourierPhoneNumber)
+		err = res.Scan(&order.OrderIdFromRestaurant, &order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierSurname, &order.CourierPhoneNumber)
 		if err != nil {
 			log.Println(err)
 		}
@@ -169,12 +190,12 @@ func (r *OrderPostgres) GetAllOrdersOfCourierServiceWithPageFromDB(limit, page, 
 	var length int
 	resl, err := transaction.Query("SELECT count(*) FROM delivery WHERE delivery_service_id=$1", idService)
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 	for resl.Next() {
 		err = resl.Scan(&length)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 	}
 	return Orders, length
@@ -233,21 +254,21 @@ func (r *OrderPostgres) AssigningOrderToCourierInDB(order Order) error {
 	return nil
 }
 
-func (r *OrderPostgres) GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, error) {
-	var order DetailedOrder
+func (r *OrderPostgres) GetDetailedOrderByIdFromDB(Id int) (*AllInfoAboutOrder, error) {
+	var order AllInfoAboutOrder
 	transaction, err := r.db.Begin()
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 	defer transaction.Commit()
-	res, err := transaction.Query(fmt.Sprintf("SELECT d.id, d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_address,co.name,co.surname,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.id=%d", Id))
+	res, err := transaction.Query(fmt.Sprintf("SELECT d.payment_type,d.customer_name,d.customer_phone,d.id_from_restaurant,d.id, d.order_date, d.courier_id,d.id,d.delivery_service_id,d.delivery_time,d.status,d.customer_address,d.restaurant_name,d.restaurant_address,co.name,co.surname,co.phone_number FROM delivery AS d JOIN couriers AS co ON co.id_courier=d.courier_id Where d.id=%d", Id))
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 	for res.Next() {
-		err = res.Scan(&order.IdOrder, &order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantAddress, &order.CourierName, &order.CourierSurname, &order.CourierPhoneNumber)
+		err = res.Scan(&order.PaymentType, &order.CourierName, &order.CustomerPhone, &order.OrderIdFromRestaurant, &order.IdOrder, &order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantName, &order.RestaurantAddress, &order.CourierName, &order.CourierSurname, &order.CourierPhoneNumber)
 		if err != nil {
 			log.Println(err)
 			return nil, err
@@ -259,7 +280,7 @@ func (r *OrderPostgres) GetDetailedOrderByIdFromDB(Id int) (*DetailedOrder, erro
 func (r *OrderPostgres) CreateOrder(order *courierProto.OrderCourierServer) (*emptypb.Empty, error) {
 	timestamp1 := time.Now()
 	timestamp2 := time.Now().Add(45 * time.Minute)
-	_, err := r.db.Exec("INSERT INTO delivery (delivery_service_id, customer_address, order_date, restaurant_address, delivery_time, restaurant_name) VALUES ($1, $2, $3, $4, $5, $6)", order.CourierServiceID, order.ClientAddress, timestamp1, order.RestaurantAddress, timestamp2, order.RestaurantName)
+	_, err := r.db.Exec("INSERT INTO delivery (delivery_service_id, customer_address, order_date, restaurant_address, delivery_time, restaurant_name, id_from_restaurant,customer_name,payment_type,customer_phone) VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9,$10)", order.CourierServiceID, order.ClientAddress, timestamp1, order.RestaurantAddress, timestamp2, order.RestaurantName, order.OrderID, order.ClientFullName, order.PaymentType, order.ClientPhoneNumber)
 	if err != nil {
 		log.Fatalf("CreateOrder:%s", err)
 		return &emptypb.Empty{}, fmt.Errorf("CreateOrder:%w", err)

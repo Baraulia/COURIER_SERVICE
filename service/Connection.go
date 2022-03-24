@@ -3,12 +3,13 @@ package service
 import (
 	"github.com/minio/minio-go"
 	"log"
+	"os"
 )
 
 func InitClientDO() (*minio.Client, error) {
 
-	ACCESS_KEY := "Z4AK5OV4JRTOPORJRW2V"                        //os.Getenv("ACCESS_KEY")
-	SECRET_KEY := "uELoOpfK1rA/LGjDFPK6w0GZQ+fDumGtIMt16RK6Sfg" //os.Getenv("SECRET_KEY")
+	ACCESS_KEY := os.Getenv("ACCESS_KEY")
+	SECRET_KEY := os.Getenv("SECRET_KEY")
 	endpoint := "fra1.digitaloceanspaces.com"
 	ssl := true
 

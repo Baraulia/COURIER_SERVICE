@@ -88,7 +88,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dao.SmallInfo"
+                            "$ref": "#/definitions/dao.Courier"
                         }
                     },
                     "400": {
@@ -227,6 +227,61 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/couriers/service": {
+            "get": {
+                "description": "get list of all couriers by courier service id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Couriers"
+                ],
+                "summary": "GetCouriersOfCourierService",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "iddeliveryservice",
+                        "name": "iddeliveryservice",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.listCouriers"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "string"
                         }
@@ -461,7 +516,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dao.DetailedOrder"
+                            "$ref": "#/definitions/dao.AllInfoAboutOrder"
                         }
                     },
                     "400": {
@@ -960,6 +1015,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controller.listCouriers": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.Courier"
+                    }
+                }
+            }
+        },
         "controller.listDeliveryServices": {
             "type": "object",
             "properties": {
@@ -1004,6 +1070,62 @@ const docTemplate = `{
                 }
             }
         },
+        "dao.AllInfoAboutOrder": {
+            "type": "object",
+            "properties": {
+                "courier_id": {
+                    "type": "integer"
+                },
+                "customer_address": {
+                    "type": "string"
+                },
+                "customer_name": {
+                    "type": "string"
+                },
+                "customer_phone": {
+                    "type": "string"
+                },
+                "delivery_service_id": {
+                    "type": "integer"
+                },
+                "delivery_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "id_from_restaurant": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order_date": {
+                    "type": "string"
+                },
+                "payment_type": {
+                    "type": "integer"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "picked": {
+                    "type": "boolean"
+                },
+                "restaurant_address": {
+                    "type": "string"
+                },
+                "restaurant_name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
+                }
+            }
+        },
         "dao.Courier": {
             "type": "object",
             "properties": {
@@ -1039,6 +1161,9 @@ const docTemplate = `{
                 },
                 "surname": {
                     "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -1090,6 +1215,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
+                    "type": "integer"
+                },
+                "id_from_restaurant": {
                     "type": "integer"
                 },
                 "name": {

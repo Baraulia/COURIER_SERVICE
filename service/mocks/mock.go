@@ -171,10 +171,10 @@ func (mr *MockOrderAppMockRecorder) GetCourierCompletedOrdersByMonth(limit, page
 }
 
 // GetDetailedOrderById mocks base method.
-func (m *MockOrderApp) GetDetailedOrderById(Id int) (*dao.DetailedOrder, error) {
+func (m *MockOrderApp) GetDetailedOrderById(Id int) (*dao.AllInfoAboutOrder, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDetailedOrderById", Id)
-	ret0, _ := ret[0].(*dao.DetailedOrder)
+	ret0, _ := ret[0].(*dao.AllInfoAboutOrder)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -284,10 +284,10 @@ func (m *MockCourierApp) EXPECT() *MockCourierAppMockRecorder {
 }
 
 // GetCourier mocks base method.
-func (m *MockCourierApp) GetCourier(id int) (dao.SmallInfo, error) {
+func (m *MockCourierApp) GetCourier(id int) (dao.Courier, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCourier", id)
-	ret0, _ := ret[0].(dao.SmallInfo)
+	ret0, _ := ret[0].(dao.Courier)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -311,6 +311,21 @@ func (m *MockCourierApp) GetCouriers() ([]dao.SmallInfo, error) {
 func (mr *MockCourierAppMockRecorder) GetCouriers() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCouriers", reflect.TypeOf((*MockCourierApp)(nil).GetCouriers))
+}
+
+// GetCouriersOfCourierService mocks base method.
+func (m *MockCourierApp) GetCouriersOfCourierService(limit, page, idService int) ([]dao.Courier, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCouriersOfCourierService", limit, page, idService)
+	ret0, _ := ret[0].([]dao.Courier)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCouriersOfCourierService indicates an expected call of GetCouriersOfCourierService.
+func (mr *MockCourierAppMockRecorder) GetCouriersOfCourierService(limit, page, idService interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCouriersOfCourierService", reflect.TypeOf((*MockCourierApp)(nil).GetCouriersOfCourierService), limit, page, idService)
 }
 
 // SaveCourier mocks base method.

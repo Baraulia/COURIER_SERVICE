@@ -145,8 +145,8 @@ func (s *OrderService) AssigningOrderToCourier(order dao.Order) error {
 	return nil
 }
 
-func (s *OrderService) GetDetailedOrderById(Id int) (*dao.DetailedOrder, error) {
-	var Order *dao.DetailedOrder
+func (s *OrderService) GetDetailedOrderById(Id int) (*dao.AllInfoAboutOrder, error) {
+	var Order *dao.AllInfoAboutOrder
 	Order, err := s.repo.GetDetailedOrderByIdFromDB(Id)
 	if err != nil {
 		log.Println(err)

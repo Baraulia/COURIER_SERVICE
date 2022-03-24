@@ -16,6 +16,7 @@ func NewCourierPostgres(db *sql.DB) *CourierPostgres {
 
 type Courier struct {
 	Id                uint16 `json:"id_courier"`
+	UserId            int    `json:"user_id"`
 	CourierName       string `json:"courier_name"`
 	ReadyToGo         bool   `json:"ready_to_go"`
 	PhoneNumber       string `json:"phone_number"`
@@ -39,9 +40,9 @@ type SmallInfo struct {
 
 func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
 
-	insertValue := `INSERT INTO "couriers" ("name","ready to go","phone_number","email","photo","surname", "delivery_service_id") VALUES ($1,$2,$3,$4,$5,$6,$7)`
+	insertValue := `INSERT INTO "couriers" ("user_id","name","ready to go","phone_number","email","photo","surname", "delivery_service_id") VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`
 
-	_, err := r.db.Exec(insertValue, courier.CourierName, courier.ReadyToGo, courier.PhoneNumber, courier.Email, courier.Photo, courier.Surname, courier.DeliveryServiceId)
+	_, err := r.db.Exec(insertValue, courier.UserId, courier.CourierName, courier.ReadyToGo, courier.PhoneNumber, courier.Email, courier.Photo, courier.Surname, courier.DeliveryServiceId)
 
 	if err != nil {
 
@@ -54,7 +55,7 @@ func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
 func (r *CourierPostgres) GetCouriersFromDB() ([]SmallInfo, error) {
 	var Couriers []SmallInfo
 
-	selectValue := `Select "id_courier","name", "phone_number","photo", "surname", "deleted" from "couriers" order by "surname" ASC `
+	selectValue := `Select "id_courier","name", "phone_number","photo", "surname", "deleted" from "couriers" order by "surname"`
 
 	get, err := r.db.Query(selectValue)
 
@@ -72,30 +73,30 @@ func (r *CourierPostgres) GetCouriersFromDB() ([]SmallInfo, error) {
 	return Couriers, nil
 }
 
-func (r *CourierPostgres) GetCourierFromDB(id int) (SmallInfo, error) {
-	var cour SmallInfo
+func (r *CourierPostgres) GetCourierFromDB(id int) (Courier, error) {
+	var courier Courier
 
-	selectValue := `Select id_courier,name,phone_number,photo, surname, deleted from couriers where id_courier = $1`
+	selectValue := `Select id_courier,name,phone_number,photo, surname, deleted,email,delivery_service_id
+			from couriers where id_courier = $1`
 
 	get, err := r.db.Query(selectValue, id)
 
 	if err != nil {
 		log.Println("Error of getting courier :" + err.Error())
-		return SmallInfo{}, err
+		return Courier{}, err
 	}
 
 	for get.Next() {
-		var courier SmallInfo
-		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname, &courier.Deleted)
-		cour = courier
+		err = get.Scan(&courier.Id, &courier.CourierName, &courier.PhoneNumber, &courier.Photo, &courier.Surname,
+			&courier.Deleted, &courier.Email, &courier.DeliveryServiceId)
 	}
-	return cour, nil
+	return courier, nil
 }
 
-func (r *CourierPostgres) UpdateCourierInDB(id uint16, status bool) (uint16, error) {
+func (r *CourierPostgres) UpdateCourierInDB(id uint16) (uint16, error) {
 
 	UpdateValue := `UPDATE couriers SET deleted = $1 WHERE id_courier = $2`
-	_, err := r.db.Exec(UpdateValue, status, id)
+	_, err := r.db.Exec(UpdateValue, "true", id)
 	if err != nil {
 		log.Println("Error with getting courier by id: " + err.Error())
 		return 0, fmt.Errorf("updateCourier: error while scanning:%w", err)
@@ -174,4 +175,39 @@ func (r *CourierPostgres) UpdateCourierDB(courier Courier) error {
 		return err
 	}
 	return nil
+}
+
+func (r *CourierPostgres) GetCouriersOfCourierServiceFromDB(limit, page, idService int) ([]Courier, int) {
+	var Couriers []Courier
+	transaction, err := r.db.Begin()
+	if err != nil {
+		log.Println(err)
+	}
+	defer transaction.Commit()
+	//запрос!!!
+	res, err := transaction.Query("SELECT id_courier,name,surname,phone_number,email,rating,photo,deleted,delivery_service_id FROM couriers Where delivery_service_id=$1 ORDER BY surname LIMIT $2 OFFSET $3", idService, limit, limit*(page-1))
+	if err != nil {
+		log.Println(err)
+	}
+	for res.Next() {
+		var courier Courier
+		err = res.Scan(&courier.Id, &courier.CourierName, &courier.Surname, &courier.PhoneNumber, &courier.Email, &courier.Rating, &courier.Photo, &courier.Deleted, &courier.DeliveryServiceId)
+		if err != nil {
+			log.Println(err)
+		}
+		Couriers = append(Couriers, courier)
+	}
+
+	var length int
+	resl, err := transaction.Query("SELECT count(*) FROM couriers WHERE delivery_service_id=$1", idService)
+	if err != nil {
+		log.Println(err)
+	}
+	for resl.Next() {
+		err = resl.Scan(&length)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	return Couriers, length
 }

@@ -81,9 +81,10 @@ func TestHandler_GetCouriers(t *testing.T) {
 }
 
 func TestHandler_GetOneCourier(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockCourierApp, courier dao.SmallInfo)
-	cour := dao.SmallInfo{
+	type mockBehavior func(s *mock_service.MockCourierApp, courier dao.Courier)
+	cour := dao.Courier{
 		Id:          1,
+		UserId:      1,
 		CourierName: "test",
 		PhoneNumber: "1038812",
 		Photo:       "my fav photo",
@@ -94,26 +95,28 @@ func TestHandler_GetOneCourier(t *testing.T) {
 	testTable := []struct {
 		name                string
 		inputBody           string
-		inputCourier        dao.SmallInfo
+		inputCourier        dao.Courier
 		mockBehavior        mockBehavior
 		expectedStatusCode  int
 		expectedRequestBody string
 	}{
 		{
 			name:      "OK",
-			inputBody: `{"name":"Test","id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov","deleted":true}`,
-			inputCourier: dao.SmallInfo{
-				Id:          1,
-				CourierName: "test",
-				PhoneNumber: "1038812",
-				Photo:       "my fav photo",
-				Surname:     "Shorokhov",
+			inputBody: `{"name":"Test","id_courier":1,"user_id":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov","deleted":true}`,
+			inputCourier: dao.Courier{
+				Id:                1,
+				UserId:            1,
+				CourierName:       "test",
+				PhoneNumber:       "1038812",
+				Photo:             "my fav photo",
+				Surname:           "Shorokhov",
+				DeliveryServiceId: 0,
 			},
-			mockBehavior: func(s *mock_service.MockCourierApp, courier dao.SmallInfo) {
+			mockBehavior: func(s *mock_service.MockCourierApp, courier dao.Courier) {
 				s.EXPECT().GetCourier(1).Return(cour, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov","deleted":true}`,
+			expectedRequestBody: `{"id_courier":1,"user_id":1,"courier_name":"test","ready_to_go":false,"phone_number":"1038812","email":"","rating":0,"photo":"my fav photo","surname":"Shorokhov","number_of_failures":0,"deleted":true,"delivery_service_id":0}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -147,17 +150,18 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 	type mockBehavior func(s *mock_service.MockOrderApp, order []dao.DetailedOrder)
 	var orders []dao.DetailedOrder
 	ord := dao.DetailedOrder{
-		IdDeliveryService:  1,
-		IdOrder:            1,
-		IdCourier:          1,
-		DeliveryTime:       time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
-		CustomerAddress:    "Some address",
-		Status:             "ready to delivery",
-		OrderDate:          "11.11.2022",
-		CourierPhoneNumber: "",
-		CourierName:        "",
-		CourierSurname:     "",
-		Picked:             false,
+		IdDeliveryService:     1,
+		IdOrder:               1,
+		IdCourier:             1,
+		DeliveryTime:          time.Date(2020, time.May, 2, 2, 2, 2, 2, time.UTC),
+		CustomerAddress:       "Some address",
+		Status:                "ready to delivery",
+		OrderDate:             "11.11.2022",
+		CourierPhoneNumber:    "",
+		CourierName:           "",
+		CourierSurname:        "",
+		OrderIdFromRestaurant: 0,
+		Picked:                false,
 	}
 	orders = append(orders, ord)
 
@@ -182,7 +186,7 @@ func TestHandler_GetCourierCompletedOrders(t *testing.T) {
 				s.EXPECT().GetCourierCompletedOrders(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","surname":"","phone_number":""}]}`,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","picked":false,"name":"","surname":"","phone_number":"","id_from_restaurant":0}]}`,
 		},
 	}
 	for _, testCase := range testTable {
@@ -217,18 +221,19 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 	type mockBehavior func(s *mock_service.MockOrderApp, order []dao.DetailedOrder)
 	var orders []dao.DetailedOrder
 	ord := dao.DetailedOrder{
-		IdDeliveryService:  1,
-		IdOrder:            1,
-		IdCourier:          1,
-		DeliveryTime:       time.Date(2022, 02, 19, 13, 34, 53, 93589, time.UTC),
-		CustomerAddress:    "Some address",
-		Status:             "ready to delivery",
-		OrderDate:          "2022-11-11",
-		RestaurantAddress:  "Some address",
-		Picked:             true,
-		CourierName:        "Sam",
-		CourierSurname:     "",
-		CourierPhoneNumber: "1234567",
+		IdDeliveryService:     1,
+		IdOrder:               1,
+		IdCourier:             1,
+		DeliveryTime:          time.Date(2022, 02, 19, 13, 34, 53, 93589, time.UTC),
+		CustomerAddress:       "Some address",
+		Status:                "ready to delivery",
+		OrderDate:             "2022-11-11",
+		RestaurantAddress:     "Some address",
+		Picked:                true,
+		CourierName:           "Sam",
+		CourierSurname:        "",
+		OrderIdFromRestaurant: 0,
+		CourierPhoneNumber:    "1234567",
 	}
 	orders = append(orders, ord)
 
@@ -242,7 +247,7 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 	}{
 		{
 			name:      "OK",
-			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}}`,
+			inputBody: `{"name":"Test","delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2020-05-02T02:02:02.000000002Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false,"id_from_restaurant":0}}`,
 			inputOrder: []dao.DetailedOrder{
 				{
 					IdDeliveryService:  1,
@@ -263,7 +268,7 @@ func TestHandler_GetAllOrdersOfCourierService(t *testing.T) {
 				s.EXPECT().GetAllOrdersOfCourierService(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","picked":true,"name":"Sam","surname":"","phone_number":"1234567"}]}`,
+			expectedRequestBody: `{"data":[{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"2022-11-11","restaurant_address":"Some address","picked":true,"name":"Sam","surname":"","phone_number":"1234567","id_from_restaurant":0}]}`,
 		},
 	}
 	for _, testCase := range testTable {
