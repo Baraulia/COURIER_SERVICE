@@ -30,7 +30,7 @@ type CourierApp interface {
 	GetCouriers() ([]dao.SmallInfo, error)
 	GetCourier(id int) (dao.Courier, error)
 	SaveCourier(courier *dao.Courier) (*dao.Courier, error)
-	UpdateCourier(id uint16) (uint16, error)
+	UpdateCourier(id uint16, status bool) (uint16, error)
 	SaveCourierPhoto(cover []byte, id int) error
 	GetCouriersOfCourierService(limit, page, idService int) ([]dao.Courier, error)
 }

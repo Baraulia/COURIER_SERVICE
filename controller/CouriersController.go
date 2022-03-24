@@ -10,6 +10,10 @@ import (
 	"strconv"
 )
 
+type delete struct {
+	Status bool `json:"deleted"`
+}
+
 // getCouriers godoc
 // @Summary getCouriers
 // @Description get all couriers
@@ -87,18 +91,30 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path int true "ID"
-// @Success 200 {object} int
+// @Param input body bool true "deleted"
+// @Success 200 {object} dao.Courier
 // @Failure 400 {string} string
 // @Failure 500 {string} err
 // @Router /courier/{id} [put]
 func (h *Handler) UpdateCourier(ctx *gin.Context) {
 	idQuery := ctx.Param("id")
+
+	var txt delete
+	var status bool
+
+	if err := ctx.ShouldBindJSON(&txt); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+		return
+	}
+
+	status = txt.Status
+
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
 		return
 	}
-	courierId, err := h.services.CourierApp.UpdateCourier(uint16(id))
+	courierId, err := h.services.CourierApp.UpdateCourier(uint16(id), status)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"No such courier": err})
 		return

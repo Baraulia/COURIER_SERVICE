@@ -4,7 +4,7 @@ package docs
 
 import "github.com/swaggo/swag"
 
-const docTemplate_swagger = `{
+const docTemplate = `{
     "schemes": {{ marshal .Schemes }},
     "swagger": "2.0",
     "info": {
@@ -124,13 +124,22 @@ const docTemplate_swagger = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "deleted",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "integer"
+                            "$ref": "#/definitions/dao.Courier"
                         }
                     },
                     "400": {
@@ -1292,8 +1301,8 @@ const docTemplate_swagger = `{
     }
 }`
 
-// SwaggerInfo_swagger holds exported Swagger Info so clients can modify it
-var SwaggerInfo_swagger = &swag.Spec{
+// SwaggerInfo holds exported Swagger Info so clients can modify it
+var SwaggerInfo = &swag.Spec{
 	Version:          "",
 	Host:             "",
 	BasePath:         "",
@@ -1301,9 +1310,9 @@ var SwaggerInfo_swagger = &swag.Spec{
 	Title:            "Courier Service",
 	Description:      "Courier Service for Food Delivery Application",
 	InfoInstanceName: "swagger",
-	SwaggerTemplate:  docTemplate_swagger,
+	SwaggerTemplate:  docTemplate,
 }
 
 func init() {
-	swag.Register(SwaggerInfo_swagger.InstanceName(), SwaggerInfo_swagger)
+	swag.Register(SwaggerInfo.InstanceName(), SwaggerInfo)
 }

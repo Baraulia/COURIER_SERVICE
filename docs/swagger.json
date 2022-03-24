@@ -114,13 +114,22 @@
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "deleted",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "integer"
+                            "$ref": "#/definitions/dao.Courier"
                         }
                     },
                     "400": {

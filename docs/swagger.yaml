@@ -258,13 +258,19 @@ paths:
         name: id
         required: true
         type: integer
+      - description: deleted
+        in: body
+        name: input
+        required: true
+        schema:
+          type: boolean
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            type: integer
+            $ref: '#/definitions/dao.Courier'
         "400":
           description: Bad Request
           schema:

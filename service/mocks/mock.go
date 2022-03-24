@@ -358,18 +358,18 @@ func (mr *MockCourierAppMockRecorder) SaveCourierPhoto(cover, id interface{}) *g
 }
 
 // UpdateCourier mocks base method.
-func (m *MockCourierApp) UpdateCourier(id uint16) (uint16, error) {
+func (m *MockCourierApp) UpdateCourier(id uint16, status bool) (uint16, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateCourier", id)
+	ret := m.ctrl.Call(m, "UpdateCourier", id, status)
 	ret0, _ := ret[0].(uint16)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // UpdateCourier indicates an expected call of UpdateCourier.
-func (mr *MockCourierAppMockRecorder) UpdateCourier(id interface{}) *gomock.Call {
+func (mr *MockCourierAppMockRecorder) UpdateCourier(id, status interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCourier", reflect.TypeOf((*MockCourierApp)(nil).UpdateCourier), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCourier", reflect.TypeOf((*MockCourierApp)(nil).UpdateCourier), id, status)
 }
 
 // MockDeliveryServiceApp is a mock of DeliveryServiceApp interface.
