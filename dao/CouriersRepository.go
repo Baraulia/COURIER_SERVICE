@@ -16,6 +16,7 @@ func NewCourierPostgres(db *sql.DB) *CourierPostgres {
 
 type Courier struct {
 	Id                uint16 `json:"id_courier"`
+	UserId            int    `json:"user_id"`
 	CourierName       string `json:"courier_name"`
 	ReadyToGo         bool   `json:"ready_to_go"`
 	PhoneNumber       string `json:"phone_number"`
@@ -39,9 +40,9 @@ type SmallInfo struct {
 
 func (r *CourierPostgres) SaveCourierInDB(courier *Courier) error {
 
-	insertValue := `INSERT INTO "couriers" ("name","ready to go","phone_number","email","photo","surname", "delivery_service_id") VALUES ($1,$2,$3,$4,$5,$6,$7)`
+	insertValue := `INSERT INTO "couriers" ("user_id","name","ready to go","phone_number","email","photo","surname", "delivery_service_id") VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`
 
-	_, err := r.db.Exec(insertValue, courier.CourierName, courier.ReadyToGo, courier.PhoneNumber, courier.Email, courier.Photo, courier.Surname, courier.DeliveryServiceId)
+	_, err := r.db.Exec(insertValue, courier.UserId, courier.CourierName, courier.ReadyToGo, courier.PhoneNumber, courier.Email, courier.Photo, courier.Surname, courier.DeliveryServiceId)
 
 	if err != nil {
 

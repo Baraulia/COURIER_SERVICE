@@ -84,6 +84,7 @@ func TestHandler_GetOneCourier(t *testing.T) {
 	type mockBehavior func(s *mock_service.MockCourierApp, courier dao.Courier)
 	cour := dao.Courier{
 		Id:          1,
+		UserId:      1,
 		CourierName: "test",
 		PhoneNumber: "1038812",
 		Photo:       "my fav photo",
@@ -101,9 +102,10 @@ func TestHandler_GetOneCourier(t *testing.T) {
 	}{
 		{
 			name:      "OK",
-			inputBody: `{"name":"Test","id_courier":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov","deleted":true}`,
+			inputBody: `{"name":"Test","id_courier":1,"user_id":1,"courier_name":"test","phone_number":"1038812","photo":"my fav photo","surname":"Shorokhov","deleted":true}`,
 			inputCourier: dao.Courier{
 				Id:                1,
+				UserId:            1,
 				CourierName:       "test",
 				PhoneNumber:       "1038812",
 				Photo:             "my fav photo",
@@ -114,7 +116,7 @@ func TestHandler_GetOneCourier(t *testing.T) {
 				s.EXPECT().GetCourier(1).Return(cour, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"id_courier":1,"courier_name":"test","ready_to_go":false,"phone_number":"1038812","email":"","rating":0,"photo":"my fav photo","surname":"Shorokhov","number_of_failures":0,"deleted":true,"delivery_service_id":0}`,
+			expectedRequestBody: `{"id_courier":1,"user_id":1,"courier_name":"test","ready_to_go":false,"phone_number":"1038812","email":"","rating":0,"photo":"my fav photo","surname":"Shorokhov","number_of_failures":0,"deleted":true,"delivery_service_id":0}`,
 		},
 	}
 	for _, testCase := range testTable {
