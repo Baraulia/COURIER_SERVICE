@@ -85,7 +85,7 @@ jobs:
             export SECRET_KEY=${{ secrets.SECRET_KEY }}
             # Run a new container from a new image
             docker run -e AUTH_SERVER_URL -e DB_PORT -e DB_USER -e DB_PASSWORD -e HOST -e DB_DATABASE \
-            -e DB_SSL_MODE -e API_SERVER_PORT -d \
+            -e DB_SSL_MODE -e API_SERVER_PORT -e ACCESS_KEY -e SECRET_KEY -d \
             --restart always \
             --publish 81:80 \
             --publish 8091:8091 \
