@@ -53,7 +53,7 @@ func (s *CourierService) SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 
 func (s *CourierService) UpdateCourier(id uint16, status bool) (uint16, error) {
 	get, err := s.repo.GetCourierFromDB(int(id))
-	if (get == dao.SmallInfo{}) {
+	if (get == dao.Courier{}) {
 		return 0, fmt.Errorf("Error in CourierService: %s", err)
 	}
 	if id == 0 {

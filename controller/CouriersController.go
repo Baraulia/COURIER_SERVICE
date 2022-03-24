@@ -92,13 +92,12 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 // @Produce  json
 // @Param id path int true "ID"
 // @Param input body bool true "deleted"
-// @Success 200 {object} int
+// @Success 200 {object} dao.Courier
 // @Failure 400 {string} string
 // @Failure 500 {string} err
 // @Router /courier/{id} [put]
 func (h *Handler) UpdateCourier(ctx *gin.Context) {
 	idQuery := ctx.Param("id")
-	id, err := strconv.Atoi(idQuery)
 
 	var txt delete
 	var status bool
@@ -109,6 +108,8 @@ func (h *Handler) UpdateCourier(ctx *gin.Context) {
 	}
 
 	status = txt.Status
+
+	id, err := strconv.Atoi(idQuery)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
 		return
