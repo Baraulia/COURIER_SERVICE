@@ -77,7 +77,7 @@ func (r *CourierPostgres) GetCourierFromDB(id int) (Courier, error) {
 	var courier Courier
 
 	selectValue := `Select id_courier,name,phone_number,photo, surname, deleted,email,delivery_service_id
-			from couriers where id_courier = $1`
+			from couriers where user_id = $1`
 
 	get, err := r.db.Query(selectValue, id)
 
