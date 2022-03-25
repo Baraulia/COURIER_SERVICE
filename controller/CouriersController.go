@@ -53,7 +53,7 @@ func (h *Handler) GetCouriers(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /courier/{id} [get]
 func (h *Handler) GetCourier(ctx *gin.Context) {
-	necessaryRole := []string{"Superadmin", "Courier manager"}
+	necessaryRole := []string{"Superadmin", "Courier", "Courier manager"}
 	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
 		log.Println("Handler GetCouriers:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
@@ -119,7 +119,7 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /courier/{id} [put]
 func (h *Handler) UpdateCourier(ctx *gin.Context) {
-	necessaryRole := []string{"Superadmin", "Courier", "Courier manager"}
+	necessaryRole := []string{"Superadmin", "Courier manager"}
 	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
 		log.Println("Handler GetCouriers:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})

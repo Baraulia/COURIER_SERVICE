@@ -425,7 +425,7 @@ func (h *Handler) GetCompletedOrdersOfCourierService(ctx *gin.Context) {
 // @Failure 500 {string} string
 // @Router /orders/manager [get]
 func (h *Handler) GetOrdersOfCourierServiceForManager(ctx *gin.Context) {
-	necessaryRole := []string{"Superadmin", "Courier", "Courier manager"}
+	necessaryRole := []string{"Superadmin", "Courier manager"}
 	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
 		log.Println("Handler GetOrders:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})

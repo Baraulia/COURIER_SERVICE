@@ -60,7 +60,7 @@ func (h *Handler) CreateDeliveryService(ctx *gin.Context) {
 // @Failure 500 {string} string
 // @Router /deliveryservice/{id} [get]
 func (h *Handler) GetDeliveryServiceById(ctx *gin.Context) {
-	necessaryRole := []string{"Superadmin", "Courier manager"}
+	necessaryRole := []string{"Superadmin", "Courier", "Courier manager"}
 	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
 		log.Println("Handler CreateDeliveryService:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
@@ -94,7 +94,7 @@ type listDeliveryServices struct {
 // @Failure 500 {string} string
 // @Router /deliveryservice [get]
 func (h *Handler) GetAllDeliveryServices(ctx *gin.Context) {
-	necessaryRole := []string{"Superadmin", "Courier manager"}
+	necessaryRole := []string{"Superadmin"}
 	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
 		log.Println("Handler CreateDeliveryService:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})

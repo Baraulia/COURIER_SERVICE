@@ -147,7 +147,7 @@ func TestHandler_GetOneCourier(t *testing.T) {
 				}, nil)
 			},
 			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
-				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier", "Courier manager"}, role).Return(nil)
 			},
 			mockBehavior: func(s *mock_service.MockAllProjectApp, courier dao.Courier) {
 				s.EXPECT().GetCourier(1).Return(cour, nil)

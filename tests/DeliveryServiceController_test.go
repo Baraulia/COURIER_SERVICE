@@ -168,7 +168,7 @@ func TestHandler_GetAllDeliveryServices(t *testing.T) {
 				}, nil)
 			},
 			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
-				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
+				s.EXPECT().CheckRole([]string{"Superadmin"}, role).Return(nil)
 			},
 			mockBehavior: func(s *mock_service.MockAllProjectApp, service dao.DeliveryService) {
 				s.EXPECT().GetAllDeliveryServices().Return(servicess, nil)
@@ -250,7 +250,7 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 				}, nil)
 			},
 			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
-				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier", "Courier manager"}, role).Return(nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"id":1,"name":"name","email":"email","photo":"photo","description":"description","phone_number":"123","manager_id":1,"status":"active","NumOfCouriers":3}`,
