@@ -268,7 +268,7 @@ func (r *OrderPostgres) GetDetailedOrderByIdFromDB(Id int) (*AllInfoAboutOrder, 
 		return nil, err
 	}
 	for res.Next() {
-		err = res.Scan(&order.PaymentType, &order.CourierName, &order.CustomerPhone, &order.OrderIdFromRestaurant, &order.IdOrder, &order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantName, &order.RestaurantAddress, &order.CourierName, &order.CourierSurname, &order.CourierPhoneNumber)
+		err = res.Scan(&order.PaymentType, &order.CustomerName, &order.CustomerPhone, &order.OrderIdFromRestaurant, &order.IdOrder, &order.OrderDate, &order.IdCourier, &order.IdOrder, &order.IdDeliveryService, &order.DeliveryTime, &order.Status, &order.CustomerAddress, &order.RestaurantName, &order.RestaurantAddress, &order.CourierName, &order.CourierSurname, &order.CourierPhoneNumber)
 		if err != nil {
 			log.Println(err)
 			return nil, err
