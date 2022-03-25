@@ -41,7 +41,7 @@ func (r *DeliveryServicePostgres) SaveDeliveryServiceInDB(service *DeliveryServi
 
 func (r *DeliveryServicePostgres) GetDeliveryServiceByIdFromDB(Id int) (*DeliveryService, error) {
 	var service DeliveryService
-	res, err := r.db.Query("SELECT id, name,email,photo,description,phone_number,manager_id,status FROM delivery_service Where id=$1", Id)
+	res, err := r.db.Query("SELECT id, name,email,photo,description,phone_number,manager_id,status FROM delivery_service Where manager_id=$1", Id)
 	if err != nil {
 		log.Println(err)
 		return nil, err
