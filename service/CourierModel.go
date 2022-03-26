@@ -52,6 +52,11 @@ func (s *CourierService) GetCourier(id int) (dao.Courier, error) {
 		log.Println("account deleted")
 		return dao.Courier{}, fmt.Errorf("Error in CourierService: %s", err)
 	}
+	if get.Deleted == true {
+		err := errors.New("account deleted")
+		log.Println("account deleted")
+		return dao.Courier{}, err
+	}
 	return get, nil
 }
 
