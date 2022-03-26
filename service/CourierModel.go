@@ -39,6 +39,11 @@ func (s *CourierService) GetCourier(id int) (dao.Courier, error) {
 		log.Println("id cannot be zero")
 		return dao.Courier{}, fmt.Errorf("Error in CourierService: %s", err)
 	}
+	if get.Deleted == true {
+		err := errors.New("account deleted")
+		log.Println("account deleted")
+		return dao.Courier{}, err
+	}
 	return get, nil
 }
 
@@ -52,15 +57,6 @@ func (s *CourierService) SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 }
 
 func (s *CourierService) UpdateCourier(id uint16, status bool) (uint16, error) {
-	/*get, err := s.repo.GetCourierFromDB(int(id))
-	if (get == dao.Courier{}) {
-		return 0, fmt.Errorf("Error in CourierService: %s", err)
-	}
-	if id == 0 {
-		err := errors.New("no id")
-		log.Println("id cannot be zero")
-		return 0, fmt.Errorf("Error in CourierService: %s", err)
-	}*/
 	courierId, err := s.repo.CourierRep.UpdateCourierInDB(id, status)
 	if err != nil {
 		return 0, fmt.Errorf("Error with database: %s", err)

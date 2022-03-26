@@ -53,7 +53,7 @@ func (h *Handler) GetCourier(ctx *gin.Context) {
 	}
 	Courier, err := h.services.GetCourier(id)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"No such courier": err})
+		ctx.JSON(http.StatusBadRequest, gin.H{"No such courier": fmt.Sprintf("Error: %s", err)})
 		return
 	}
 	ctx.JSON(http.StatusOK, Courier)
