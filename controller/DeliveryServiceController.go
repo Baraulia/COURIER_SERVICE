@@ -62,7 +62,7 @@ func (h *Handler) CreateDeliveryService(ctx *gin.Context) {
 func (h *Handler) GetDeliveryServiceById(ctx *gin.Context) {
 	necessaryRole := []string{"Superadmin", "Courier", "Courier manager"}
 	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
-		log.Println("Handler CreateDeliveryService:not enough rights")
+		log.Println("Handler GetDeliveryServiceById:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
@@ -96,7 +96,7 @@ type listDeliveryServices struct {
 func (h *Handler) GetAllDeliveryServices(ctx *gin.Context) {
 	necessaryRole := []string{"Superadmin"}
 	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
-		log.Println("Handler CreateDeliveryService:not enough rights")
+		log.Println("Handler GetAllDeliveryServices:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
@@ -123,7 +123,7 @@ func (h *Handler) GetAllDeliveryServices(ctx *gin.Context) {
 func (h *Handler) UpdateDeliveryService(ctx *gin.Context) {
 	necessaryRole := []string{"Superadmin", "Courier manager"}
 	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
-		log.Println("Handler CreateDeliveryService:not enough rights")
+		log.Println("Handler UpdateDeliveryService:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
@@ -162,7 +162,7 @@ func (h *Handler) UpdateDeliveryService(ctx *gin.Context) {
 func (h *Handler) SaveLogoController(ctx *gin.Context) {
 	necessaryRole := []string{"Superadmin", "Courier manager"}
 	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
-		log.Println("Handler CreateDeliveryService:not enough rights")
+		log.Println("Handler SaveLogoController:not enough rights")
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
 		return
 	}
