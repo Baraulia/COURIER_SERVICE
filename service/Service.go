@@ -31,6 +31,7 @@ type AllProjectApp interface {
 	GetCourier(id int) (dao.Courier, error)
 	SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 	UpdateCourier(id uint16, status bool) (uint16, error)
+	NewUpdateCourier(courier dao.Courier) error
 	SaveCourierPhoto(cover []byte, id int) error
 	GetCouriersOfCourierService(limit, page, idService int) ([]dao.Courier, error)
 

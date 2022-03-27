@@ -39,7 +39,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	{
 		courier.GET("/:id", h.GetCourier)
 		courier.POST("/", h.SaveCourier)
-		courier.PUT("/:id", h.UpdateCourier)
+		courier.PUT("/:id", h.newUpdateCourier)
 	}
 
 	orders := router.Group("/orders")

@@ -379,6 +379,20 @@ func (mr *MockAllProjectAppMockRecorder) GetServices(in interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServices", reflect.TypeOf((*MockAllProjectApp)(nil).GetServices), in)
 }
 
+// NewUpdateCourier mocks base method.
+func (m *MockAllProjectApp) NewUpdateCourier(courier dao.Courier) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "NewUpdateCourier", courier)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// NewUpdateCourier indicates an expected call of NewUpdateCourier.
+func (mr *MockAllProjectAppMockRecorder) NewUpdateCourier(courier interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewUpdateCourier", reflect.TypeOf((*MockAllProjectApp)(nil).NewUpdateCourier), courier)
+}
+
 // ParseToken mocks base method.
 func (m *MockAllProjectApp) ParseToken(token string) (*authProto.UserRole, error) {
 	m.ctrl.T.Helper()

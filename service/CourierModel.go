@@ -77,6 +77,14 @@ func (s *CourierService) UpdateCourier(id uint16, status bool) (uint16, error) {
 	return courierId, nil
 }
 
+func (s *CourierService) NewUpdateCourier(courier dao.Courier) error {
+	err := s.repo.UpdateCourierDB(courier)
+	if err != nil {
+		return fmt.Errorf("Error with database: %s", err)
+	}
+	return nil
+}
+
 func (s *CourierService) SaveCourierPhoto(cover []byte, id int) error {
 	client, err := InitClientDO()
 	if err != nil {
