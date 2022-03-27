@@ -36,6 +36,11 @@ func (s *CourierService) GetDeliveryServiceById(Id int) (*dao.DeliveryService, e
 		log.Println(err)
 		return nil, fmt.Errorf("Error in DeliveryService: %s", err)
 	}
+	if service.Status == "inactive" {
+		err := errors.New("account deleted")
+		log.Println("account deleted")
+		return nil, fmt.Errorf("Error in DeliveryService: %s", err)
+	}
 	return service, nil
 }
 
