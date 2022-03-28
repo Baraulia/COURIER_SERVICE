@@ -77,7 +77,7 @@ func (r *CourierPostgres) GetCourierFromDB(id int) (Courier, error) {
 	var courier Courier
 
 	selectValue := `Select id_courier,name,phone_number,photo, surname, deleted,email,delivery_service_id
-			from couriers where id_courier = $1`
+			from couriers where user_id = $1`
 
 	get, err := r.db.Query(selectValue, id)
 
@@ -161,14 +161,17 @@ func (r *CourierPostgres) UpdateCourierDB(courier Courier) error {
 		courier.DeliveryServiceId = oldCourier.DeliveryServiceId
 	}
 	if courier.PhoneNumber == "" {
-		courier.PhoneNumber = courier.PhoneNumber
+		courier.PhoneNumber = oldCourier.PhoneNumber
+	}
+	if courier.Deleted == false {
+		courier.Deleted = oldCourier.Deleted
 	}
 
-	s := `UPDATE couriers SET name=$1, surname=$2, delivery_service_id=$3, email=$4, photo=$5, phone_number=$6 
-                            WHERE id_courier = $7`
+	s := `UPDATE couriers SET name=$1, surname=$2, delivery_service_id=$3, email=$4, photo=$5, phone_number=$6, deleted=$7
+                            WHERE id_courier = $8`
 	log.Println(s)
 	insert, err := transaction.Query(s, courier.CourierName, courier.Surname, courier.DeliveryServiceId, courier.Email,
-		courier.Photo, courier.PhoneNumber, courier.Id)
+		courier.Photo, courier.PhoneNumber, courier.Deleted, courier.Id)
 	defer insert.Close()
 	if err != nil {
 		log.Println(err)

@@ -2,20 +2,28 @@ package service
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
+	authProto "github.com/Baraulia/COURIER_SERVICE/GRPCC"
+	"github.com/Baraulia/COURIER_SERVICE/GRPCC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/minio/minio-go"
 	"log"
 	"strconv"
+	"strings"
 )
 
 type CourierService struct {
-	repo dao.Repository
+	repo    dao.Repository
+	grpcCli *grpcClient.GRPCClient
 }
 
-func NewCourierService(repo dao.Repository) *CourierService {
-	return &CourierService{repo: repo}
+func NewProjectService(repo dao.Repository, grpcCli *grpcClient.GRPCClient) *CourierService {
+	return &CourierService{
+		repo:    repo,
+		grpcCli: grpcCli,
+	}
 }
 
 func (s *CourierService) GetCouriers() ([]dao.SmallInfo, error) {
@@ -39,6 +47,16 @@ func (s *CourierService) GetCourier(id int) (dao.Courier, error) {
 		log.Println("id cannot be zero")
 		return dao.Courier{}, fmt.Errorf("Error in CourierService: %s", err)
 	}
+	if get.Deleted == true {
+		err := errors.New("account deleted")
+		log.Println("account deleted")
+		return dao.Courier{}, fmt.Errorf("Error in CourierService: %s", err)
+	}
+	if get.Deleted == true {
+		err := errors.New("account deleted")
+		log.Println("account deleted")
+		return dao.Courier{}, err
+	}
 	return get, nil
 }
 
@@ -52,20 +70,19 @@ func (s *CourierService) SaveCourier(courier *dao.Courier) (*dao.Courier, error)
 }
 
 func (s *CourierService) UpdateCourier(id uint16, status bool) (uint16, error) {
-	get, err := s.repo.GetCourierFromDB(int(id))
-	if (get == dao.Courier{}) {
-		return 0, fmt.Errorf("Error in CourierService: %s", err)
-	}
-	if id == 0 {
-		err := errors.New("no id")
-		log.Println("id cannot be zero")
-		return 0, fmt.Errorf("Error in CourierService: %s", err)
-	}
 	courierId, err := s.repo.CourierRep.UpdateCourierInDB(id, status)
 	if err != nil {
 		return 0, fmt.Errorf("Error with database: %s", err)
 	}
 	return courierId, nil
+}
+
+func (s *CourierService) NewUpdateCourier(courier dao.Courier) error {
+	err := s.repo.UpdateCourierDB(courier)
+	if err != nil {
+		return fmt.Errorf("Error with database: %s", err)
+	}
+	return nil
 }
 
 func (s *CourierService) SaveCourierPhoto(cover []byte, id int) error {
@@ -104,4 +121,34 @@ func (s *CourierService) GetCouriersOfCourierService(limit, page, idService int)
 		return nil, fmt.Errorf("Error in OrderService: %s", err)
 	}
 	return Couriers, nil
+}
+
+func (s *CourierService) ParseToken(token string) (*authProto.UserRole, error) {
+	return s.grpcCli.GetUserWithRights(context.Background(), &authProto.AccessToken{AccessToken: token})
+}
+
+func (s *CourierService) CheckRole(neededRoles []string, givenRole string) error {
+	neededRolesString := strings.Join(neededRoles, ",")
+	if !strings.Contains(neededRolesString, givenRole) {
+		return fmt.Errorf("not enough rights")
+	}
+	return nil
+}
+
+func (s *CourierService) CheckRights(neededPerms []string, givenPerms string) error {
+	if neededPerms != nil {
+		ok := true
+		for _, perm := range neededPerms {
+			if !strings.Contains(givenPerms, perm) {
+				ok = false
+				return fmt.Errorf("not enough rights")
+			} else {
+				continue
+			}
+		}
+		if ok == true {
+			return nil
+		}
+	}
+	return nil
 }

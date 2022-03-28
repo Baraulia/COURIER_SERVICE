@@ -4,7 +4,7 @@ package docs
 
 import "github.com/swaggo/swag"
 
-const docTemplate = `{
+const docTemplate_swagger = `{
     "schemes": {{ marshal .Schemes }},
     "swagger": "2.0",
     "info": {
@@ -18,6 +18,11 @@ const docTemplate = `{
     "paths": {
         "/courier": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "post new courier",
                 "consumes": [
                     "application/json"
@@ -64,6 +69,11 @@ const docTemplate = `{
         },
         "/courier/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get courier by ID",
                 "consumes": [
                     "application/json"
@@ -106,6 +116,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "put courier status by courier ID",
                 "consumes": [
                     "application/json"
@@ -159,6 +174,11 @@ const docTemplate = `{
         },
         "/couriers": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get all couriers",
                 "consumes": [
                     "application/json"
@@ -194,6 +214,11 @@ const docTemplate = `{
         },
         "/couriers/photo": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "set photo to DO Spaces and it's way to DB",
                 "consumes": [
                     "image/jpeg"
@@ -236,6 +261,11 @@ const docTemplate = `{
         },
         "/couriers/service": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of all couriers by courier service id",
                 "produces": [
                     "application/json"
@@ -291,6 +321,11 @@ const docTemplate = `{
         },
         "/deliveryservice": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of all delivery service",
                 "produces": [
                     "application/json"
@@ -321,6 +356,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "create a Delivery Service",
                 "consumes": [
                     "application/json"
@@ -369,6 +409,11 @@ const docTemplate = `{
         },
         "/deliveryservice/logo": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "set logo to DO Spaces and it's way to DB",
                 "consumes": [
                     "image/jpeg"
@@ -411,6 +456,11 @@ const docTemplate = `{
         },
         "/deliveryservice/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get delivery service by id",
                 "produces": [
                     "application/json"
@@ -450,6 +500,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "update delivery service information",
                 "consumes": [
                     "application/json"
@@ -495,6 +550,11 @@ const docTemplate = `{
         },
         "/order/detailed/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get detailed order by id",
                 "produces": [
                     "application/json"
@@ -536,6 +596,11 @@ const docTemplate = `{
         },
         "/order/status_change/{id}": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "put order status by order ID",
                 "consumes": [
                     "application/json"
@@ -589,6 +654,11 @@ const docTemplate = `{
         },
         "/order/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get orders by order ID",
                 "consumes": [
                     "application/json"
@@ -633,6 +703,11 @@ const docTemplate = `{
         },
         "/orders": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of all orders by courier service id",
                 "produces": [
                     "application/json"
@@ -688,6 +763,11 @@ const docTemplate = `{
         },
         "/orders/bymonth": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of completed orders by courier id sorted by month",
                 "produces": [
                     "application/json"
@@ -757,6 +837,11 @@ const docTemplate = `{
         },
         "/orders/completed": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of completed orders by courier id",
                 "produces": [
                     "application/json"
@@ -812,6 +897,11 @@ const docTemplate = `{
         },
         "/orders/manager": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of all orders by courier service id with custom status",
                 "produces": [
                     "application/json"
@@ -867,6 +957,11 @@ const docTemplate = `{
         },
         "/orders/service/completed": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get list of completed orders by courier service id",
                 "produces": [
                     "application/json"
@@ -928,6 +1023,11 @@ const docTemplate = `{
         },
         "/orders/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get orders by courier ID",
                 "consumes": [
                     "application/json"
@@ -970,6 +1070,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "assign order to courier",
                 "consumes": [
                     "application/json"
@@ -1301,8 +1406,8 @@ const docTemplate = `{
     }
 }`
 
-// SwaggerInfo holds exported Swagger Info so clients can modify it
-var SwaggerInfo = &swag.Spec{
+// SwaggerInfo_swagger holds exported Swagger Info so clients can modify it
+var SwaggerInfo_swagger = &swag.Spec{
 	Version:          "",
 	Host:             "",
 	BasePath:         "",
@@ -1310,9 +1415,9 @@ var SwaggerInfo = &swag.Spec{
 	Title:            "Courier Service",
 	Description:      "Courier Service for Food Delivery Application",
 	InfoInstanceName: "swagger",
-	SwaggerTemplate:  docTemplate,
+	SwaggerTemplate:  docTemplate_swagger,
 }
 
 func init() {
-	swag.Register(SwaggerInfo.InstanceName(), SwaggerInfo)
+	swag.Register(SwaggerInfo_swagger.InstanceName(), SwaggerInfo_swagger)
 }
