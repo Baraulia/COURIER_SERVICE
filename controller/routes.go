@@ -27,6 +27,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	)
 
 	couriers := router.Group("/couriers")
+	couriers.Use(h.userIdentity)
 	{
 		couriers.GET("/", h.GetCouriers)
 		couriers.POST("/photo", h.SaveCourierPhoto)
@@ -34,13 +35,15 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	}
 
 	courier := router.Group("/courier")
+	courier.Use(h.userIdentity)
 	{
 		courier.GET("/:id", h.GetCourier)
 		courier.POST("/", h.SaveCourier)
-		courier.PUT("/:id", h.UpdateCourier)
+		courier.PUT("/:id", h.newUpdateCourier)
 	}
 
 	orders := router.Group("/orders")
+	orders.Use(h.userIdentity)
 	{
 		orders.GET("/completed", h.GetCourierCompletedOrders)
 		orders.GET("/", h.GetAllOrdersOfCourierService)
@@ -53,6 +56,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	}
 
 	order := router.Group("/order")
+	order.Use(h.userIdentity)
 	{
 		order.GET("/:id", h.GetOrder)
 		order.PUT("/status_change/:id", h.ChangeOrderStatus)
@@ -60,6 +64,7 @@ func (h *Handler) InitRoutesGin() *gin.Engine {
 	}
 
 	deliveryService := router.Group("/deliveryservice")
+	deliveryService.Use(h.userIdentity)
 	{
 		deliveryService.POST("/", h.CreateDeliveryService)
 		deliveryService.GET("/:id", h.GetDeliveryServiceById)

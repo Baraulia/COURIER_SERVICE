@@ -16,6 +16,7 @@ type delete struct {
 
 // getCouriers godoc
 // @Summary getCouriers
+// @Security ApiKeyAuth
 // @Description get all couriers
 // @Tags Couriers
 // @Accept  json
@@ -25,6 +26,12 @@ type delete struct {
 // @Failure 500 {string} string
 // @Router /couriers [get]
 func (h *Handler) GetCouriers(ctx *gin.Context) {
+	necessaryRole := []string{"Superadmin", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetCouriers:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	Couriers, err := h.services.GetCouriers()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
@@ -35,6 +42,7 @@ func (h *Handler) GetCouriers(ctx *gin.Context) {
 
 // getCourier by ID godoc
 // @Summary getCourier
+// @Security ApiKeyAuth
 // @Description get courier by ID
 // @Tags Courier
 // @Accept  json
@@ -45,6 +53,12 @@ func (h *Handler) GetCouriers(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /courier/{id} [get]
 func (h *Handler) GetCourier(ctx *gin.Context) {
+	necessaryRole := []string{"Superadmin", "Courier", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetCourier:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	idQuery := ctx.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
@@ -61,6 +75,7 @@ func (h *Handler) GetCourier(ctx *gin.Context) {
 
 // postCourier  godoc
 // @Summary postCourier
+// @Security ApiKeyAuth
 // @Description post new courier
 // @Tags Courier
 // @Accept  json
@@ -71,6 +86,12 @@ func (h *Handler) GetCourier(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /courier [post]
 func (h *Handler) SaveCourier(ctx *gin.Context) {
+	necessaryRole := []string{"Superadmin", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler SaveCourier:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	var Courier *dao.Courier
 	if err := ctx.ShouldBindJSON(&Courier); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
@@ -86,6 +107,7 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 
 // ChangeCourierStatus by courier ID godoc
 // @Summary changeCourierStatus
+// @Security ApiKeyAuth
 // @Description put courier status by courier ID
 // @Tags Courier
 // @Accept  json
@@ -97,6 +119,12 @@ func (h *Handler) SaveCourier(ctx *gin.Context) {
 // @Failure 500 {string} err
 // @Router /courier/{id} [put]
 func (h *Handler) UpdateCourier(ctx *gin.Context) {
+	necessaryRole := []string{"Superadmin", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler UpdateCourier:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	idQuery := ctx.Param("id")
 
 	var txt delete
@@ -114,7 +142,7 @@ func (h *Handler) UpdateCourier(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
 		return
 	}
-	courierId, err := h.services.CourierApp.UpdateCourier(uint16(id), status)
+	courierId, err := h.services.UpdateCourier(uint16(id), status)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"No such courier": err})
 		return
@@ -124,6 +152,7 @@ func (h *Handler) UpdateCourier(ctx *gin.Context) {
 }
 
 // @Summary SaveCourierPhoto
+// @Security ApiKeyAuth
 // @Description set photo to DO Spaces and it's way to DB
 // @Tags Couriers
 // @Accept  image/jpeg
@@ -134,6 +163,12 @@ func (h *Handler) UpdateCourier(ctx *gin.Context) {
 // @Failure 400 {string} string
 // @Router /couriers/photo [post]
 func (h *Handler) SaveCourierPhoto(ctx *gin.Context) {
+	necessaryRole := []string{"Superadmin", "Courier", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler SaveCourierPhoto:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	id, er := strconv.Atoi(ctx.Query("id"))
 	if er != nil || id <= 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "expect an integer greater than 0"})
@@ -160,6 +195,7 @@ type listCouriers struct {
 }
 
 // @Summary GetCouriersOfCourierService
+// @Security ApiKeyAuth
 // @Description get list of all couriers by courier service id
 // @Tags Couriers
 // @Produce json
@@ -171,6 +207,12 @@ type listCouriers struct {
 // @Failure 500 {string} string
 // @Router /couriers/service [get]
 func (h *Handler) GetCouriersOfCourierService(ctx *gin.Context) {
+	necessaryRole := []string{"Superadmin", "Courier manager"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetCouriersOfCourierService:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
 	page, er := strconv.Atoi(ctx.Query("page"))
 	if er != nil || page == 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "page query param is wrong. Expected an integer greater than 0"})
@@ -194,4 +236,48 @@ func (h *Handler) GetCouriersOfCourierService(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, listCouriers{Data: Couriers})
 
+}
+
+// ChangeCourierStatus by courier ID godoc
+// @Summary changeCourierStatus
+// @Security ApiKeyAuth
+// @Description put courier status by courier ID
+// @Tags Courier
+// @Accept  json
+// @Produce  json
+// @Param id path int true "ID"
+// @Param input body bool true "deleted"
+// @Success 200 {object} dao.Courier
+// @Failure 400 {string} string
+// @Failure 500 {string} err
+// @Router /courier/{id} [put]
+func (h *Handler) newUpdateCourier(ctx *gin.Context) {
+	necessaryRole := []string{"Superadmin", "Courier manager", "Courier"}
+	if err := h.services.CheckRole(necessaryRole, ctx.GetString("role")); err != nil {
+		log.Println("Handler GetCouriers:not enough rights")
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "not enough rights"})
+		return
+	}
+
+	idQuery := ctx.Param("id")
+
+	var courier dao.Courier
+
+	if err := ctx.ShouldBindJSON(&courier); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+		return
+	}
+
+	id, err := strconv.Atoi(idQuery)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"Error with query parameter": err})
+		return
+	}
+	courier.Id = uint16(id)
+	if err := h.services.NewUpdateCourier(courier); err != nil {
+		log.Println(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Error: %s", err)})
+		return
+	}
+	ctx.Status(http.StatusNoContent)
 }

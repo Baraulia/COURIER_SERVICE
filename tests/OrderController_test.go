@@ -2,11 +2,11 @@ package tests
 
 import (
 	"bytes"
+	authProto "github.com/Baraulia/COURIER_SERVICE/GRPCC"
 	"github.com/Baraulia/COURIER_SERVICE/controller"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/Baraulia/COURIER_SERVICE/service"
 	"github.com/Baraulia/COURIER_SERVICE/service/mocks"
-	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"net/http/httptest"
@@ -15,7 +15,10 @@ import (
 )
 
 func TestHandler_GetOrders(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockOrderApp, courier dao.Order)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
+	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
+	type mockBehavior func(s *mock_service.MockAllProjectApp, courier dao.Order)
+
 	var orders []dao.Order
 	ord := dao.Order{
 		IdDeliveryService: 1,
@@ -29,12 +32,16 @@ func TestHandler_GetOrders(t *testing.T) {
 	orders = append(orders, ord)
 
 	testTable := []struct {
-		name                string
-		inputBody           string
-		inputCourier        dao.Order
-		mockBehavior        mockBehavior
-		expectedStatusCode  int
-		expectedRequestBody string
+		name                   string
+		inputBody              string
+		inputCourier           dao.Order
+		inputRole              string
+		inputToken             string
+		mockBehaviorParseToken mockBehaviorParseToken
+		mockBehavior           mockBehavior
+		mockBehaviorCheck      mockBehaviorCheck
+		expectedStatusCode     int
+		expectedRequestBody    string
 	}{
 		{
 			name:      "OK",
@@ -48,8 +55,20 @@ func TestHandler_GetOrders(t *testing.T) {
 				Status:            "ready to delivery",
 				OrderDate:         "11.11.2022",
 			},
-			mockBehavior: func(s *mock_service.MockOrderApp, courier dao.Order) {
+			mockBehavior: func(s *mock_service.MockAllProjectApp, courier dao.Order) {
 				s.EXPECT().GetOrders(3).Return(orders, nil)
+			},
+			inputRole:  "Courier",
+			inputToken: "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
+					UserId:      1,
+					Role:        "Courier",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier", "Courier manager"}, role).Return(nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}`,
@@ -60,19 +79,19 @@ func TestHandler_GetOrders(t *testing.T) {
 			c := gomock.NewController(t)
 			defer c.Finish()
 
-			get := mock_service.NewMockOrderApp(c)
+			get := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(get, testCase.inputCourier)
+			testCase.mockBehaviorParseToken(get, testCase.inputToken)
+			testCase.mockBehaviorCheck(get, testCase.inputRole)
 
-			services := &service.Service{OrderApp: get}
+			services := &service.Service{AllProjectApp: get}
 			handler := controller.NewHandler(services)
 
-			r := gin.New()
-
-			r.GET("/orders/:id", handler.GetOrders)
+			r := handler.InitRoutesGin()
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("GET", "/orders/3", bytes.NewBufferString(testCase.inputBody))
-
+			req.Header.Set("Authorization", "Bearer testToken")
 			r.ServeHTTP(w, req)
 
 			assert.Equal(t, testCase.expectedStatusCode, w.Code)
@@ -84,7 +103,9 @@ func TestHandler_GetOrders(t *testing.T) {
 }
 
 func TestHandler_GetOneOrder(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockOrderApp, courier dao.Order)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
+	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
+	type mockBehavior func(s *mock_service.MockAllProjectApp, courier dao.Order)
 
 	ord := dao.Order{
 		IdDeliveryService: 1,
@@ -97,12 +118,16 @@ func TestHandler_GetOneOrder(t *testing.T) {
 	}
 
 	testTable := []struct {
-		name                string
-		inputBody           string
-		inputCourier        dao.Order
-		mockBehavior        mockBehavior
-		expectedStatusCode  int
-		expectedRequestBody string
+		name                   string
+		inputBody              string
+		inputCourier           dao.Order
+		inputRole              string
+		inputToken             string
+		mockBehaviorParseToken mockBehaviorParseToken
+		mockBehavior           mockBehavior
+		mockBehaviorCheck      mockBehaviorCheck
+		expectedStatusCode     int
+		expectedRequestBody    string
 	}{
 		{
 			name:      "OK",
@@ -116,8 +141,20 @@ func TestHandler_GetOneOrder(t *testing.T) {
 				Status:            "ready to delivery",
 				OrderDate:         "11.11.2022",
 			},
-			mockBehavior: func(s *mock_service.MockOrderApp, courier dao.Order) {
+			mockBehavior: func(s *mock_service.MockAllProjectApp, courier dao.Order) {
 				s.EXPECT().GetOrder(1).Return(ord, nil)
+			},
+			inputRole:  "Courier",
+			inputToken: "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
+					UserId:      1,
+					Role:        "Courier",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier", "Courier manager"}, role).Return(nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"delivery_service_id":1,"id":1,"courier_id":1,"delivery_time":"2022-02-19T13:34:53.000093589Z","customer_address":"Some address","status":"ready to delivery","order_date":"11.11.2022","restaurant_address":"","picked":false}`,
@@ -128,19 +165,18 @@ func TestHandler_GetOneOrder(t *testing.T) {
 			c := gomock.NewController(t)
 			defer c.Finish()
 
-			get := mock_service.NewMockOrderApp(c)
+			get := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(get, testCase.inputCourier)
+			testCase.mockBehaviorParseToken(get, testCase.inputToken)
+			testCase.mockBehaviorCheck(get, testCase.inputRole)
 
-			services := &service.Service{OrderApp: get}
+			services := &service.Service{AllProjectApp: get}
 			handler := controller.NewHandler(services)
-
-			r := gin.New()
-
-			r.GET("/order/:id", handler.GetOrder)
+			r := handler.InitRoutesGin()
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("GET", "/order/1", bytes.NewBufferString(testCase.inputBody))
-
+			req.Header.Set("Authorization", "Bearer testToken")
 			r.ServeHTTP(w, req)
 
 			assert.Equal(t, testCase.expectedStatusCode, w.Code)
@@ -152,13 +188,20 @@ func TestHandler_GetOneOrder(t *testing.T) {
 }
 
 func TestHandler_UpdateOrder(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockOrderApp, order dao.Order)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
+	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
+	type mockBehavior func(s *mock_service.MockAllProjectApp, order dao.Order)
+
 	testTable := []struct {
-		name               string
-		inputBody          string
-		inputOrder         dao.Order
-		mockBehavior       mockBehavior
-		expectedStatusCode int
+		name                   string
+		inputBody              string
+		inputOrder             dao.Order
+		inputRole              string
+		inputToken             string
+		mockBehaviorParseToken mockBehaviorParseToken
+		mockBehavior           mockBehavior
+		mockBehaviorCheck      mockBehaviorCheck
+		expectedStatusCode     int
 	}{
 		{
 			name:      "OK",
@@ -167,8 +210,20 @@ func TestHandler_UpdateOrder(t *testing.T) {
 				Id:        1,
 				IdCourier: 8,
 			},
-			mockBehavior: func(s *mock_service.MockOrderApp, order dao.Order) {
+			mockBehavior: func(s *mock_service.MockAllProjectApp, order dao.Order) {
 				s.EXPECT().AssigningOrderToCourier(order).Return(nil)
+			},
+			inputRole:  "Courier",
+			inputToken: "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
+					UserId:      1,
+					Role:        "Courier",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier", "Courier manager"}, role).Return(nil)
 			},
 			expectedStatusCode: 204,
 		},
@@ -178,30 +233,30 @@ func TestHandler_UpdateOrder(t *testing.T) {
 			c := gomock.NewController(t)
 			defer c.Finish()
 
-			get := mock_service.NewMockOrderApp(c)
+			get := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(get, testCase.inputOrder)
+			testCase.mockBehaviorParseToken(get, testCase.inputToken)
+			testCase.mockBehaviorCheck(get, testCase.inputRole)
 
-			services := &service.Service{OrderApp: get}
+			services := &service.Service{AllProjectApp: get}
 			handler := controller.NewHandler(services)
-
-			r := gin.New()
-
-			r.PUT("/orders/:id", handler.UpdateOrder)
+			r := handler.InitRoutesGin()
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("PUT", "/orders/1", bytes.NewBufferString(testCase.inputBody))
-
+			req.Header.Set("Authorization", "Bearer testToken")
 			r.ServeHTTP(w, req)
 
 			assert.Equal(t, testCase.expectedStatusCode, w.Code)
 
 		})
 	}
-
 }
 
 func TestHandler_GetDetailedOrdersById(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockOrderApp, order *dao.AllInfoAboutOrder)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
+	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
+	type mockBehavior func(s *mock_service.MockAllProjectApp, order *dao.AllInfoAboutOrder)
 
 	ord := &dao.AllInfoAboutOrder{
 		IdDeliveryService:     1,
@@ -224,12 +279,16 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 	}
 
 	testTable := []struct {
-		name                string
-		inputBody           string
-		inputOrder          dao.AllInfoAboutOrder
-		mockBehavior        mockBehavior
-		expectedStatusCode  int
-		expectedRequestBody string
+		name                   string
+		inputBody              string
+		inputOrder             dao.AllInfoAboutOrder
+		inputRole              string
+		inputToken             string
+		mockBehaviorParseToken mockBehaviorParseToken
+		mockBehavior           mockBehavior
+		mockBehaviorCheck      mockBehaviorCheck
+		expectedStatusCode     int
+		expectedRequestBody    string
 	}{
 		{
 			name:      "OK",
@@ -237,7 +296,19 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 			inputOrder: dao.AllInfoAboutOrder{
 				IdOrder: 1,
 			},
-			mockBehavior: func(s *mock_service.MockOrderApp, order *dao.AllInfoAboutOrder) {
+			inputRole:  "Courier",
+			inputToken: "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
+					UserId:      1,
+					Role:        "Courier",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier", "Courier manager"}, role).Return(nil)
+			},
+			mockBehavior: func(s *mock_service.MockAllProjectApp, order *dao.AllInfoAboutOrder) {
 				s.EXPECT().GetDetailedOrderById(1).Return(ord, nil)
 			},
 			expectedStatusCode:  200,
@@ -249,18 +320,18 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 			c := gomock.NewController(t)
 			defer c.Finish()
 
-			get := mock_service.NewMockOrderApp(c)
+			get := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(get, &testCase.inputOrder)
+			testCase.mockBehaviorParseToken(get, testCase.inputToken)
+			testCase.mockBehaviorCheck(get, testCase.inputRole)
 
-			services := &service.Service{OrderApp: get}
+			services := &service.Service{AllProjectApp: get}
 			handler := controller.NewHandler(services)
-
-			r := gin.New()
-
-			r.GET("/order/detailed/:id", handler.GetDetailedOrderById)
+			r := handler.InitRoutesGin()
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("GET", "/order/detailed/1", bytes.NewBufferString(testCase.inputBody))
+			req.Header.Set("Authorization", "Bearer testToken")
 
 			r.ServeHTTP(w, req)
 
@@ -272,7 +343,9 @@ func TestHandler_GetDetailedOrdersById(t *testing.T) {
 }
 
 func TestHandler_GetCompletedOrdersOfCourierService(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockOrderApp, order []dao.Order)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
+	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
+	type mockBehavior func(s *mock_service.MockAllProjectApp, order []dao.Order)
 	var orders []dao.Order
 	ord := dao.Order{
 		IdDeliveryService: 1,
@@ -288,12 +361,16 @@ func TestHandler_GetCompletedOrdersOfCourierService(t *testing.T) {
 	orders = append(orders, ord)
 
 	testTable := []struct {
-		name                string
-		inputBody           string
-		inputOrder          []dao.Order
-		mockBehavior        mockBehavior
-		expectedStatusCode  int
-		expectedRequestBody string
+		name                   string
+		inputBody              string
+		inputOrder             []dao.Order
+		inputRole              string
+		inputToken             string
+		mockBehaviorParseToken mockBehaviorParseToken
+		mockBehavior           mockBehavior
+		mockBehaviorCheck      mockBehaviorCheck
+		expectedStatusCode     int
+		expectedRequestBody    string
 	}{
 		{
 			name:      "OK",
@@ -311,7 +388,19 @@ func TestHandler_GetCompletedOrdersOfCourierService(t *testing.T) {
 					Picked:            false,
 				},
 			},
-			mockBehavior: func(s *mock_service.MockOrderApp, order []dao.Order) {
+			inputRole:  "Courier",
+			inputToken: "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
+					UserId:      1,
+					Role:        "Courier",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier", "Courier manager"}, role).Return(nil)
+			},
+			mockBehavior: func(s *mock_service.MockAllProjectApp, order []dao.Order) {
 				s.EXPECT().GetCompletedOrdersOfCourierService(1, 1, 1).Return(orders, nil)
 			},
 			expectedStatusCode:  200,
@@ -323,19 +412,18 @@ func TestHandler_GetCompletedOrdersOfCourierService(t *testing.T) {
 			c := gomock.NewController(t)
 			defer c.Finish()
 
-			get := mock_service.NewMockOrderApp(c)
+			get := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(get, testCase.inputOrder)
+			testCase.mockBehaviorParseToken(get, testCase.inputToken)
+			testCase.mockBehaviorCheck(get, testCase.inputRole)
 
-			services := &service.Service{OrderApp: get}
+			services := &service.Service{AllProjectApp: get}
 			handler := controller.NewHandler(services)
-
-			r := gin.New()
-
-			r.GET("/orders/service/completed", handler.GetCompletedOrdersOfCourierService)
+			r := handler.InitRoutesGin()
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("GET", "/orders/service/completed?limit=1&page=1&iddeliveryservice=1", bytes.NewBufferString(testCase.inputBody))
-
+			req.Header.Set("Authorization", "Bearer testToken")
 			r.ServeHTTP(w, req)
 
 			assert.Equal(t, testCase.expectedStatusCode, w.Code)

@@ -2,11 +2,11 @@ package tests
 
 import (
 	"bytes"
+	authProto "github.com/Baraulia/COURIER_SERVICE/GRPCC"
 	"github.com/Baraulia/COURIER_SERVICE/controller"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/Baraulia/COURIER_SERVICE/service"
 	"github.com/Baraulia/COURIER_SERVICE/service/mocks"
-	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"net/http/httptest"
@@ -14,14 +14,21 @@ import (
 )
 
 func TestHandler_CreateDeliveryService(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockDeliveryServiceApp, service dao.DeliveryService)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
+	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
+	type mockBehavior func(s *mock_service.MockAllProjectApp, service dao.DeliveryService)
+
 	testTable := []struct {
-		name                string
-		inputBody           string
-		inputService        dao.DeliveryService
-		mockBehavior        mockBehavior
-		expectedStatusCode  int
-		expectedRequestBody string
+		name                   string
+		inputBody              string
+		inputService           dao.DeliveryService
+		inputRole              string
+		inputToken             string
+		mockBehaviorParseToken mockBehaviorParseToken
+		mockBehavior           mockBehavior
+		mockBehaviorCheck      mockBehaviorCheck
+		expectedStatusCode     int
+		expectedRequestBody    string
 	}{
 		{
 			name:      "OK",
@@ -34,52 +41,95 @@ func TestHandler_CreateDeliveryService(t *testing.T) {
 				Status:      "active",
 				PhoneNumber: "1234567",
 			},
-			mockBehavior: func(s *mock_service.MockDeliveryServiceApp, service dao.DeliveryService) {
+			inputRole:  "Courier manager",
+			inputToken: "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
+					UserId:      1,
+					Role:        "Courier manager",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
+			},
+			mockBehavior: func(s *mock_service.MockAllProjectApp, service dao.DeliveryService) {
 				s.EXPECT().CreateDeliveryService(service).Return(1, nil)
 			},
 			expectedStatusCode:  200,
 			expectedRequestBody: `{"id":1}`,
 		},
 		{
-			name:                "Invalid request",
-			inputBody:           `{"email": "email",}`,
-			inputService:        dao.DeliveryService{},
-			mockBehavior:        func(r *mock_service.MockDeliveryServiceApp, service dao.DeliveryService) {},
+			name:         "Invalid request",
+			inputBody:    "a",
+			inputService: dao.DeliveryService{},
+			inputRole:    "Courier manager",
+			inputToken:   "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
+					UserId:      1,
+					Role:        "Courier manager",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
+			},
+			mockBehavior:        func(r *mock_service.MockAllProjectApp, service dao.DeliveryService) {},
 			expectedStatusCode:  400,
 			expectedRequestBody: `{"message":"Invalid request"}`,
 		},
 		{
-			name:                "empty fields",
-			inputBody:           `{"email": "email"}`,
-			inputService:        dao.DeliveryService{},
-			mockBehavior:        func(r *mock_service.MockDeliveryServiceApp, service dao.DeliveryService) {},
+			name:         "empty fields",
+			inputBody:    "{}",
+			inputService: dao.DeliveryService{},
+			inputRole:    "Courier manager",
+			inputToken:   "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
+					UserId:      1,
+					Role:        "Courier manager",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
+			},
+			mockBehavior:        func(r *mock_service.MockAllProjectApp, service dao.DeliveryService) {},
 			expectedStatusCode:  400,
 			expectedRequestBody: `{"message":"empty fields"}`,
 		},
 	}
 
-	for _, tt := range testTable {
-		t.Run(tt.name, func(t *testing.T) {
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
 			c := gomock.NewController(t)
 			defer c.Finish()
-			newMock := mock_service.NewMockDeliveryServiceApp(c)
-			tt.mockBehavior(newMock, tt.inputService)
-			services := &service.Service{DeliveryServiceApp: newMock}
+			newMock := mock_service.NewMockAllProjectApp(c)
+			testCase.mockBehavior(newMock, testCase.inputService)
+			testCase.mockBehaviorParseToken(newMock, testCase.inputToken)
+			testCase.mockBehaviorCheck(newMock, testCase.inputRole)
+
+			services := &service.Service{AllProjectApp: newMock}
 			handler := controller.NewHandler(services)
-			r := gin.New()
-			r.POST("/deliveryservice", handler.CreateDeliveryService)
+			r := handler.InitRoutesGin()
+
 			w := httptest.NewRecorder()
-			req := httptest.NewRequest("POST", "/deliveryservice", bytes.NewBufferString(tt.inputBody))
+			req := httptest.NewRequest("POST", "/deliveryservice/", bytes.NewBufferString(testCase.inputBody))
+			req.Header.Set("Authorization", "Bearer testToken")
 			r.ServeHTTP(w, req)
-			assert.Equal(t, tt.expectedStatusCode, w.Code)
-			assert.Equal(t, tt.expectedRequestBody, w.Body.String())
+			assert.Equal(t, testCase.expectedStatusCode, w.Code)
+			assert.Equal(t, testCase.expectedRequestBody, w.Body.String())
 		})
 	}
 
 }
 
 func TestHandler_GetAllDeliveryServices(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockDeliveryServiceApp, service dao.DeliveryService)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
+	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
+	type mockBehavior func(s *mock_service.MockAllProjectApp, service dao.DeliveryService)
+
 	var servicess []dao.DeliveryService
 	serv := dao.DeliveryService{
 		Id:            1,
@@ -90,53 +140,72 @@ func TestHandler_GetAllDeliveryServices(t *testing.T) {
 		PhoneNumber:   "123",
 		ManagerId:     1,
 		Status:        "active",
-		NumOfCouriers: 0,
+		NumOfCouriers: 5,
 	}
 	servicess = append(servicess, serv)
 
 	testTable := []struct {
-		name                string
-		inputBody           string
-		inputService        dao.DeliveryService
-		mockBehavior        mockBehavior
-		expectedStatusCode  int
-		expectedRequestBody string
+		name                   string
+		inputBody              string
+		inputService           dao.DeliveryService
+		inputRole              string
+		inputToken             string
+		mockBehaviorParseToken mockBehaviorParseToken
+		mockBehavior           mockBehavior
+		mockBehaviorCheck      mockBehaviorCheck
+		expectedStatusCode     int
+		expectedRequestBody    string
 	}{
 		{
-			name: "OK",
-			mockBehavior: func(s *mock_service.MockDeliveryServiceApp, service dao.DeliveryService) {
+			name:       "OK",
+			inputRole:  "Courier manager",
+			inputToken: "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
+					UserId:      1,
+					Role:        "Courier manager",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin"}, role).Return(nil)
+			},
+			mockBehavior: func(s *mock_service.MockAllProjectApp, service dao.DeliveryService) {
 				s.EXPECT().GetAllDeliveryServices().Return(servicess, nil)
 			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"data":[{"id":1,"name":"name","email":"email","photo":"photo","description":"description","phone_number":"123","manager_id":1,"status":"active","NumOfCouriers":0}]}`,
+			expectedRequestBody: `{"data":[{"id":1,"name":"name","email":"email","photo":"photo","description":"description","phone_number":"123","manager_id":1,"status":"active","NumOfCouriers":5}]}`,
 		},
 	}
-	for _, tt := range testTable {
-		t.Run(tt.name, func(t *testing.T) {
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
 			c := gomock.NewController(t)
 			defer c.Finish()
-			newMock := mock_service.NewMockDeliveryServiceApp(c)
-			tt.mockBehavior(newMock, tt.inputService)
+			newMock := mock_service.NewMockAllProjectApp(c)
+			testCase.mockBehavior(newMock, testCase.inputService)
+			testCase.mockBehaviorParseToken(newMock, testCase.inputToken)
+			testCase.mockBehaviorCheck(newMock, testCase.inputRole)
 
-			services := &service.Service{DeliveryServiceApp: newMock}
+			services := &service.Service{AllProjectApp: newMock}
 			handler := controller.NewHandler(services)
-
-			r := gin.New()
-			r.GET("/deliveryservice/", handler.GetAllDeliveryServices)
+			r := handler.InitRoutesGin()
 
 			w := httptest.NewRecorder()
-			req := httptest.NewRequest("GET", "/deliveryservice/", bytes.NewBufferString(tt.inputBody))
+			req := httptest.NewRequest("GET", "/deliveryservice/", bytes.NewBufferString(testCase.inputBody))
+			req.Header.Set("Authorization", "Bearer testToken")
 			r.ServeHTTP(w, req)
 
-			assert.Equal(t, tt.expectedStatusCode, w.Code)
-			assert.Equal(t, tt.expectedRequestBody, w.Body.String())
+			assert.Equal(t, testCase.expectedStatusCode, w.Code)
+			assert.Equal(t, testCase.expectedRequestBody, w.Body.String())
 
 		})
 	}
 }
 
 func TestHandler_GetDeliveryServiceById(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockDeliveryServiceApp, service *dao.DeliveryService)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
+	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
+	type mockBehavior func(s *mock_service.MockAllProjectApp, service *dao.DeliveryService)
 
 	serv := &dao.DeliveryService{
 		Id:            1,
@@ -146,17 +215,21 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 		Description:   "description",
 		PhoneNumber:   "123",
 		ManagerId:     1,
+		NumOfCouriers: 3,
 		Status:        "active",
-		NumOfCouriers: 5,
 	}
 
 	testTable := []struct {
-		name                string
-		inputBody           string
-		inputService        dao.DeliveryService
-		mockBehavior        mockBehavior
-		expectedStatusCode  int
-		expectedRequestBody string
+		name                   string
+		inputBody              string
+		inputService           dao.DeliveryService
+		inputRole              string
+		inputToken             string
+		mockBehaviorParseToken mockBehaviorParseToken
+		mockBehavior           mockBehavior
+		mockBehaviorCheck      mockBehaviorCheck
+		expectedStatusCode     int
+		expectedRequestBody    string
 	}{
 		{
 			name:      "OK",
@@ -164,45 +237,66 @@ func TestHandler_GetDeliveryServiceById(t *testing.T) {
 			inputService: dao.DeliveryService{
 				Id: 1,
 			},
-			mockBehavior: func(s *mock_service.MockDeliveryServiceApp, service *dao.DeliveryService) {
+			mockBehavior: func(s *mock_service.MockAllProjectApp, service *dao.DeliveryService) {
 				s.EXPECT().GetDeliveryServiceById(1).Return(serv, nil)
 			},
+			inputRole:  "Courier manager",
+			inputToken: "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
+					UserId:      1,
+					Role:        "Courier manager",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier", "Courier manager"}, role).Return(nil)
+			},
 			expectedStatusCode:  200,
-			expectedRequestBody: `{"id":1,"name":"name","email":"email","photo":"photo","description":"description","phone_number":"123","manager_id":1,"status":"active","NumOfCouriers":5}`,
+			expectedRequestBody: `{"id":1,"name":"name","email":"email","photo":"photo","description":"description","phone_number":"123","manager_id":1,"status":"active","NumOfCouriers":3}`,
 		},
 	}
-	for _, tt := range testTable {
-		t.Run(tt.name, func(t *testing.T) {
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
 			c := gomock.NewController(t)
 			defer c.Finish()
-			newMock := mock_service.NewMockDeliveryServiceApp(c)
-			tt.mockBehavior(newMock, &tt.inputService)
+			newMock := mock_service.NewMockAllProjectApp(c)
+			testCase.mockBehavior(newMock, &testCase.inputService)
+			testCase.mockBehaviorParseToken(newMock, testCase.inputToken)
+			testCase.mockBehaviorCheck(newMock, testCase.inputRole)
 
-			services := &service.Service{DeliveryServiceApp: newMock}
+			services := &service.Service{AllProjectApp: newMock}
 			handler := controller.NewHandler(services)
-
-			r := gin.New()
-			r.GET("/deliveryservice/:id", handler.GetDeliveryServiceById)
+			r := handler.InitRoutesGin()
 
 			w := httptest.NewRecorder()
-			req := httptest.NewRequest("GET", "/deliveryservice/1", bytes.NewBufferString(tt.inputBody))
+			req := httptest.NewRequest("GET", "/deliveryservice/1", bytes.NewBufferString(testCase.inputBody))
+			req.Header.Set("Authorization", "Bearer testToken")
 			r.ServeHTTP(w, req)
 
-			assert.Equal(t, tt.expectedStatusCode, w.Code)
-			assert.Equal(t, tt.expectedRequestBody, w.Body.String())
+			assert.Equal(t, testCase.expectedStatusCode, w.Code)
+			assert.Equal(t, testCase.expectedRequestBody, w.Body.String())
 
 		})
 	}
 }
+
 func TestHandler_UpdateDeliveryService(t *testing.T) {
-	type mockBehavior func(s *mock_service.MockDeliveryServiceApp, serv dao.DeliveryService)
+	type mockBehaviorCheck func(s *mock_service.MockAllProjectApp, role string)
+	type mockBehaviorParseToken func(s *mock_service.MockAllProjectApp, token string)
+	type mockBehavior func(s *mock_service.MockAllProjectApp, serv dao.DeliveryService)
+
 	testTable := []struct {
-		name               string
-		inputBody          string
-		inputService       dao.DeliveryService
-		id                 int
-		mockBehavior       mockBehavior
-		expectedStatusCode int
+		name                   string
+		inputBody              string
+		inputService           dao.DeliveryService
+		id                     int
+		inputRole              string
+		inputToken             string
+		mockBehaviorParseToken mockBehaviorParseToken
+		mockBehavior           mockBehavior
+		mockBehaviorCheck      mockBehaviorCheck
+		expectedStatusCode     int
 	}{
 		{
 			name:      "OK",
@@ -213,8 +307,20 @@ func TestHandler_UpdateDeliveryService(t *testing.T) {
 				Email: "email",
 			},
 			id: 1,
-			mockBehavior: func(s *mock_service.MockDeliveryServiceApp, serv dao.DeliveryService) {
+			mockBehavior: func(s *mock_service.MockAllProjectApp, serv dao.DeliveryService) {
 				s.EXPECT().UpdateDeliveryService(serv).Return(nil)
+			},
+			inputRole:  "Courier manager",
+			inputToken: "testToken",
+			mockBehaviorParseToken: func(s *mock_service.MockAllProjectApp, token string) {
+				s.EXPECT().ParseToken(token).Return(&authProto.UserRole{
+					UserId:      1,
+					Role:        "Courier manager",
+					Permissions: "",
+				}, nil)
+			},
+			mockBehaviorCheck: func(s *mock_service.MockAllProjectApp, role string) {
+				s.EXPECT().CheckRole([]string{"Superadmin", "Courier manager"}, role).Return(nil)
 			},
 			expectedStatusCode: 204,
 		},
@@ -224,21 +330,22 @@ func TestHandler_UpdateDeliveryService(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			c := gomock.NewController(t)
 			defer c.Finish()
-			get := mock_service.NewMockDeliveryServiceApp(c)
+			get := mock_service.NewMockAllProjectApp(c)
 			testCase.mockBehavior(get, testCase.inputService)
-			services := &service.Service{DeliveryServiceApp: get}
+			testCase.mockBehaviorParseToken(get, testCase.inputToken)
+			testCase.mockBehaviorCheck(get, testCase.inputRole)
+
+			services := &service.Service{AllProjectApp: get}
 			handler := controller.NewHandler(services)
 
-			r := gin.New()
-			r.PUT("/deliveryservice/:id", handler.UpdateDeliveryService)
+			r := handler.InitRoutesGin()
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("PUT", "/deliveryservice/1", bytes.NewBufferString(testCase.inputBody))
-
+			req.Header.Set("Authorization", "Bearer testToken")
 			r.ServeHTTP(w, req)
 
 			assert.Equal(t, testCase.expectedStatusCode, w.Code)
 		})
 	}
-
 }

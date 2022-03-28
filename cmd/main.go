@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/Baraulia/COURIER_SERVICE/GRPC/grpcServer"
+	"github.com/Baraulia/COURIER_SERVICE/GRPCC/grpcClient"
 	"github.com/Baraulia/COURIER_SERVICE/controller"
 	"github.com/Baraulia/COURIER_SERVICE/dao"
 	"github.com/Baraulia/COURIER_SERVICE/server"
@@ -28,8 +29,9 @@ func main() {
 	if err != nil {
 		log.Fatal("failed to initialize dao:", err.Error())
 	}
+	grpcCli := grpcClient.NewGRPCClient(os.Getenv("HOST"))
 	repository := dao.NewRepository(database)
-	services := service.NewService(repository)
+	services := service.NewService(repository, grpcCli)
 	handlers := controller.NewHandler(services)
 	port := os.Getenv("API_SERVER_PORT")
 
